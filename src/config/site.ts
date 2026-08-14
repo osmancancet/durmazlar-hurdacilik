@@ -59,8 +59,17 @@ export const SITE = {
   /** Hizmet verilen iller — JSON-LD areaServed ve yerel SEO metinleri için. */
   serviceAreas: ["Manisa", "Balıkesir", "İzmir", "Kütahya"],
 
-  /** Yayına alındığında kendi alan adınızla değiştirin (sonunda / olmadan). */
-  url: "https://durmazlarhurdacilik.com",
+  /**
+   * Sitenin canlı adresi (sonunda / olmadan).
+   *
+   * Canonical adresler, hreflang etiketleri, site haritası ve sosyal medya
+   * önizlemeleri bu değerden üretilir; var olmayan bir adres yazılırsa
+   * arama motorları siteyi indekslemez.
+   *
+   * Kendi alan adınızı aldığınızda (ör. https://durmazlarhurdacilik.com)
+   * Vercel'de alan adını projeye ekleyin ve burayı tek satırda güncelleyin.
+   */
+  url: "https://durmazlar-hurdacilik.vercel.app",
 
   /** Sosyal medya hesapları (boş bırakılanlar arayüzde gösterilmez). */
   social: {
