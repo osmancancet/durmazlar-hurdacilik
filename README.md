@@ -33,10 +33,11 @@ Adres, çalışma saatleri ve hizmet verilen iller de aynı dosyadadır.
 
 ### 2. Yeni fotoğraf eklemek
 
-1. Ham fotoğrafı bu klasörün **bir üstüne** (ham `.jpeg` dosyalarının yanına) koyun.
-2. `scripts/optimize-images.mjs` içindeki `MAP` listesine bir satır ekleyin:
+1. Ham fotoğrafı bu klasörün **bir üstüne** (diğer ham fotoğrafların yanına) koyun.
+2. `scripts/optimize-images.mjs` içindeki `MAP` listesine bir satır ekleyin.
+   Dosya adı **uzantısıyla ve boşluklarıyla birlikte** yazılır:
    ```js
-   ["WhatsApp Image 2026-08-08 at 15.10.01", "yeni-urun-1"],
+   ["PHOTO-2026-08-08-15-10-01.jpg", "yeni-urun-1"],
    ```
 3. `npm run images` çalıştırın. Büyük (1600px) ve küçük (640px) WebP
    sürümleri `public/images/` altına yazılır.
@@ -219,7 +220,7 @@ title: { tr: "Endüstriyel Hurda Alımı", en: "Industrial Scrap Purchasing" },
 |---|---|
 | `services.ts` | Dört hizmetin başlığı, anlatımı ve maddeleri |
 | `materials.ts` | Alınan malzeme grupları ve kalemleri |
-| `gallery.ts` | 24 fotoğrafın başlık, açıklama ve kategorisi |
+| `gallery.ts` | 47 fotoğrafın başlık, açıklama ve kategorisi |
 | `faq.ts` | Sık sorulan sorular |
 | `ui.ts` | Buton etiketleri, sayfa başlıkları, ana sayfa ve hakkımızda metinleri |
 
@@ -244,7 +245,7 @@ değiştiği için ziyaretçi güncel fiyat sormaya yönlendiriliyor.
 - **Statik export.** Sunucu tarafı özellik kullanılmaz; her sayfa derleme
   anında HTML'e dönüşür.
 - **Görseller** derleme öncesi `sharp` ile WebP'ye çevrilir ve hafifçe
-  renk uyumlanır (24 fotoğraf farklı saatlerde çekildiği için). Uyumlamayı
+  renk uyumlanır (fotoğraflar farklı saatlerde çekildiği için). Uyumlamayı
   kapatmak için `scripts/optimize-images.mjs` içindeki `GRADE = false`.
   Ham `.jpeg` dosyalarına hiç dokunulmaz.
 - Galeri ızgarası yalnızca 640px küçük resimleri yükler; 1600px sürüm

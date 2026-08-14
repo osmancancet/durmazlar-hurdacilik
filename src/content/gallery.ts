@@ -254,8 +254,8 @@ export const GALLERY: GalleryItem[] = [
   {
     file: "motor-reduktor-1",
     category: "ekipman",
-    width: 1200,
-    height: 1600,
+    width: 1600,
+    height: 1200,
     title: { tr: "Dizel Motor ve Redüktör", en: "Diesel Engines & Gearboxes" },
     description: {
       tr: "Turbolu dizel motorlar, redüktörler ve dişli gruplarıyla tahrik ünitesi.",
@@ -293,6 +293,262 @@ export const GALLERY: GalleryItem[] = [
     description: {
       tr: "Boyalı çelik kiriş ve profiller — çatı konstrüksiyonu sökümünden.",
       en: "Painted steel beams and profiles from a roof structure teardown.",
+    },
+  },
+
+  /* — İkinci parti — */
+
+  {
+    file: "beyaz-tank-1",
+    category: "ekipman",
+    width: 1600,
+    height: 1200,
+    title: { tr: "Beyaz Depo Tankları", en: "White Storage Tanks" },
+    description: {
+      tr: "Ayaklı yatay depolama tankları; arkada saha ve Soma ovası.",
+      en: "Horizontal storage tanks on saddles, with the yard and Soma plain behind.",
+    },
+  },
+  {
+    file: "is-makinesi-kovasi-1",
+    category: "ekipman",
+    width: 1600,
+    height: 1200,
+    title: { tr: "İş Makinesi Kovaları", en: "Excavator Buckets" },
+    description: {
+      tr: "Sıra hâlinde dizilmiş ekskavatör kovaları ve bağlantı pimleri.",
+      en: "A row of excavator buckets with their linkage pins.",
+    },
+  },
+  {
+    file: "konveyor-tamburu-3",
+    category: "ekipman",
+    width: 1600,
+    height: 1200,
+    title: { tr: "Konveyör Tamburu Stoğu", en: "Conveyor Drum Stock" },
+    description: {
+      tr: "Kaplamalı ve düz tamburlar, yatak grupları ve mavi sehpalarıyla.",
+      en: "Lagged and plain drums with their bearing units and blue frames.",
+    },
+  },
+  {
+    file: "konveyor-tamburu-4",
+    category: "ekipman",
+    width: 1600,
+    height: 1200,
+    title: { tr: "Tahrik Tamburu Grubu", en: "Drive Drum Assemblies" },
+    description: {
+      tr: "Sehpalarına monteli tahrik tamburları; arkada konveyör konstrüksiyonu.",
+      en: "Drive drums mounted on their frames, with conveyor structure behind.",
+    },
+  },
+  {
+    file: "titresimli-elek-1",
+    category: "ekipman",
+    width: 1600,
+    height: 1200,
+    title: { tr: "Titreşimli Elek Gövdesi", en: "Vibrating Screen Body" },
+    description: {
+      tr: "Cıvatalı elek gövdesi ve yay yatakları — kömür hazırlama hattından.",
+      en: "Bolted screen body with spring mounts, from a coal preparation line.",
+    },
+  },
+  {
+    file: "titresimli-elek-2",
+    category: "ekipman",
+    width: 1600,
+    height: 1200,
+    title: { tr: "Titreşimli Elek Ünitesi", en: "Vibrating Screen Unit" },
+    description: {
+      tr: "Komple elek ünitesi; arkada eleme hattı ve santral bacası.",
+      en: "A complete screen unit, with the screening line and power plant stack behind.",
+    },
+  },
+  {
+    file: "celik-halat-1",
+    category: "hurda",
+    width: 1536,
+    height: 2048,
+    title: { tr: "Çelik Halat Makaraları", en: "Wire Rope Drums" },
+    description: {
+      tr: "Ahşap makaralara sarılı vinç ve maden halatları.",
+      en: "Crane and mining wire rope wound on wooden drums.",
+    },
+  },
+  {
+    file: "sondaj-borusu-2",
+    category: "boru-profil",
+    width: 1600,
+    height: 1200,
+    title: { tr: "Sondaj Tij Takımı", en: "Drill Rod Set" },
+    description: {
+      tr: "Dişli bağlantılı sondaj tijleri, beton saha üzerinde istiflenmiş.",
+      en: "Threaded drill rods stacked on the concrete apron.",
+    },
+  },
+  {
+    file: "ray-1",
+    category: "boru-profil",
+    width: 1600,
+    height: 1200,
+    title: { tr: "Vinç ve Demiryolu Rayı", en: "Crane & Railway Rail" },
+    description: {
+      tr: "Ağır kesitli ray profilleri; yanında boru ve mil stoğu.",
+      en: "Heavy-section rail profiles, alongside pipe and shaft stock.",
+    },
+  },
+  {
+    file: "celik-sac-2",
+    category: "hurda",
+    width: 1600,
+    height: 1200,
+    title: { tr: "Kalın Sac Levha Stoğu", en: "Heavy Plate Stock" },
+    description: {
+      tr: "Büyük ebatlı kalın çelik levhalar; arkada hurda sahası ve ekskavatör.",
+      en: "Large heavy-gauge steel plates, with the scrap yard and excavator behind.",
+    },
+  },
+  {
+    file: "muhafaza-borusu-1",
+    category: "boru-profil",
+    width: 1200,
+    height: 1600,
+    title: { tr: "Muhafaza Borusu Takımı", en: "Casing Pipe Set" },
+    description: {
+      tr: "Dişli uçlu muhafaza boruları, boy boy ayrılmış hâlde.",
+      en: "Threaded-end casing pipes, sorted by length.",
+    },
+  },
+  {
+    file: "celik-mil-1",
+    category: "boru-profil",
+    width: 1600,
+    height: 1200,
+    title: { tr: "Çelik Yuvarlak Mil", en: "Solid Round Bar" },
+    description: {
+      tr: "Döküm numarası etiketli dolu çelik miller ve yuvarlak çubuklar.",
+      en: "Solid steel shafts and round bar, still carrying their heat-number tags.",
+    },
+  },
+  {
+    file: "hidrolik-unite-1",
+    category: "ekipman",
+    width: 1600,
+    height: 1200,
+    title: { tr: "Hidrolik Güç Ünitesi", en: "Hydraulic Power Unit" },
+    description: {
+      tr: "Elektrik motorlu hidrolik ünite ve vinç tamburu, hortumlarıyla birlikte.",
+      en: "Motor-driven hydraulic unit and winch drum, complete with hoses.",
+    },
+  },
+  {
+    file: "sondaj-borusu-3",
+    category: "boru-profil",
+    width: 1200,
+    height: 1600,
+    title: { tr: "Dişli Uçlu Sondaj Borusu", en: "Threaded Drill Pipe" },
+    description: {
+      tr: "Kalın cidarlı sondaj boruları; erkek ve dişi dişleri görünür durumda.",
+      en: "Heavy-wall drill pipe with pin and box threads clearly visible.",
+    },
+  },
+  {
+    file: "romork-sasi-1",
+    category: "hurda",
+    width: 1600,
+    height: 1200,
+    title: { tr: "Römork Şasisi", en: "Trailer Chassis" },
+    description: {
+      tr: "Lastikleri takılı römork şasisi; çevresinde profil ve sac hurdası.",
+      en: "A trailer chassis on its wheels, surrounded by profile and plate scrap.",
+    },
+  },
+  {
+    file: "celik-sac-3",
+    category: "hurda",
+    width: 1600,
+    height: 1200,
+    title: { tr: "Sac Levha ve Treyler Aksı", en: "Steel Plate & Trailer Axle" },
+    description: {
+      tr: "Kalın sac levhaların üzerinde fren kampanalı treyler aksı.",
+      en: "A trailer axle with brake drums resting on heavy steel plate.",
+    },
+  },
+  {
+    file: "kaynakli-kiris-1",
+    category: "hurda",
+    width: 1200,
+    height: 1600,
+    title: { tr: "Kaynaklı Çelik Kiriş", en: "Fabricated Steel Girder" },
+    description: {
+      tr: "Bulonlu bağlantı plakalı kaynaklı kirişler — tesis sökümünden.",
+      en: "Welded girders with bolted connection plates, from a plant teardown.",
+    },
+  },
+  {
+    file: "buyuk-cap-boru-2",
+    category: "boru-profil",
+    width: 1600,
+    height: 1200,
+    title: { tr: "Büyük Çaplı Boru İstifi", en: "Large-Bore Pipe Stack" },
+    description: {
+      tr: "Kalın cidarlı geniş çaplı borular; arkada konstrüksiyon ve damper kasa.",
+      en: "Heavy-wall large-bore pipe, with structural steel and tipper bodies behind.",
+    },
+  },
+  {
+    file: "galvaniz-profil-1",
+    category: "hurda",
+    width: 1600,
+    height: 1200,
+    title: { tr: "Galvaniz Profil ve Raf Ayağı", en: "Galvanised Profiles & Rack Legs" },
+    description: {
+      tr: "Delikli galvaniz profiller ve raf ayakları, ayrıştırılmayı bekliyor.",
+      en: "Perforated galvanised profiles and rack legs waiting to be sorted.",
+    },
+  },
+  {
+    file: "kesilmis-boru-1",
+    category: "boru-profil",
+    width: 1200,
+    height: 1600,
+    title: { tr: "Kesilmiş Çelik Boru", en: "Cut Steel Pipe" },
+    description: {
+      tr: "Nakliye boyuna kesilmiş büyük çaplı borular ve alüminyum kırpıntı.",
+      en: "Large-bore pipe cut to haulage length, with aluminium trimmings.",
+    },
+  },
+  {
+    file: "celik-profil-1",
+    category: "hurda",
+    width: 1600,
+    height: 1200,
+    title: { tr: "Çelik I ve H Profil", en: "Steel I & H Beams" },
+    description: {
+      tr: "Çeşitli kesitlerde I ve H profiller, boy boy yelpaze hâlinde dizilmiş.",
+      en: "I- and H-section beams of various sizes, fanned out by length.",
+    },
+  },
+  {
+    file: "kalin-cidarli-boru-1",
+    category: "boru-profil",
+    width: 1600,
+    height: 1200,
+    title: { tr: "Kalın Cidarlı Boru Parçası", en: "Heavy-Wall Pipe Sections" },
+    description: {
+      tr: "Boyalı, kalın cidarlı boru parçaları — hat sökümünden çıkma.",
+      en: "Painted heavy-wall pipe sections recovered from a pipeline teardown.",
+    },
+  },
+  {
+    file: "celik-halat-2",
+    category: "hurda",
+    width: 1200,
+    height: 1600,
+    title: { tr: "Çelik Halat Stoğu", en: "Wire Rope Stock" },
+    description: {
+      tr: "Farklı çaplarda çelik halat makaraları ve çözülmüş halat yığını.",
+      en: "Wire rope drums in assorted diameters, with loose rope alongside.",
     },
   },
 ];

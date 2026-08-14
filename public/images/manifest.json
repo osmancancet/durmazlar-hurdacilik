@@ -118,5 +118,120 @@
     "name": "konstruksiyon-profil-1",
     "width": 1600,
     "height": 1200
+  },
+  {
+    "name": "beyaz-tank-1",
+    "width": 1600,
+    "height": 1200
+  },
+  {
+    "name": "is-makinesi-kovasi-1",
+    "width": 1600,
+    "height": 1200
+  },
+  {
+    "name": "konveyor-tamburu-3",
+    "width": 1600,
+    "height": 1200
+  },
+  {
+    "name": "konveyor-tamburu-4",
+    "width": 1600,
+    "height": 1200
+  },
+  {
+    "name": "titresimli-elek-1",
+    "width": 1600,
+    "height": 1200
+  },
+  {
+    "name": "titresimli-elek-2",
+    "width": 1600,
+    "height": 1200
+  },
+  {
+    "name": "celik-halat-1",
+    "width": 1536,
+    "height": 2048
+  },
+  {
+    "name": "sondaj-borusu-2",
+    "width": 1600,
+    "height": 1200
+  },
+  {
+    "name": "ray-1",
+    "width": 1600,
+    "height": 1200
+  },
+  {
+    "name": "celik-sac-2",
+    "width": 1600,
+    "height": 1200
+  },
+  {
+    "name": "muhafaza-borusu-1",
+    "width": 1200,
+    "height": 1600
+  },
+  {
+    "name": "celik-mil-1",
+    "width": 1600,
+    "height": 1200
+  },
+  {
+    "name": "hidrolik-unite-1",
+    "width": 1600,
+    "height": 1200
+  },
+  {
+    "name": "sondaj-borusu-3",
+    "width": 1200,
+    "height": 1600
+  },
+  {
+    "name": "romork-sasi-1",
+    "width": 1600,
+    "height": 1200
+  },
+  {
+    "name": "celik-sac-3",
+    "width": 1600,
+    "height": 1200
+  },
+  {
+    "name": "kaynakli-kiris-1",
+    "width": 1200,
+    "height": 1600
+  },
+  {
+    "name": "buyuk-cap-boru-2",
+    "width": 1600,
+    "height": 1200
+  },
+  {
+    "name": "galvaniz-profil-1",
+    "width": 1600,
+    "height": 1200
+  },
+  {
+    "name": "kesilmis-boru-1",
+    "width": 1200,
+    "height": 1600
+  },
+  {
+    "name": "celik-profil-1",
+    "width": 1600,
+    "height": 1200
+  },
+  {
+    "name": "kalin-cidarli-boru-1",
+    "width": 1600,
+    "height": 1200
+  },
+  {
+    "name": "celik-halat-2",
+    "width": 1200,
+    "height": 1600
   }
 ]

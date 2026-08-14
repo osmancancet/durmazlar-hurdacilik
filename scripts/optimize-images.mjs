@@ -28,13 +28,13 @@ const THUMB_QUALITY = 68;
 /**
  * Hafif renk uyumlama.
  *
- * 24 fotoğraf farklı saatlerde telefonla çekildi; kimi öğle güneşinde sert
+ * Fotoğraflar farklı saatlerde telefonla çekildi; kimi öğle güneşinde sert
  * ve doygun, kimi gölgede soluk. Açık kâğıt zeminde bu fark yan yana
  * durunca göze çarpıyor. Amaç fotoğrafları "filtrelemek" değil, 24'ünü aynı
  * dosyanın parçası gibi göstermek: doygunluk bir tık aşağı, parlaklık çok
  * hafif yukarı.
  *
- * Ham .jpeg dosyalarına dokunulmaz — çıktı her zaman onlardan yeniden
+ * Ham dosyalara dokunulmaz — çıktı her zaman onlardan yeniden
  * üretilir. Geri almak için bu bayrağı false yapmak yeterli.
  */
 const GRADE = true;
@@ -51,32 +51,65 @@ function pipeline(input, width) {
   return image;
 }
 
-/** [ham dosya adı (uzantısız), hedef ad] */
+/**
+ * [ham dosya adı (uzantısıyla birlikte), hedef ad]
+ *
+ * Uzantı ve boşluklar dosya adında aynen yazılır — saha fotoğrafları hem
+ * "WhatsApp Image ....jpeg" hem "PHOTO-....jpg" biçiminde geliyor ve
+ * macOS kopyaları " 2", " 3" ekliyor. Tahmin etmek yerine tam adı tutmak
+ * tek doğru yol.
+ */
 const MAP = [
-  ["WhatsApp Image 2026-08-08 at 14.46.02", "tanker-govdesi-1"],
-  ["WhatsApp Image 2026-08-08 at 14.46.03", "buyuk-cap-boru-1"],
-  ["WhatsApp Image 2026-08-08 at 14.46.09", "celik-konstruksiyon-kasa-1"],
-  ["WhatsApp Image 2026-08-08 at 14.46.10", "elek-sac-kasa-1"],
-  ["WhatsApp Image 2026-08-08 at 14.46.19", "konveyor-sasi-1"],
-  ["WhatsApp Image 2026-08-08 at 14.46.20", "celik-kafes-kiris-1"],
-  ["WhatsApp Image 2026-08-08 at 14.46.21", "celik-kafes-kiris-2"],
-  ["WhatsApp Image 2026-08-08 at 14.46.22", "konveyor-tamburu-1"],
-  ["WhatsApp Image 2026-08-08 at 14.46.23", "kirici-merdane-1"],
-  ["WhatsApp Image 2026-08-08 at 14.46.24", "kirici-merdane-2"],
-  ["WhatsApp Image 2026-08-08 at 14.46.42", "konveyor-tamburu-2"],
-  ["WhatsApp Image 2026-08-08 at 14.46.48", "konveyor-sasi-2"],
-  ["WhatsApp Image 2026-08-08 at 14.46.50", "saha-genel-1"],
-  ["WhatsApp Image 2026-08-08 at 14.46.51", "maden-delici-1"],
-  ["WhatsApp Image 2026-08-08 at 14.46.52", "paslanmaz-tank-1"],
-  ["WhatsApp Image 2026-08-08 at 14.46.53", "helezon-konveyor-1"],
-  ["WhatsApp Image 2026-08-08 at 14.46.54", "sac-izgara-1"],
-  ["WhatsApp Image 2026-08-08 at 14.46.58", "platform-izgarasi-1"],
-  ["WhatsApp Image 2026-08-08 at 14.46.59", "sondaj-borusu-1"],
-  ["WhatsApp Image 2026-08-08 at 14.47.15", "celik-boru-1"],
-  ["WhatsApp Image 2026-08-08 at 14.47.16", "motor-reduktor-1"],
-  ["WhatsApp Image 2026-08-08 at 14.47.17", "celik-sac-1"],
-  ["WhatsApp Image 2026-08-08 at 14.47.18", "celik-boru-2"],
-  ["WhatsApp Image 2026-08-08 at 14.47.19", "konstruksiyon-profil-1"],
+  // — İlk parti (WhatsApp'tan gelen 24 kare) —
+  ["WhatsApp Image 2026-08-08 at 14.46.02.jpeg", "tanker-govdesi-1"],
+  ["WhatsApp Image 2026-08-08 at 14.46.03.jpeg", "buyuk-cap-boru-1"],
+  ["WhatsApp Image 2026-08-08 at 14.46.09.jpeg", "celik-konstruksiyon-kasa-1"],
+  ["WhatsApp Image 2026-08-08 at 14.46.10.jpeg", "elek-sac-kasa-1"],
+  ["WhatsApp Image 2026-08-08 at 14.46.19.jpeg", "konveyor-sasi-1"],
+  ["WhatsApp Image 2026-08-08 at 14.46.20.jpeg", "celik-kafes-kiris-1"],
+  ["WhatsApp Image 2026-08-08 at 14.46.21.jpeg", "celik-kafes-kiris-2"],
+  ["WhatsApp Image 2026-08-08 at 14.46.22.jpeg", "konveyor-tamburu-1"],
+  ["WhatsApp Image 2026-08-08 at 14.46.23.jpeg", "kirici-merdane-1"],
+  ["WhatsApp Image 2026-08-08 at 14.46.24.jpeg", "kirici-merdane-2"],
+  ["WhatsApp Image 2026-08-08 at 14.46.42.jpeg", "konveyor-tamburu-2"],
+  ["WhatsApp Image 2026-08-08 at 14.46.48.jpeg", "konveyor-sasi-2"],
+  ["WhatsApp Image 2026-08-08 at 14.46.50.jpeg", "saha-genel-1"],
+  ["WhatsApp Image 2026-08-08 at 14.46.51.jpeg", "maden-delici-1"],
+  ["WhatsApp Image 2026-08-08 at 14.46.52.jpeg", "paslanmaz-tank-1"],
+  ["WhatsApp Image 2026-08-08 at 14.46.53.jpeg", "helezon-konveyor-1"],
+  ["WhatsApp Image 2026-08-08 at 14.46.54.jpeg", "sac-izgara-1"],
+  ["WhatsApp Image 2026-08-08 at 14.46.58.jpeg", "platform-izgarasi-1"],
+  ["WhatsApp Image 2026-08-08 at 14.46.59.jpeg", "sondaj-borusu-1"],
+  ["WhatsApp Image 2026-08-08 at 14.47.15.jpeg", "celik-boru-1"],
+  ["WhatsApp Image 2026-08-08 at 14.47.16.jpeg", "motor-reduktor-1"],
+  ["WhatsApp Image 2026-08-08 at 14.47.17.jpeg", "celik-sac-1"],
+  ["WhatsApp Image 2026-08-08 at 14.47.18.jpeg", "celik-boru-2"],
+  ["WhatsApp Image 2026-08-08 at 14.47.19.jpeg", "konstruksiyon-profil-1"],
+
+  // — İkinci parti (PHOTO-* olarak eklenen 23 kare) —
+  ["PHOTO-2026-08-08-14-46-22.jpg", "beyaz-tank-1"],
+  ["PHOTO-2026-08-08-14-46-22 2.jpg", "is-makinesi-kovasi-1"],
+  ["PHOTO-2026-08-08-14-46-22 4.jpg", "konveyor-tamburu-3"],
+  ["PHOTO-2026-08-08-14-46-23.jpg", "konveyor-tamburu-4"],
+  ["PHOTO-2026-08-08-14-46-23 3.jpg", "titresimli-elek-1"],
+  ["PHOTO-2026-08-08-14-46-24 2.jpg", "titresimli-elek-2"],
+  ["PHOTO-2026-08-08-14-46-24 3.jpg", "celik-halat-1"],
+  ["PHOTO-2026-08-08-14-46-59.jpg", "sondaj-borusu-2"],
+  ["PHOTO-2026-08-08-14-47-15.jpg", "ray-1"],
+  ["PHOTO-2026-08-08-14-47-15 3.jpg", "celik-sac-2"],
+  ["PHOTO-2026-08-08-14-47-16.jpg", "muhafaza-borusu-1"],
+  ["PHOTO-2026-08-08-14-47-16 2.jpg", "celik-mil-1"],
+  ["PHOTO-2026-08-08-14-47-16 4.jpg", "hidrolik-unite-1"],
+  ["PHOTO-2026-08-08-14-47-16 5.jpg", "sondaj-borusu-3"],
+  ["PHOTO-2026-08-08-14-47-17.jpg", "romork-sasi-1"],
+  ["PHOTO-2026-08-08-14-47-17 2.jpg", "celik-sac-3"],
+  ["PHOTO-2026-08-08-14-47-17 4.jpg", "kaynakli-kiris-1"],
+  ["PHOTO-2026-08-08-14-47-17 5.jpg", "buyuk-cap-boru-2"],
+  ["PHOTO-2026-08-08-14-47-17 6.jpg", "galvaniz-profil-1"],
+  ["PHOTO-2026-08-08-14-47-18.jpg", "kesilmis-boru-1"],
+  ["PHOTO-2026-08-08-14-47-18 2.jpg", "celik-profil-1"],
+  ["PHOTO-2026-08-08-14-47-18 3.jpg", "kalin-cidarli-boru-1"],
+  ["PHOTO-2026-08-08-14-47-18 5.jpg", "celik-halat-2"],
 ];
 
 const kb = (bytes) => `${Math.round(bytes / 1024)} KB`;
@@ -97,13 +130,13 @@ await mkdir(THUMBS, { recursive: true });
 const manifest = [];
 let processed = 0;
 
-for (const [srcName, dstName] of MAP) {
-  const src = join(RAW, `${srcName}.jpeg`);
+for (const [srcFile, dstName] of MAP) {
+  const src = join(RAW, srcFile);
   let input;
   try {
     input = await readFile(src);
   } catch {
-    console.warn(`  atlandı (bulunamadı): ${srcName}.jpeg`);
+    console.warn(`  atlandı (bulunamadı): ${srcFile}`);
     continue;
   }
 
