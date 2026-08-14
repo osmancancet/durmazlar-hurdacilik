@@ -1,0 +1,122 @@
+[
+  {
+    "name": "tanker-govdesi-1",
+    "width": 1600,
+    "height": 1200
+  },
+  {
+    "name": "buyuk-cap-boru-1",
+    "width": 1600,
+    "height": 1200
+  },
+  {
+    "name": "celik-konstruksiyon-kasa-1",
+    "width": 1600,
+    "height": 1200
+  },
+  {
+    "name": "elek-sac-kasa-1",
+    "width": 1536,
+    "height": 2048
+  },
+  {
+    "name": "konveyor-sasi-1",
+    "width": 1536,
+    "height": 2048
+  },
+  {
+    "name": "celik-kafes-kiris-1",
+    "width": 1600,
+    "height": 1200
+  },
+  {
+    "name": "celik-kafes-kiris-2",
+    "width": 1536,
+    "height": 2048
+  },
+  {
+    "name": "konveyor-tamburu-1",
+    "width": 1600,
+    "height": 1200
+  },
+  {
+    "name": "kirici-merdane-1",
+    "width": 1600,
+    "height": 1200
+  },
+  {
+    "name": "kirici-merdane-2",
+    "width": 1536,
+    "height": 2048
+  },
+  {
+    "name": "konveyor-tamburu-2",
+    "width": 1600,
+    "height": 1200
+  },
+  {
+    "name": "konveyor-sasi-2",
+    "width": 1600,
+    "height": 1200
+  },
+  {
+    "name": "saha-genel-1",
+    "width": 1536,
+    "height": 2048
+  },
+  {
+    "name": "maden-delici-1",
+    "width": 1600,
+    "height": 1200
+  },
+  {
+    "name": "paslanmaz-tank-1",
+    "width": 1536,
+    "height": 2048
+  },
+  {
+    "name": "helezon-konveyor-1",
+    "width": 1536,
+    "height": 2048
+  },
+  {
+    "name": "sac-izgara-1",
+    "width": 1600,
+    "height": 1200
+  },
+  {
+    "name": "platform-izgarasi-1",
+    "width": 1600,
+    "height": 1200
+  },
+  {
+    "name": "sondaj-borusu-1",
+    "width": 1600,
+    "height": 1200
+  },
+  {
+    "name": "celik-boru-1",
+    "width": 1600,
+    "height": 1200
+  },
+  {
+    "name": "motor-reduktor-1",
+    "width": 1600,
+    "height": 1200
+  },
+  {
+    "name": "celik-sac-1",
+    "width": 1600,
+    "height": 1200
+  },
+  {
+    "name": "celik-boru-2",
+    "width": 1200,
+    "height": 1600
+  },
+  {
+    "name": "konstruksiyon-profil-1",
+    "width": 1600,
+    "height": 1200
+  }
+]

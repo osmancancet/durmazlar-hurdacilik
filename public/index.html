@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Durmazlar Hurdacılık</title>
+    <!--
+      Kök adres (/) için yönlendirme.
+
+      Statik export'ta next.config redirects çalışmadığından yönlendirme
+      HTML düzeyinde yapılır. Arama motoru bu sayfayı dizine almasın,
+      hedef sayfayı alsın diye canonical Türkçe sürümü gösterir.
+    -->
+    <meta http-equiv="refresh" content="0; url=/tr/" />
+    <link rel="canonical" href="/tr/" />
+    <meta name="robots" content="noindex, follow" />
+    <style>
+      body {
+        margin: 0;
+        display: grid;
+        min-height: 100vh;
+        place-items: center;
+        background: #0f1214;
+        color: #e8ecee;
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      }
+      a {
+        color: #f5b301;
+      }
+    </style>
+  </head>
+  <body>
+    <p>
+      Yönlendiriliyorsunuz… <a href="/tr/">Türkçe</a> ·
+      <a href="/en/">English</a>
+    </p>
+  </body>
+</html>

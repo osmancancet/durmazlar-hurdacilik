@@ -1,0 +1,164 @@
+@import "tailwindcss";
+
+/*
+ * ÇELİK BELGE — tasarım sistemi
+ *
+ * Tez: bu site sahanın dramatize edilmiş reklamı değil, belgelenmiş teknik
+ * dosyasıdır. Bu işin belgesi kantar fişidir — numaralı, tablo hâlinde,
+ * daktilo yazısıyla basılmış, tonajı kanıtlayan slip. Sahanın malzemesi ise
+ * çelik plaka, oksit pas ve galvaniz çinko. Bütün renk ve yazı kararları
+ * buradan çıkar.
+ *
+ * Renk rolleri:
+ *   paper/ink/steel/zinc -> kâğıt ve mürekkep; sayfanın tamamı bunlarla kurulur
+ *   oxide                -> YAPI rengi. Saç teli çizgiler, bölüm numaraları,
+ *                           mono etiketler. Asla büyük dolu buton olmaz.
+ *   whatsapp             -> AKSİYON rengi. Yalnızca WhatsApp butonları.
+ *
+ * Oksit ile yeşil karşıt renklerdir; aynı görsel rolde yarışsalar sayfa
+ * dağılırdı. Ayrı roller verilerek (yapı / aksiyon) hiç çakışmazlar.
+ */
+@theme {
+  --color-paper: #eff1f1;
+  --color-paper-raised: #f6f7f7;
+  --color-paper-deep: #e4e7e8;
+  --color-ink: #14181b;
+  --color-ink-soft: #2c343a;
+  --color-steel: #5b6770;
+  /* Kâğıt zeminde WCAG AA (4.54:1). Daha açık bir gri metin olarak kalamaz. */
+  --color-steel-light: #646f77;
+  --color-zinc: #c6ccd0;
+  --color-zinc-light: #dde1e3;
+  --color-oxide: #a8401f;
+  --color-oxide-deep: #7f2f16;
+
+  /*
+   * WhatsApp yeşili açık zemine göre koyultuldu: marka yeşili (#25D366)
+   * kâğıt üzerinde hem bağırıyor hem de üstündeki beyaz metinle AA'yı
+   * geçemiyordu. Bu ton 5.24:1 veriyor; parlak sürüm hover'da kullanılıyor.
+   */
+  --color-whatsapp: #0d733b;
+  --color-whatsapp-bright: #25d366;
+
+  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-source), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, "SF Mono", monospace;
+}
+
+/*
+ * Tek temaya bilinçli bağlılık: belge estetiği kâğıt üzerinde kurulur,
+ * koyu sürümü tezi zayıflatırdı. color-scheme, form denetimlerinin ve
+ * kaydırma çubuklarının açık temaya göre çizilmesini sağlar.
+ */
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/*
+ * Yardımcı sınıflar `components` katmanında tanımlanır.
+ *
+ * Bu ÖNEMLİ: katmansız yazılsalardı, aynı özgüllükteki Tailwind yardımcıları
+ * (text-paper gibi) katmanlı oldukları için kaybederdi ve `.display`in
+ * kendi rengi her yerde galip gelirdi — koyu zeminde başlık görünmez olurdu.
+ * Katman içinde tanımlayınca yardımcılar normal biçimde üzerine yazabiliyor.
+ */
+@layer components {
+  /* Rakamların hizalandığı her yer: künyeler, tablolar, telefon, tonaj. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Mono etiket — kantar fişi sesi. Bölüm başlıkları, künye alanları. */
+  .label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-steel);
+  }
+
+  /* Başlıklar: sıkı aralıklı grotesk. */
+  .display {
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.02;
+    text-wrap: balance;
+    color: var(--color-ink);
+  }
+
+  /*
+   * Plaka: fotoğrafın çerçevesi. Kart değil — teknik rapordaki resim
+   * plakası. Dolgu ve gölge yok; yalnızca çinko saç teli çizgi.
+   */
+  .plate {
+    border: 1px solid var(--color-zinc);
+    background-color: var(--color-paper-deep);
+  }
+
+  /* Gövde metni ~65 karakterde tutulur — uzun satır okumayı yorar. */
+  .measure {
+    max-width: 62ch;
+  }
+
+  .measure-tight {
+    max-width: 46ch;
+  }
+}
+
+/* Klavyeyle gezenler için her yerde görünür odak. */
+:focus-visible {
+  outline: 2px solid var(--color-oxide);
+  outline-offset: 3px;
+}
+
+/* Kaydırma ile beliren bölümler — IntersectionObserver "is-visible" ekler. */
+.reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* JavaScript kapalıysa hiçbir bölüm gizli kalmamalı. */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
