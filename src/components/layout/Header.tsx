@@ -58,7 +58,7 @@ export function Header({ locale }: { locale: Locale }) {
           </span>
           <a
             href={telHref()}
-            className="tabular font-mono text-xs font-medium tracking-wide text-ink transition-colors hover:text-oxide"
+            className="tap tabular font-mono text-xs font-medium tracking-wide text-ink transition-colors hover:text-oxide"
           >
             {SITE.phone.display}
           </a>
@@ -106,7 +106,7 @@ export function Header({ locale }: { locale: Locale }) {
               aria-label={UI.menu[locale]}
               aria-expanded={menuOpen}
               aria-controls="mobil-menu"
-              className="grid size-9 place-items-center border border-zinc text-ink transition-colors hover:border-ink lg:hidden"
+              className="tap grid size-9 place-items-center border border-zinc text-ink transition-colors hover:border-ink lg:hidden"
             >
               <MenuIcon className="size-5" />
             </button>
@@ -138,7 +138,7 @@ export function Header({ locale }: { locale: Locale }) {
             type="button"
             onClick={() => setMenuOpen(false)}
             aria-label={UI.close[locale]}
-            className="grid size-9 place-items-center border border-zinc text-ink"
+            className="tap grid size-9 place-items-center border border-zinc text-ink"
           >
             <CloseIcon className="size-5" />
           </button>
@@ -202,12 +202,16 @@ function LanguageSwitcher({ locale }: { locale: Locale }) {
         const active = candidate === locale;
         return (
           <span key={candidate} className="flex items-center gap-1.5">
-            {position > 0 && <span className="text-zinc">/</span>}
+            {position > 0 && (
+              <span aria-hidden className="text-steel-light">
+                /
+              </span>
+            )}
             <Link
               href={hrefFor(route.key, candidate)}
               hrefLang={candidate}
               aria-current={active ? "true" : undefined}
-              className={`uppercase transition-colors ${
+              className={`inline-flex min-h-6 min-w-6 items-center justify-center px-1 uppercase transition-colors ${
                 active ? "text-ink" : "text-steel-light hover:text-ink"
               }`}
             >

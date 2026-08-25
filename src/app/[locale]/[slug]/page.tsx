@@ -8,7 +8,7 @@ import { ServicesPage } from "@/components/pages/ServicesPage";
 import { SUB_ROUTES, routeBySlug } from "@/config/routes";
 import { FAQ } from "@/content/faq";
 import { LOCALES, isLocale, type Locale } from "@/lib/i18n";
-import { buildMetadata, faqJsonLd } from "@/lib/seo";
+import { breadcrumbJsonLd, buildMetadata, faqJsonLd } from "@/lib/seo";
 
 /**
  * Ana sayfa dışındaki beş sayfa.
@@ -61,6 +61,14 @@ export default async function Page({
   return (
     <>
       <Component locale={locale} />
+
+      {/* Kırıntı yolu — her alt sayfa kendi izini bildirir. */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbJsonLd(route.key, locale)),
+        }}
+      />
 
       {/* SSS yalnızca hakkımızda sayfasında; zengin sonuç için. */}
       {route.key === "about" && (

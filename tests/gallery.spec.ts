@@ -82,6 +82,59 @@ test.describe("lightbox", () => {
     await expect(dialog).toHaveCount(0);
   });
 
+  /*
+   * Lightbox bir `aria-modal` iletişim kutusu. Odak yönetimi olmadan klavye
+   * kullanıcısı, üstü tamamen örtülmüş sayfadaki görünmez bağlantılar
+   * arasında dolaşır — kutu açıkken Tab dışarı kaçmamalı, kapanınca odak
+   * fotoğrafı açan plakaya dönmeli.
+   */
+  test("odağı içeride tutar ve kapanınca geri verir", async ({ page }) => {
+    await page.goto(GALLERY_PATH);
+
+    const opener = page.locator("main figure button").first();
+    await opener.click();
+
+    const dialog = page.getByRole("dialog");
+    await expect(dialog).toBeVisible();
+
+    // Açılışta odak kutunun içindedir.
+    await expect
+      .poll(() =>
+        dialog.evaluate((node) => node.contains(document.activeElement)),
+      )
+      .toBe(true);
+
+    // Kutudaki her öğeyi dolaşmak odağı dışarı taşımaz.
+    for (let press = 0; press < 8; press += 1) {
+      await page.keyboard.press("Tab");
+      expect(
+        await dialog.evaluate((node) => node.contains(document.activeElement)),
+      ).toBe(true);
+    }
+
+    await page.keyboard.press("Escape");
+    await expect(dialog).toHaveCount(0);
+
+    // Kapanışta odak, fotoğrafı açan plakaya döner.
+    await expect(opener).toBeFocused();
+  });
+
+  test("ok tuşuyla gezinmek odağı ızgaraya geri fırlatmaz", async ({
+    page,
+  }) => {
+    await page.goto(GALLERY_PATH);
+
+    await page.locator("main figure button").first().click();
+    const dialog = page.getByRole("dialog");
+
+    await page.keyboard.press("ArrowRight");
+    await expect(dialog).toHaveAttribute("aria-label", GALLERY[1].title.tr);
+
+    expect(
+      await dialog.evaluate((node) => node.contains(document.activeElement)),
+    ).toBe(true);
+  });
+
   test("açıkken kendi WhatsApp bağlantısını taşır", async ({ page }) => {
     await page.goto(GALLERY_PATH);
 

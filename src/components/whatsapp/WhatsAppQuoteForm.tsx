@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { WhatsAppIcon } from "@/components/ui/Icons";
 import { CONTACT } from "@/content/ui";
 import { QUOTE_MATERIAL_OPTIONS } from "@/content/materials";
@@ -39,10 +39,41 @@ export function WhatsAppQuoteForm({ locale }: { locale: Locale }) {
 
   const [errors, setErrors] = useState<{ name?: string; phone?: string }>({});
 
+  /*
+   * Gönderim başarısız olursa odak, formun başındaki özete taşınır. Yalnızca
+   * alan altına hata yazmak yetmiyor: uzun formda ekran okuyucu kullanan
+   * kişi neyin eksik olduğunu göremiyor, mobilde ise hata ekranın dışında
+   * kalabiliyor. Özet, her hatayı kendi alanına bağlar.
+   */
+  const summaryRef = useRef<HTMLDivElement | null>(null);
+
   const setField = <K extends keyof QuoteFormValues>(
     key: K,
     value: QuoteFormValues[K],
-  ) => setValues((previous) => ({ ...previous, [key]: value }));
+  ) => {
+    setValues((previous) => ({ ...previous, [key]: value }));
+    /* Kişi hatayı düzeltirken uyarı hemen kalkar; yeniden göndermesi
+       gerekmez. */
+    setErrors((previous) =>
+      previous[key as "name" | "phone"]
+        ? { ...previous, [key]: undefined }
+        : previous,
+    );
+  };
+
+  /** Tek alanın kuralı — hem alandan çıkışta hem gönderimde kullanılır. */
+  const validateField = (key: "name" | "phone", value: string) => {
+    if (key === "name") return value.trim() ? undefined : CONTACT.errors.name[locale];
+    return PHONE_PATTERN.test(value.trim())
+      ? undefined
+      : CONTACT.errors.phone[locale];
+  };
+
+  /* Alandan çıkışta doğrulama: kişi hatayı gönderim anını beklemeden görür. */
+  const handleBlur = (key: "name" | "phone") => {
+    const message = validateField(key, values[key]);
+    setErrors((previous) => ({ ...previous, [key]: message }));
+  };
 
   const toggleMaterial = (label: string) =>
     setValues((previous) => ({
@@ -55,13 +86,18 @@ export function WhatsAppQuoteForm({ locale }: { locale: Locale }) {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
-    const nextErrors: typeof errors = {};
-    if (!values.name.trim()) nextErrors.name = CONTACT.errors.name[locale];
-    if (!PHONE_PATTERN.test(values.phone.trim()))
-      nextErrors.phone = CONTACT.errors.phone[locale];
+    const nextErrors: typeof errors = {
+      name: validateField("name", values.name),
+      phone: validateField("phone", values.phone),
+    };
 
     setErrors(nextErrors);
-    if (Object.keys(nextErrors).length > 0) return;
+
+    if (nextErrors.name || nextErrors.phone) {
+      /* Özet DOM'a bu render'da giriyor; odak bir sonraki kareye bırakılır. */
+      requestAnimationFrame(() => summaryRef.current?.focus());
+      return;
+    }
 
     window.open(
       waHref(quoteMessage(locale, values)),
@@ -72,6 +108,39 @@ export function WhatsAppQuoteForm({ locale }: { locale: Locale }) {
 
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-9">
+      {(errors.name || errors.phone) && (
+        <div
+          ref={summaryRef}
+          role="alert"
+          tabIndex={-1}
+          className="border-l-2 border-oxide bg-paper-deep px-5 py-4 focus:outline-none"
+        >
+          <p className="label text-oxide">{CONTACT.errors.summary[locale]}</p>
+          <ul className="mt-2 space-y-1">
+            {errors.name && (
+              <li>
+                <a
+                  href="#quote-name"
+                  className="text-sm font-semibold text-oxide underline underline-offset-4"
+                >
+                  {errors.name}
+                </a>
+              </li>
+            )}
+            {errors.phone && (
+              <li>
+                <a
+                  href="#quote-phone"
+                  className="text-sm font-semibold text-oxide underline underline-offset-4"
+                >
+                  {errors.phone}
+                </a>
+              </li>
+            )}
+          </ul>
+        </div>
+      )}
+
       <div className="grid gap-x-10 gap-y-7 sm:grid-cols-2">
         <div>
           <label htmlFor="quote-name" className="label">
@@ -83,6 +152,7 @@ export function WhatsAppQuoteForm({ locale }: { locale: Locale }) {
             autoComplete="name"
             value={values.name}
             onChange={(event) => setField("name", event.target.value)}
+            onBlur={() => handleBlur("name")}
             aria-invalid={Boolean(errors.name)}
             aria-describedby={errors.name ? "quote-name-error" : undefined}
             className={`${FIELD} mt-1`}
@@ -106,6 +176,7 @@ export function WhatsAppQuoteForm({ locale }: { locale: Locale }) {
             placeholder="05XX XXX XX XX"
             value={values.phone}
             onChange={(event) => setField("phone", event.target.value)}
+            onBlur={() => handleBlur("phone")}
             aria-invalid={Boolean(errors.phone)}
             aria-describedby={errors.phone ? "quote-phone-error" : undefined}
             className={`${FIELD} tabular mt-1 font-mono`}

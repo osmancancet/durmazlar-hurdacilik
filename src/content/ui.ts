@@ -303,6 +303,11 @@ export const CONTACT = {
       tr: "Geçerli bir telefon numarası yazın.",
       en: "Please enter a valid phone number.",
     },
+    /** Eksik alan varsa formun başında beliren özet başlığı. */
+    summary: {
+      tr: "Formda eksik var",
+      en: "There is a problem with the form",
+    },
   },
   photoHint: {
     title: { tr: "Fotoğraf göndermek en hızlısı", en: "Photos are the fastest route" },

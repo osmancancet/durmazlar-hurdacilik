@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowRightIcon, CloseIcon, WhatsAppIcon } from "@/components/ui/Icons";
 import {
   GALLERY_CATEGORIES,
@@ -39,12 +39,28 @@ export function GalleryGrid({
   const [category, setCategory] = useState<GalleryCategory | "tumu">("tumu");
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
+  /*
+   * Lightbox bir iletişim kutusudur (`aria-modal`), dolayısıyla odak onun
+   * içinde kalmalı: açılınca odak kutuya girer, Tab kutunun dışına çıkmaz,
+   * kapanınca odak fotoğrafı açan plakaya geri döner. Bunlar olmadan klavye
+   * kullanıcısı, üstü örtülmüş sayfada görünmeyen bağlantılar arasında
+   * dolaşırdı.
+   */
+  const dialogRef = useRef<HTMLDivElement | null>(null);
+  const openerRef = useRef<HTMLElement | null>(null);
+
   const visible =
     category === "tumu"
       ? items
       : items.filter((item) => item.category === category);
 
   const close = useCallback(() => setOpenIndex(null), []);
+
+  /** Plakayı açan düğme hatırlanır ki kapanışta odak oraya dönsün. */
+  const open = useCallback((index: number, event: React.MouseEvent) => {
+    openerRef.current = event.currentTarget as HTMLElement;
+    setOpenIndex(index);
+  }, []);
 
   const step = useCallback(
     (direction: 1 | -1) =>
@@ -56,23 +72,87 @@ export function GalleryGrid({
     [visible.length],
   );
 
+  const isOpen = openIndex !== null;
+
+  /*
+   * Açılış/kapanış: gövde kaydırması, kutuya odaklanma ve kapanışta odağı
+   * geri verme. Yalnızca `isOpen` değişince çalışır — ok tuşuyla fotoğraf
+   * değiştirmek bu etkiyi yeniden kurmaz, yoksa her adımda odak ızgaraya
+   * geri fırlardı.
+   */
   useEffect(() => {
-    if (openIndex === null) return;
+    if (!isOpen) return;
 
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") close();
-      if (event.key === "ArrowRight") step(1);
-      if (event.key === "ArrowLeft") step(-1);
-    };
-
-    document.addEventListener("keydown", onKey);
+    const previouslyFocused = openerRef.current;
+    dialogRef.current?.focus();
     document.body.style.overflow = "hidden";
 
     return () => {
-      document.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
+      previouslyFocused?.focus();
     };
-  }, [openIndex, close, step]);
+  }, [isOpen]);
+
+  /* Klavye: Esc kapatır, oklar gezinir, Tab kutunun içinde döner. */
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        close();
+        return;
+      }
+      if (event.key === "ArrowRight") {
+        step(1);
+        return;
+      }
+      if (event.key === "ArrowLeft") {
+        step(-1);
+        return;
+      }
+      if (event.key !== "Tab") return;
+
+      const dialog = dialogRef.current;
+      if (!dialog) return;
+
+      /*
+       * Tab tarayıcıya bırakılmaz, tamamen burada yürütülür.
+       *
+       * Yalnızca uçlarda araya girmek yetmiyor: mobil görünümde Chromium'un
+       * varsayılan sıralaması kutu içindeki düğmeleri atlayıp odağı <body>'ye
+       * düşürüyor. Sıradaki öğe elle seçilince davranış her yerde aynı olur.
+       */
+      const focusable = Array.from(
+        dialog.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((element) => element.getClientRects().length > 0);
+
+      event.preventDefault();
+
+      if (focusable.length === 0) {
+        dialog.focus();
+        return;
+      }
+
+      const current = focusable.indexOf(document.activeElement as HTMLElement);
+      const last = focusable.length - 1;
+
+      /* Odak kutunun kendisindeyse (current === -1) uçtan başlanır. */
+      const next = event.shiftKey
+        ? current <= 0
+          ? last
+          : current - 1
+        : current === -1 || current === last
+          ? 0
+          : current + 1;
+
+      focusable[next].focus();
+    };
+
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [isOpen, close, step]);
 
   const active = openIndex === null ? null : visible[openIndex];
 
@@ -94,7 +174,7 @@ export function GalleryGrid({
                   setOpenIndex(null);
                 }}
                 aria-pressed={selected}
-                className={`font-mono text-xs font-medium tracking-[0.1em] uppercase transition-colors ${
+                className={`inline-flex min-h-6 items-center py-1.5 font-mono text-xs font-medium tracking-[0.1em] uppercase transition-colors ${
                   selected
                     ? "text-oxide underline underline-offset-[6px]"
                     : "text-steel hover:text-ink"
@@ -125,7 +205,7 @@ export function GalleryGrid({
               <figure>
                 <button
                   type="button"
-                  onClick={() => setOpenIndex(index)}
+                  onClick={(event) => open(index, event)}
                   className={`plate group relative block w-full overflow-hidden ${
                     wide ? "aspect-3/2" : "aspect-3/2 lg:aspect-4/3"
                   }`}
@@ -169,7 +249,7 @@ export function GalleryGrid({
                       )}
                       {...EXTERNAL_LINK_PROPS}
                       aria-label={`${item.title[locale]} — ${UI.askAbout[locale]}`}
-                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-whatsapp underline-offset-4 hover:underline"
+                      className="inline-flex min-h-6 items-center gap-1.5 py-1 text-sm font-semibold text-whatsapp underline-offset-4 hover:underline"
                     >
                       <WhatsAppIcon className="size-[0.9rem]" />
                       {UI.askAbout[locale]}
@@ -184,10 +264,12 @@ export function GalleryGrid({
 
       {active && (
         <div
+          ref={dialogRef}
           role="dialog"
           aria-modal="true"
+          tabIndex={-1}
           aria-label={active.title[locale]}
-          className="fixed inset-0 z-60 flex flex-col bg-paper"
+          className="fixed inset-0 z-60 flex flex-col bg-paper focus:outline-none"
           onClick={close}
         >
           <div className="flex items-center justify-between gap-4 border-b border-zinc px-5 py-3 md:px-8">
@@ -199,7 +281,7 @@ export function GalleryGrid({
               type="button"
               onClick={close}
               aria-label={UI.close[locale]}
-              className="grid size-9 place-items-center border border-zinc text-ink transition-colors hover:border-ink"
+              className="tap grid size-9 place-items-center border border-zinc text-ink transition-colors hover:border-ink"
             >
               <CloseIcon className="size-5" />
             </button>

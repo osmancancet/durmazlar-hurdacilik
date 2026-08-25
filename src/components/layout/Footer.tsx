@@ -17,7 +17,12 @@ import { EXTERNAL_LINK_PROPS, telHref } from "@/lib/whatsapp";
  * olarak durur, süs olarak değil.
  */
 export function Footer({ locale }: { locale: Locale }) {
-  const year = 2026;
+  /*
+   * Site statik olarak dışa aktarıldığı için bu değer derleme anında
+   * sabitlenir — ama elle yazılmış bir yıl gibi eskimez: her yayında
+   * kendini günceller.
+   */
+  const year = new Date().getFullYear();
 
   return (
     <footer className="border-t border-zinc bg-paper-raised">
@@ -63,7 +68,7 @@ export function Footer({ locale }: { locale: Locale }) {
               <dd className="mt-2">
                 <a
                   href={telHref()}
-                  className="tabular font-mono text-sm font-medium text-ink transition-colors hover:text-oxide"
+                  className="tap tabular font-mono text-sm font-medium text-ink transition-colors hover:text-oxide"
                 >
                   {SITE.phone.display}
                 </a>
@@ -96,7 +101,7 @@ export function Footer({ locale }: { locale: Locale }) {
                 <li key={route.key}>
                   <Link
                     href={hrefFor(route.key, locale)}
-                    className="text-sm text-steel transition-colors hover:text-oxide"
+                    className="inline-flex min-h-6 items-center py-1 text-sm text-steel transition-colors hover:text-oxide"
                   >
                     {route.label[locale]}
                   </Link>
@@ -114,7 +119,7 @@ export function Footer({ locale }: { locale: Locale }) {
                 <li key={service.id}>
                   <a
                     href={`${hrefFor("services", locale)}#${service.id}`}
-                    className="text-sm text-steel transition-colors hover:text-oxide"
+                    className="inline-flex min-h-6 items-center py-1 text-sm text-steel transition-colors hover:text-oxide"
                   >
                     {service.title[locale]}
                   </a>

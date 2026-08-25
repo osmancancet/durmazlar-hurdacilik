@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test";
 import { hrefFor } from "@/config/routes";
 import { SITE } from "@/config/site";
 import { FAQ } from "@/content/faq";
+import { SERVICES } from "@/content/services";
 import { ALL_PAGES } from "./helpers";
 
 /**
@@ -58,8 +59,20 @@ test("işletme verisi (LocalBusiness) doğru ve eksiksiz", async ({ page }) => {
     return Array.isArray(data) ? data : [data];
   });
 
-  const business = parsed.find((entry) => entry["@type"] === "LocalBusiness");
+  /*
+   * `@type` tek bir dize ya da dizi olabilir; işletme hem LocalBusiness hem
+   * RecyclingCenter olarak bildiriliyor. Test iki biçimi de kabul eder.
+   */
+  const typesOf = (entry: { "@type"?: string | string[] }) =>
+    Array.isArray(entry["@type"]) ? entry["@type"] : [entry["@type"]];
+
+  const business = parsed.find((entry) =>
+    typesOf(entry).includes("LocalBusiness"),
+  );
   expect(business, "LocalBusiness verisi yok").toBeTruthy();
+
+  // Sektör tipi de bildirilmeli — hurdacı aramalarında ayırt edici.
+  expect(typesOf(business)).toContain("RecyclingCenter");
 
   expect(business.name).toBe(SITE.name);
   expect(business.telephone).toBe(SITE.phone.e164);
@@ -68,6 +81,27 @@ test("işletme verisi (LocalBusiness) doğru ve eksiksiz", async ({ page }) => {
   expect(business.address.postalCode).toBe(SITE.address.postalCode);
   expect(business.openingHoursSpecification.length).toBeGreaterThan(0);
   expect(business.areaServed.length).toBe(SITE.serviceAreas.length);
+
+  // Hizmet kataloğu, hizmet sayfasındaki dört başlığı taşır.
+  expect(business.hasOfferCatalog.itemListElement.length).toBe(SERVICES.length);
+});
+
+test("alt sayfalar kırıntı yolu verisi taşır", async ({ page }) => {
+  await page.goto(hrefFor("services", "tr"));
+
+  const blocks = await page
+    .locator('script[type="application/ld+json"]')
+    .allTextContents();
+
+  const parsed = blocks.flatMap((block) => {
+    const data = JSON.parse(block);
+    return Array.isArray(data) ? data : [data];
+  });
+
+  const crumbs = parsed.find((entry) => entry["@type"] === "BreadcrumbList");
+  expect(crumbs, "BreadcrumbList verisi yok").toBeTruthy();
+  expect(crumbs.itemListElement.length).toBe(2);
+  expect(crumbs.itemListElement[1].name).toBe("Hizmetler");
 });
 
 test("hakkımızda sayfası SSS verisi taşır", async ({ page }) => {

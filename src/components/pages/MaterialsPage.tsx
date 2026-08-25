@@ -103,7 +103,7 @@ export function MaterialsPage({ locale }: { locale: Locale }) {
                       href={waHref(materialMessage(locale, item.name[locale]))}
                       {...EXTERNAL_LINK_PROPS}
                       aria-label={`${item.name[locale]} — ${UI.askPrice[locale]}`}
-                      className="row-span-2 inline-flex items-center gap-1.5 self-center text-sm font-semibold whitespace-nowrap text-whatsapp underline-offset-4 hover:underline"
+                      className="row-span-2 inline-flex min-h-6 items-center gap-1.5 self-center py-1 text-sm font-semibold whitespace-nowrap text-whatsapp underline-offset-4 hover:underline"
                     >
                       <WhatsAppIcon className="size-[0.9rem]" />
                       {UI.askPrice[locale]}

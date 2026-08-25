@@ -105,3 +105,71 @@ test("seçilmeyen alanlar mesaja hiç girmez", async ({ page, context }) => {
   expect(message).not.toContain(CONTACT.fields.location.tr);
   expect(message).not.toContain(CONTACT.fields.note.tr);
 });
+
+/*
+ * Hata geri bildirimi.
+ *
+ * Alan altına yazılan uyarı tek başına yetmiyor: uzun formda ekran okuyucu
+ * kullanan kişi neyin eksik olduğunu göremiyor, mobilde uyarı ekranın
+ * dışında kalabiliyor. Formun başındaki özet her hatayı kendi alanına
+ * bağlar ve gönderim başarısız olunca odağı üzerine alır.
+ */
+test("eksik gönderimde hata özeti belirir ve odağı alır", async ({ page }) => {
+  await page.goto(CONTACT_PATH);
+
+  await page.getByRole("button", { name: CONTACT.submit.tr }).click();
+
+  // Next.js kendi yönlendirme duyurucusunu da role="alert" ile ekler;
+  // özet, formun içindekiyle seçilir.
+  const summary = page.locator('form [role="alert"]');
+  await expect(summary).toBeVisible();
+  await expect(summary).toContainText(CONTACT.errors.summary.tr);
+  await expect(summary).toBeFocused();
+
+  // Her hata, kendi alanına giden bir bağlantı taşır.
+  await expect(
+    summary.getByRole("link", { name: CONTACT.errors.name.tr }),
+  ).toHaveAttribute("href", "#quote-name");
+  await expect(
+    summary.getByRole("link", { name: CONTACT.errors.phone.tr }),
+  ).toHaveAttribute("href", "#quote-phone");
+});
+
+test("alandan çıkınca doğrulanır, düzeltilince uyarı kalkar", async ({
+  page,
+}) => {
+  await page.goto(CONTACT_PATH);
+
+  // Geçersiz numara yazıp alandan çıkmak, gönderimi beklemeden uyarır.
+  await page.fill("#quote-phone", "123");
+  await page.locator("#quote-phone").blur();
+
+  const error = page.locator("#quote-phone-error");
+  await expect(error).toHaveText(CONTACT.errors.phone.tr);
+  await expect(page.locator("#quote-phone")).toHaveAttribute(
+    "aria-invalid",
+    "true",
+  );
+
+  // Düzeltmeye başlayınca uyarı hemen kalkar.
+  await page.fill("#quote-phone", "05321112233");
+  await expect(error).toHaveCount(0);
+});
+
+test("hata düzeltildikten sonra form gönderilir", async ({ page, context }) => {
+  await stubWhatsApp(page);
+  await page.goto(CONTACT_PATH);
+
+  await page.getByRole("button", { name: CONTACT.submit.tr }).click();
+  await expect(page.locator('form [role="alert"]')).toBeVisible();
+
+  await page.fill("#quote-name", "Ayşe Demir");
+  await page.fill("#quote-phone", "05321112233");
+  await expect(page.locator('form [role="alert"]')).toHaveCount(0);
+
+  const popupPromise = context.waitForEvent("page");
+  await page.getByRole("button", { name: CONTACT.submit.tr }).click();
+  const popup = await popupPromise;
+
+  expect(waText(popup.url())).toContain("Ayşe Demir");
+});

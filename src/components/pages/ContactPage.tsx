@@ -87,7 +87,7 @@ export function ContactPage({ locale }: { locale: Locale }) {
                   <a
                     href={MAPS_LINK_URL}
                     {...EXTERNAL_LINK_PROPS}
-                    className="mt-2 inline-block text-sm font-semibold text-oxide underline-offset-4 hover:underline"
+                    className="mt-2 inline-flex min-h-6 items-center py-1 text-sm font-semibold text-oxide underline-offset-4 hover:underline"
                   >
                     {UI.openInMaps[locale]} →
                   </a>
@@ -99,7 +99,7 @@ export function ContactPage({ locale }: { locale: Locale }) {
                 <dd className="mt-2">
                   <a
                     href={telHref()}
-                    className="tabular font-mono font-medium text-ink transition-colors hover:text-oxide"
+                    className="tap tabular inline-flex font-mono font-medium text-ink transition-colors hover:text-oxide"
                   >
                     {SITE.phone.display}
                   </a>

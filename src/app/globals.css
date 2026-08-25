@@ -111,6 +111,33 @@ body {
     background-color: var(--color-paper-deep);
   }
 
+  /*
+   * Dokunma hedefi genişletici.
+   *
+   * WCAG 2.2 "Hedef Boyutu (En Az)" her denetim için 24×24 CSS piksel ister;
+   * iOS ise 44pt önerir. Bu sayfanın belge dili küçük mono etiketlere
+   * dayanıyor — onları görsel olarak büyütmek hizayı bozardı. Bunun yerine
+   * görünmez bir ::after ile yalnızca *tıklama alanı* 44px'e çıkarılır.
+   *
+   * Yalnızca komşusuyla çakışmayacak, tek başına duran denetimlerde
+   * kullanılır (kayan menü düğmesi, künye telefonu). Yan yana duran küçük
+   * bağlantılarda gerçek dolgu verilir; çakışan hedefler küçük hedeften
+   * daha kötüdür.
+   */
+  .tap {
+    position: relative;
+  }
+
+  .tap::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 2.75rem);
+    height: max(100%, 2.75rem);
+    translate: -50% -50%;
+  }
+
   /* Gövde metni ~65 karakterde tutulur — uzun satır okumayı yorar. */
   .measure {
     max-width: 62ch;

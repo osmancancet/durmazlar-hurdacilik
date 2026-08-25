@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { ROUTES, hrefFor, type RouteKey } from "@/config/routes";
+import { ROUTES, hrefFor, routeByKey, type RouteKey } from "@/config/routes";
+import { SERVICES } from "@/content/services";
 import { SITE } from "@/config/site";
 import { LOCALES, HTML_LANG, type Locale, type Localized } from "@/lib/i18n";
 
@@ -131,7 +132,13 @@ export function buildMetadata(key: RouteKey, locale: Locale): Metadata {
 export function localBusinessJsonLd(locale: Locale) {
   return {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
+    /*
+     * İki tip birden: Google için genel `LocalBusiness`, sektör için
+     * `RecyclingCenter`. İkincisi schema.org'da LocalBusiness'ın alt tipidir
+     * ve "hurdacı / geri dönüşüm" aramalarında işletmenin ne yaptığını
+     * arama motoruna tahmin ettirmek yerine doğrudan söyler.
+     */
+    "@type": ["LocalBusiness", "RecyclingCenter"],
     "@id": `${SITE.url}/#business`,
     name: SITE.name,
     description: META.home.description[locale],
@@ -158,6 +165,52 @@ export function localBusinessJsonLd(locale: Locale) {
       closes: entry.closes,
     })),
     knowsLanguage: ["tr", "en"],
+    /*
+     * Hizmet kataloğu — arama motoru "ne yapıyorlar" sorusunu sayfa metnini
+     * ayrıştırarak değil, listeyi okuyarak yanıtlar.
+     */
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: locale === "tr" ? "Hizmetler" : "Services",
+      itemListElement: SERVICES.map((service) => ({
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: service.title[locale],
+          description: service.summary[locale],
+          areaServed: SITE.serviceAreas,
+        },
+        url: `${SITE.url}${hrefFor("services", locale)}#${service.id}`,
+      })),
+    },
+  };
+}
+
+/**
+ * Kırıntı yolu — arama sonucunda adres satırı yerine
+ * "Durmazlar Hurdacılık › Hizmetler" biçiminde bir iz gösterir.
+ * Ana sayfada anlamı yok; yalnızca alt sayfalarda üretilir.
+ */
+export function breadcrumbJsonLd(key: RouteKey, locale: Locale) {
+  const route = routeByKey(key);
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: SITE.name,
+        item: `${SITE.url}${hrefFor("home", locale)}`,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: route.label[locale],
+        item: `${SITE.url}${hrefFor(key, locale)}`,
+      },
+    ],
   };
 }
 
