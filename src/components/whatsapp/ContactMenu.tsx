@@ -41,6 +41,15 @@ export function ContactMenu({
   mode?: "whatsapp" | "tel";
   locale: Locale;
   children: ReactNode;
+  /**
+   * Ek sınıflar.
+   *
+   * DİKKAT: buraya konum sınıfı (`fixed`, `absolute`, `sticky`) VERİLMEZ.
+   * Bileşenin kökü açılır listeyi hizalayabilmek için `relative` taşıyor;
+   * ikisi aynı elemanda çakışınca hangisinin kazandığı sınıf sırasına değil
+   * üretilen CSS'in sırasına bağlı kalır. Konumlandırma gerekiyorsa bu
+   * bileşeni konumlandırılmış bir kabın içine koyun.
+   */
   className?: string;
   align?: "start" | "end";
   up?: boolean;

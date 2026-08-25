@@ -28,25 +28,37 @@ export function FloatingWhatsApp({ locale }: { locale: Locale }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  /*
+   * Konumlandırma ContactMenu'ye DEĞİL, onu saran kaba verilir.
+   *
+   * ContactMenu kendi kökünde `relative` taşıyor — açılır listeyi kendine
+   * göre konumlandırabilmesi için gerekli. Buraya `fixed` sınıfı da
+   * geçirilince ikisi aynı elemanda çakışıyor ve `relative` kazanıyordu:
+   * buton sabitlenmek yerine sayfa akışında kalıyor, `end-6` de onu ekranın
+   * soluna (x = -24px) itiyordu. Kap ayrı olunca her sınıf kendi işini yapar.
+   */
   return (
-    <ContactMenu
-      message={generalMessage(locale)}
-      locale={locale}
-      align="end"
-      up
+    <div
       className={`fixed end-6 bottom-6 z-40 hidden transition-all duration-300 md:block ${
         visible
           ? "translate-y-0 opacity-100"
           : "pointer-events-none translate-y-3 opacity-0"
       }`}
     >
-      <span
-        aria-label={UI.whatsappWrite[locale]}
-        className="inline-flex cursor-pointer items-center gap-2.5 bg-whatsapp px-5 py-3.5 text-sm font-semibold text-paper shadow-[0_2px_16px_rgba(15,18,53,0.18)] transition-colors hover:bg-whatsapp-bright hover:text-ink"
+      <ContactMenu
+        message={generalMessage(locale)}
+        locale={locale}
+        align="end"
+        up
       >
-        <WhatsAppIcon className="size-4 shrink-0" />
-        {UI.whatsappWrite[locale]}
-      </span>
-    </ContactMenu>
+        <span
+          aria-label={UI.whatsappWrite[locale]}
+          className="inline-flex cursor-pointer items-center gap-2.5 bg-whatsapp px-5 py-3.5 text-sm font-semibold text-paper shadow-[0_2px_16px_rgba(15,18,53,0.18)] transition-colors hover:bg-whatsapp-bright hover:text-ink"
+        >
+          <WhatsAppIcon className="size-4 shrink-0" />
+          {UI.whatsappWrite[locale]}
+        </span>
+      </ContactMenu>
+    </div>
   );
 }

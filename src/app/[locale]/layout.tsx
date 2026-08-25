@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { IBM_Plex_Mono, Poppins, Rubik, Source_Sans_3 } from "next/font/google";
 import { notFound } from "next/navigation";
 import { Footer } from "@/components/layout/Footer";
@@ -155,21 +154,19 @@ export default async function LocaleLayout({
         />
 
         {/*
-          Vercel ölçümleme.
+          Vercel Web Analytics — hangi sayfanın ne kadar görüldüğü.
 
-          `Analytics` ziyaret sayısını, `SpeedInsights` gerçek kullanıcıların
-          yaşadığı yükleme hızını (Core Web Vitals) toplar. İkisi de çerez
-          kullanmıyor, parmak izi çıkarmıyor ve ziyaretçiyi sayfalar arasında
-          takip etmiyor — bu yüzden bir çerez onayı bandına gerek kalmıyor.
-          Sayfanın ölçtüğümüz asıl işi (WhatsApp'a giden tıklama) zaten
-          harici bir bağlantı; burada toplanan şey yalnızca hangi sayfanın ne
-          kadar görüldüğü ve ne kadar hızlı açıldığı.
+          Çerez kullanmıyor, parmak izi çıkarmıyor ve ziyaretçiyi sayfalar
+          arasında takip etmiyor; bu yüzden çerez onayı bandına gerek yok.
+          Betik `/_vercel/insights/` altından, sitenin kendi alan adından
+          yükleniyor — üçüncü taraf bir alan adına istek çıkmıyor.
 
-          Betikler `/_vercel/...` altından, sitenin kendi alan adından
-          yükleniyor; üçüncü taraf bir alan adına istek çıkmıyor.
+          Speed Insights (Core Web Vitals) bilinçli olarak EKLENMEDİ: Vercel'de
+          ücretli bir özellik. Eklenip açılmasaydı her ziyaretçide karşılıksız
+          bir istek yapardı. İleride açılmak istenirse @vercel/speed-insights
+          kurulup buraya <SpeedInsights /> eklemek yeterli.
         */}
         <Analytics />
-        <SpeedInsights />
       </body>
     </html>
   );
