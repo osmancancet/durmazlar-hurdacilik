@@ -33,13 +33,13 @@ export function MaterialsPage({ locale }: { locale: Locale }) {
         aside={
           <dl className="lg:w-40">
             <dt className="label">{locale === "tr" ? "Kalem" : "Items"}</dt>
-            <dd className="tabular mt-2 font-display text-3xl font-extrabold text-ink">
+            <dd className="tabular mt-2 font-display text-3xl font-bold text-ink">
               {totalItems}
             </dd>
             <dt className="label mt-6">
               {locale === "tr" ? "Grup" : "Groups"}
             </dt>
-            <dd className="tabular mt-2 font-display text-3xl font-extrabold text-ink">
+            <dd className="tabular mt-2 font-display text-3xl font-bold text-ink">
               {MATERIAL_GROUPS.length}
             </dd>
           </dl>
@@ -48,7 +48,12 @@ export function MaterialsPage({ locale }: { locale: Locale }) {
 
       {/* Fiyat notu — uyarı kutusu değil, sayfanın başındaki bir dipnot. */}
       <Section ruled={false} className="py-10 lg:py-12">
-        <div className="grid gap-6 border-l-2 border-oxide pl-6 lg:grid-cols-[1fr_auto] lg:items-center lg:gap-12">
+        {/* Sol kenar şeridi kartvizitin arka yüzünden gelen aygıt. */}
+        <div className="relative grid gap-6 pl-6 lg:grid-cols-[1fr_auto] lg:items-center lg:gap-12">
+          <span
+            aria-hidden
+            className="brand-gradient absolute inset-y-0 left-0 w-[3px]"
+          />
           <div className="measure">
             <p className="label">{locale === "tr" ? "Not" : "Note"}</p>
             <p className="mt-2 leading-relaxed text-ink-soft">
@@ -76,7 +81,7 @@ export function MaterialsPage({ locale }: { locale: Locale }) {
         >
           <div className="grid gap-10 lg:grid-cols-[18rem_1fr] lg:gap-16">
             <div className="lg:sticky lg:top-32 lg:self-start">
-              <span className="tabular font-mono text-sm font-medium text-oxide">
+              <span className="tabular font-mono text-sm font-medium text-brand">
                 {String(groupIndex + 1).padStart(2, "0")}
               </span>
               <h2 className="display mt-3 text-[1.625rem] sm:text-[2rem]">

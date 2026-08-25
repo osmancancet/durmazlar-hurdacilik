@@ -17,11 +17,11 @@ export function FaqAccordion({ locale }: { locale: Locale }) {
       {FAQ.map((item, index) => (
         <details key={item.question.tr} className="group border-b border-zinc">
           <summary className="flex cursor-pointer list-none items-baseline gap-4 py-5 text-left [&::-webkit-details-marker]:hidden">
-            <span className="tabular shrink-0 font-mono text-xs font-medium text-oxide">
+            <span className="tabular shrink-0 font-mono text-xs font-medium text-brand">
               {String(index + 1).padStart(2, "0")}
             </span>
 
-            <span className="flex-1 font-semibold text-ink transition-colors group-hover:text-oxide">
+            <span className="flex-1 font-semibold text-ink transition-colors group-hover:text-brand">
               {item.question[locale]}
             </span>
 

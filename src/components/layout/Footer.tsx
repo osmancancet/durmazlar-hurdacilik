@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Wordmark } from "@/components/brand/Wordmark";
 import { WhatsAppButton } from "@/components/whatsapp/WhatsAppButton";
@@ -13,8 +14,12 @@ import { EXTERNAL_LINK_PROPS, telHref } from "@/lib/whatsapp";
  * Altbilgi — künye plakası.
  *
  * Dört sütunlu klasik footer yerine, bir belgenin sonundaki künye gibi:
- * alan adı mono etiketle, değeri altında. Adres ve telefon burada veri
- * olarak durur, süs olarak değil.
+ * alan adı etiketle, değeri altında. Adres ve telefon burada veri olarak
+ * durur, süs olarak değil.
+ *
+ * Kimlikten iki aygıt taşındı: üst kenardaki lacivert→mavi degrade şerit
+ * (kartvizitin arka yüzündeki dikey bant) ve sağ alt köşedeki soluk amblem
+ * filigranı. İkisi de kartvizitin birebir karşılığı.
  */
 export function Footer({ locale }: { locale: Locale }) {
   /*
@@ -25,8 +30,24 @@ export function Footer({ locale }: { locale: Locale }) {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-zinc bg-paper-raised">
-      <div className="mx-auto max-w-[84rem] px-5 py-14 md:px-8 lg:py-20">
+    <footer className="relative overflow-hidden bg-paper-raised">
+      {/* Kimliğin degrade şeridi — altbilgiyi sayfadan ayıran kenar. */}
+      <div className="brand-gradient h-1 w-full" />
+
+      {/*
+        Amblem filigranı. Süs değil, kartvizitin arka yüzündeki aygıtın aynısı.
+        aria-hidden: ekran okuyucuya taşıyacak bir bilgisi yok.
+      */}
+      <Image
+        src="/brand/ikon.svg"
+        alt=""
+        aria-hidden
+        width={340}
+        height={340}
+        className="pointer-events-none absolute -right-16 -bottom-16 -z-0 opacity-[0.05] select-none"
+      />
+
+      <div className="relative z-10 mx-auto max-w-[84rem] px-5 py-14 md:px-8 lg:py-20">
         <div className="grid gap-12 lg:grid-cols-[1fr_auto] lg:gap-20">
           <div className="measure">
             <Wordmark />
@@ -54,7 +75,7 @@ export function Footer({ locale }: { locale: Locale }) {
                 <a
                   href={MAPS_LINK_URL}
                   {...EXTERNAL_LINK_PROPS}
-                  className="text-sm leading-relaxed text-ink transition-colors hover:text-oxide"
+                  className="text-sm leading-relaxed text-ink transition-colors hover:text-brand"
                 >
                   {SITE.address.street}
                   <br />
@@ -68,7 +89,7 @@ export function Footer({ locale }: { locale: Locale }) {
               <dd className="mt-2">
                 <a
                   href={telHref()}
-                  className="tap tabular font-mono text-sm font-medium text-ink transition-colors hover:text-oxide"
+                  className="tap tabular font-mono text-sm font-medium text-ink transition-colors hover:text-brand"
                 >
                   {SITE.phone.display}
                 </a>
@@ -101,7 +122,7 @@ export function Footer({ locale }: { locale: Locale }) {
                 <li key={route.key}>
                   <Link
                     href={hrefFor(route.key, locale)}
-                    className="inline-flex min-h-6 items-center py-1 text-sm text-steel transition-colors hover:text-oxide"
+                    className="inline-flex min-h-6 items-center py-1 text-sm text-steel transition-colors hover:text-brand"
                   >
                     {route.label[locale]}
                   </Link>
@@ -119,7 +140,7 @@ export function Footer({ locale }: { locale: Locale }) {
                 <li key={service.id}>
                   <a
                     href={`${hrefFor("services", locale)}#${service.id}`}
-                    className="inline-flex min-h-6 items-center py-1 text-sm text-steel transition-colors hover:text-oxide"
+                    className="inline-flex min-h-6 items-center py-1 text-sm text-steel transition-colors hover:text-brand"
                   >
                     {service.title[locale]}
                   </a>

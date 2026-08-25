@@ -30,7 +30,7 @@ export function MobileCallBar({ locale }: { locale: Locale }) {
         href={telHref()}
         className="flex items-center justify-center gap-2 py-3.5 text-sm font-semibold text-ink"
       >
-        <PhoneIcon className="size-4 text-oxide" />
+        <PhoneIcon className="size-4 text-brand" />
         {UI.call[locale]}
       </a>
     </div>

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo, IBM_Plex_Mono, Source_Sans_3 } from "next/font/google";
+import { IBM_Plex_Mono, Poppins, Source_Sans_3 } from "next/font/google";
 import { notFound } from "next/navigation";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
@@ -16,11 +16,17 @@ import "../globals.css";
  * projeye gömer; tarayıcı harici bir sunucuya istek atmaz.
  */
 
-/** Başlık: köşeli sonlu grotesk, ağır kesimlerde karakterli. */
-const archivo = Archivo({
+/**
+ * Başlık ve etiket: kimliğin yazı karakteri.
+ *
+ * Kurumsal kimlik Poppins'in Bold ve Medium kesimlerini belirtiyor; kelime
+ * markası 700, kartvizitteki harf aralıklı alt satır 500. Sitede de aynı iki
+ * ağırlık kullanılır, üçüncü bir kesim eklenmez.
+ */
+const poppins = Poppins({
   subsets: ["latin", "latin-ext"],
-  weight: ["600", "700", "800"],
-  variable: "--font-archivo",
+  weight: ["500", "700"],
+  variable: "--font-poppins",
   display: "swap",
 });
 
@@ -48,7 +54,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#eff1f1",
+  themeColor: "#f2f5f9",
   width: "device-width",
   initialScale: 1,
 };
@@ -77,7 +83,7 @@ export default async function LocaleLayout({
   return (
     <html
       lang={HTML_LANG[locale]}
-      className={`${archivo.variable} ${sourceSans.variable} ${plexMono.variable}`}
+      className={`${poppins.variable} ${sourceSans.variable} ${plexMono.variable}`}
     >
       <head>
         {/* Beliriş efekti JavaScript'e bağlı; JS kapalıysa bölümler

@@ -2,10 +2,10 @@ import Link from "next/link";
 import { CtaBand } from "@/components/ui/CtaBand";
 import { GalleryGrid } from "@/components/ui/GalleryGrid";
 import { ArrowRightIcon } from "@/components/ui/Icons";
-import { FullBleedPlate } from "@/components/ui/Plate";
 import { Reveal } from "@/components/ui/Reveal";
 import { Rule, Section, SectionHeading } from "@/components/ui/Section";
 import { SpecStrip } from "@/components/ui/SpecStrip";
+import { VideoSlider } from "@/components/ui/VideoSlider";
 import { WhatsAppButton } from "@/components/whatsapp/WhatsAppButton";
 import { hrefFor } from "@/config/routes";
 import { SITE } from "@/config/site";
@@ -71,21 +71,14 @@ function Hero({ locale }: { locale: Locale }) {
         </div>
       </div>
 
+      {/*
+        Tezin kanıtı. Tek bir sabit fotoğraf sahanın ölçeğini anlatamıyordu;
+        havadan çekilmiş üç klip anlatıyor. Bu işte müşterinin ilk sorusu
+        "bu tonajı kaldırır mısınız" — cevabı burada, iddia olarak değil
+        görüntü olarak duruyor.
+      */}
       <div className="mt-14 lg:mt-20">
-        <FullBleedPlate
-          src="/images/konveyor-sasi-2.webp"
-          alt={
-            locale === "tr"
-              ? "Durmazlar Hurdacılık sahasında sökülmüş konveyör bant hatları"
-              : "Dismantled conveyor belt lines in the Durmazlar Hurdacılık yard"
-          }
-          caption={
-            locale === "tr"
-              ? "Saha — konveyör bant hatları, Soma"
-              : "The yard — conveyor belt lines, Soma"
-          }
-          priority
-        />
+        <VideoSlider locale={locale} />
       </div>
 
       <div className="mx-auto max-w-[84rem] px-5 md:px-8">
@@ -115,7 +108,7 @@ function Services({ locale }: { locale: Locale }) {
         action={
           <Link
             href={hrefFor("services", locale)}
-            className="inline-flex items-center gap-2 border-b border-ink pb-1 text-sm font-semibold text-ink transition-colors hover:border-oxide hover:text-oxide"
+            className="inline-flex items-center gap-2 border-b border-ink pb-1 text-sm font-semibold text-ink transition-colors hover:border-brand hover:text-brand"
           >
             {UI.allServices[locale]}
             <ArrowRightIcon className="size-4" />
@@ -130,7 +123,7 @@ function Services({ locale }: { locale: Locale }) {
               <div className="grid items-baseline gap-x-10 gap-y-4 py-8 lg:grid-cols-[10rem_1fr_auto]">
                 <Link
                   href={`${hrefFor("services", locale)}#${service.id}`}
-                  className="display text-xl text-ink transition-colors group-hover:text-oxide lg:col-start-2"
+                  className="display text-xl text-ink transition-colors group-hover:text-brand lg:col-start-2"
                 >
                   {service.title[locale]}
                 </Link>
@@ -171,7 +164,7 @@ function Process({ locale }: { locale: Locale }) {
         {HOME.processSection.steps.map((step, index) => (
           <Reveal key={step.title.tr} delay={index * 0.07}>
             <li className="border-t border-ink pt-5">
-              <span className="tabular font-mono text-sm font-medium text-oxide">
+              <span className="tabular font-mono text-sm font-medium text-brand">
                 {String(index + 1).padStart(2, "0")}
               </span>
               <h3 className="display mt-3 text-lg">{step.title[locale]}</h3>
@@ -196,7 +189,7 @@ function GalleryPreview({ locale }: { locale: Locale }) {
         action={
           <Link
             href={hrefFor("gallery", locale)}
-            className="inline-flex items-center gap-2 border-b border-ink pb-1 text-sm font-semibold text-ink transition-colors hover:border-oxide hover:text-oxide"
+            className="inline-flex items-center gap-2 border-b border-ink pb-1 text-sm font-semibold text-ink transition-colors hover:border-brand hover:text-brand"
           >
             {UI.allPhotos[locale]}
             <ArrowRightIcon className="size-4" />

@@ -62,7 +62,7 @@ export function SectionHeading({
     <div className="grid gap-6 lg:grid-cols-[10rem_1fr] lg:gap-10">
       <div className="flex items-baseline gap-3 lg:flex-col lg:gap-2">
         {index && (
-          <span className="tabular font-mono text-sm font-medium text-oxide">
+          <span className="tabular font-mono text-sm font-medium text-brand">
             {index}
           </span>
         )}

@@ -176,7 +176,7 @@ export function GalleryGrid({
                 aria-pressed={selected}
                 className={`inline-flex min-h-6 items-center py-1.5 font-mono text-xs font-medium tracking-[0.1em] uppercase transition-colors ${
                   selected
-                    ? "text-oxide underline underline-offset-[6px]"
+                    ? "text-brand underline underline-offset-[6px]"
                     : "text-steel hover:text-ink"
                 }`}
               >
@@ -228,7 +228,7 @@ export function GalleryGrid({
 
                 <figcaption className="mt-3 border-t border-zinc pt-3">
                   <p className="flex items-baseline gap-2.5">
-                    <span className="tabular shrink-0 font-mono text-xs font-medium text-oxide">
+                    <span className="tabular shrink-0 font-mono text-xs font-medium text-brand">
                       {String(startIndex + index).padStart(2, "0")}
                     </span>
                     <span className="font-semibold text-ink">

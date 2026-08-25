@@ -28,6 +28,8 @@ const TYPES = {
   ".xml": "application/xml; charset=utf-8",
   ".txt": "text/plain; charset=utf-8",
   ".woff2": "font/woff2",
+  ".mp4": "video/mp4",
+  ".webm": "video/webm",
 };
 
 async function resolve(urlPath) {
@@ -72,8 +74,45 @@ const server = createServer(async (request, response) => {
 
   try {
     const body = await readFile(file);
+    const type = TYPES[extname(file)] ?? "application/octet-stream";
+
+    /*
+     * Byte-range desteği — video için şart.
+     *
+     * Tarayıcı bir <video> içinde ileri sararken tüm dosyayı değil, istediği
+     * aralığı ister. Sunucu 206 yerine 200 dönerse arama güvenilmez çalışır
+     * ve videoyu süren testler sahte biçimde başarısız olur. Vercel bunu
+     * kendiliğinden yapıyor; testlerin sürdüğü bu sunucunun da yapması
+     * gerekiyor ki test ortamı yayınla aynı davransın.
+     */
+    const range = request.headers.range;
+    const match = /^bytes=(\d*)-(\d*)$/.exec(range ?? "");
+
+    if (match) {
+      const start = match[1] ? Number(match[1]) : 0;
+      const end = match[2] ? Number(match[2]) : body.length - 1;
+
+      if (start >= body.length || end >= body.length || start > end) {
+        response.writeHead(416, { "content-range": `bytes */${body.length}` });
+        response.end();
+        return;
+      }
+
+      response.writeHead(206, {
+        "content-type": type,
+        "content-range": `bytes ${start}-${end}/${body.length}`,
+        "accept-ranges": "bytes",
+        "content-length": end - start + 1,
+        "cache-control": "no-store",
+      });
+      response.end(body.subarray(start, end + 1));
+      return;
+    }
+
     response.writeHead(200, {
-      "content-type": TYPES[extname(file)] ?? "application/octet-stream",
+      "content-type": type,
+      "accept-ranges": "bytes",
+      "content-length": body.length,
       "cache-control": "no-store",
     });
     response.end(body);

@@ -58,7 +58,7 @@ export function Header({ locale }: { locale: Locale }) {
           </span>
           <a
             href={telHref()}
-            className="tap tabular font-mono text-xs font-medium tracking-wide text-ink transition-colors hover:text-oxide"
+            className="tap tabular font-mono text-xs font-medium tracking-wide text-ink transition-colors hover:text-brand"
           >
             {SITE.phone.display}
           </a>
@@ -67,8 +67,8 @@ export function Header({ locale }: { locale: Locale }) {
 
       <div className="border-b border-zinc">
         <div className="mx-auto flex max-w-[84rem] items-center gap-6 px-5 py-3.5 md:px-8">
-          <Link href={hrefFor("home", locale)} className="shrink-0">
-            <Wordmark />
+          <Link href={hrefFor("home", locale)} className="shrink-0 py-1">
+            <Wordmark priority />
           </Link>
 
           <nav className="ml-auto hidden items-center gap-7 lg:flex">
@@ -81,7 +81,7 @@ export function Header({ locale }: { locale: Locale }) {
                   aria-current={active ? "page" : undefined}
                   className={`relative py-1 text-sm font-semibold whitespace-nowrap transition-colors ${
                     active
-                      ? "text-ink after:absolute after:inset-x-0 after:-bottom-px after:h-0.5 after:bg-oxide"
+                      ? "text-ink after:absolute after:inset-x-0 after:-bottom-px after:h-0.5 after:bg-brand"
                       : "text-steel hover:text-ink"
                   }`}
                 >
@@ -155,12 +155,12 @@ export function Header({ locale }: { locale: Locale }) {
                 aria-current={active ? "page" : undefined}
                 className="flex items-baseline gap-4 border-b border-zinc py-5"
               >
-                <span className="tabular font-mono text-xs text-oxide">
+                <span className="tabular font-mono text-xs text-brand">
                   {String(position + 1).padStart(2, "0")}
                 </span>
                 <span
                   className={`display text-2xl ${
-                    active ? "text-oxide" : "text-ink"
+                    active ? "text-brand" : "text-ink"
                   }`}
                 >
                   {route.label[locale]}

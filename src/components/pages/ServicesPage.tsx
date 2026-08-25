@@ -34,9 +34,9 @@ export function ServicesPage({ locale }: { locale: Locale }) {
                 <li key={service.id} className="border-b border-zinc">
                   <a
                     href={`#${service.id}`}
-                    className="flex items-baseline gap-3 py-2.5 text-sm text-steel transition-colors hover:text-oxide"
+                    className="flex items-baseline gap-3 py-2.5 text-sm text-steel transition-colors hover:text-brand"
                   >
-                    <span className="tabular font-mono text-xs text-oxide">
+                    <span className="tabular font-mono text-xs text-brand">
                       {String(index + 1).padStart(2, "0")}
                     </span>
                     {service.title[locale]}
@@ -60,7 +60,7 @@ export function ServicesPage({ locale }: { locale: Locale }) {
           >
             <div className="grid gap-10 lg:grid-cols-[10rem_1fr] lg:gap-12">
               <div className="flex items-baseline gap-3 lg:flex-col lg:gap-2">
-                <span className="tabular font-mono text-sm font-medium text-oxide">
+                <span className="tabular font-mono text-sm font-medium text-brand">
                   {String(index + 1).padStart(2, "0")}
                 </span>
                 <span className="label">
@@ -104,7 +104,7 @@ export function ServicesPage({ locale }: { locale: Locale }) {
                           key={bullet}
                           className="flex gap-3 border-b border-zinc py-3"
                         >
-                          <CheckIcon className="mt-1 size-4 shrink-0 text-oxide" />
+                          <CheckIcon className="mt-1 size-4 shrink-0 text-brand" />
                           <span className="text-sm text-ink-soft">{bullet}</span>
                         </li>
                       ))}

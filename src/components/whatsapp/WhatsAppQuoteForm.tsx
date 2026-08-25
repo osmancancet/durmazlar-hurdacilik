@@ -21,7 +21,7 @@ import type { Locale } from "@/lib/i18n";
  */
 
 const FIELD =
-  "w-full border-0 border-b border-zinc bg-transparent px-0 py-2.5 text-ink placeholder-steel-light transition-colors focus:border-oxide focus:outline-none";
+  "w-full border-0 border-b border-zinc bg-transparent px-0 py-2.5 text-ink placeholder-steel-light transition-colors focus:border-brand focus:outline-none";
 
 // Türkiye numaraları: 05xx…, +905xx…, 5xx… ve aralarındaki boşluk/tire biçimleri.
 const PHONE_PATTERN = /^(\+?90[\s-]?)?0?\s?5\d{2}[\s-]?\d{3}[\s-]?\d{2}[\s-]?\d{2}$/;
@@ -113,15 +113,15 @@ export function WhatsAppQuoteForm({ locale }: { locale: Locale }) {
           ref={summaryRef}
           role="alert"
           tabIndex={-1}
-          className="border-l-2 border-oxide bg-paper-deep px-5 py-4 focus:outline-none"
+          className="border-l-2 border-brand bg-paper-deep px-5 py-4 focus:outline-none"
         >
-          <p className="label text-oxide">{CONTACT.errors.summary[locale]}</p>
+          <p className="label text-brand">{CONTACT.errors.summary[locale]}</p>
           <ul className="mt-2 space-y-1">
             {errors.name && (
               <li>
                 <a
                   href="#quote-name"
-                  className="text-sm font-semibold text-oxide underline underline-offset-4"
+                  className="text-sm font-semibold text-brand underline underline-offset-4"
                 >
                   {errors.name}
                 </a>
@@ -131,7 +131,7 @@ export function WhatsAppQuoteForm({ locale }: { locale: Locale }) {
               <li>
                 <a
                   href="#quote-phone"
-                  className="text-sm font-semibold text-oxide underline underline-offset-4"
+                  className="text-sm font-semibold text-brand underline underline-offset-4"
                 >
                   {errors.phone}
                 </a>
@@ -144,7 +144,7 @@ export function WhatsAppQuoteForm({ locale }: { locale: Locale }) {
       <div className="grid gap-x-10 gap-y-7 sm:grid-cols-2">
         <div>
           <label htmlFor="quote-name" className="label">
-            {CONTACT.fields.name[locale]} <span className="text-oxide">*</span>
+            {CONTACT.fields.name[locale]} <span className="text-brand">*</span>
           </label>
           <input
             id="quote-name"
@@ -158,7 +158,7 @@ export function WhatsAppQuoteForm({ locale }: { locale: Locale }) {
             className={`${FIELD} mt-1`}
           />
           {errors.name && (
-            <p id="quote-name-error" className="mt-2 text-sm text-oxide">
+            <p id="quote-name-error" className="mt-2 text-sm text-brand">
               {errors.name}
             </p>
           )}
@@ -166,7 +166,7 @@ export function WhatsAppQuoteForm({ locale }: { locale: Locale }) {
 
         <div>
           <label htmlFor="quote-phone" className="label">
-            {CONTACT.fields.phone[locale]} <span className="text-oxide">*</span>
+            {CONTACT.fields.phone[locale]} <span className="text-brand">*</span>
           </label>
           <input
             id="quote-phone"
@@ -182,7 +182,7 @@ export function WhatsAppQuoteForm({ locale }: { locale: Locale }) {
             className={`${FIELD} tabular mt-1 font-mono`}
           />
           {errors.phone && (
-            <p id="quote-phone-error" className="mt-2 text-sm text-oxide">
+            <p id="quote-phone-error" className="mt-2 text-sm text-brand">
               {errors.phone}
             </p>
           )}

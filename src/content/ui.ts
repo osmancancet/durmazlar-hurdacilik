@@ -17,6 +17,11 @@ export const UI = {
   close: { tr: "Kapat", en: "Close" },
   previous: { tr: "Önceki", en: "Previous" },
   next: { tr: "Sonraki", en: "Next" },
+  videoSection: {
+    tr: "Havadan saha görüntüleri",
+    en: "Aerial views of the yard",
+  },
+  playVideo: { tr: "Videoyu oynat", en: "Play video" },
   scrollDown: { tr: "Aşağı kaydırın", en: "Scroll down" },
   address: { tr: "Adres", en: "Address" },
   phone: { tr: "Telefon", en: "Phone" },

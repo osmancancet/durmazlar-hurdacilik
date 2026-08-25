@@ -109,9 +109,14 @@ export function buildMetadata(key: RouteKey, locale: Locale): Metadata {
       locale: HTML_LANG[locale].replace("-", "_"),
       images: [
         {
-          url: `${SITE.url}/images/konveyor-sasi-2.webp`,
-          width: 1600,
-          height: 1200,
+          /*
+           * Paylaşım kapağı kurumsal kimlikten üretildi: lacivert degrade
+           * zemin, beyaz logo. WhatsApp ve Google'da ilk görünen şey bu —
+           * saha fotoğrafı yerine markanın kendisi duruyor.
+           */
+          url: `${SITE.url}/brand/og.jpg`,
+          width: 1200,
+          height: 630,
           alt: SITE.name,
         },
       ],
@@ -120,7 +125,7 @@ export function buildMetadata(key: RouteKey, locale: Locale): Metadata {
       card: "summary_large_image",
       title: meta.title[locale],
       description: meta.description[locale],
-      images: [`${SITE.url}/images/konveyor-sasi-2.webp`],
+      images: [`${SITE.url}/brand/og.jpg`],
     },
   };
 }
@@ -145,6 +150,8 @@ export function localBusinessJsonLd(locale: Locale) {
     url: `${SITE.url}${hrefFor("home", locale)}`,
     telephone: SITE.phone.e164,
     image: `${SITE.url}/images/konveyor-sasi-2.webp`,
+    /* Google'ın işletme kartında marka işareti olarak gösterilir. */
+    logo: `${SITE.url}/brand/ikon-512.png`,
     priceRange: "$$",
     address: {
       "@type": "PostalAddress",

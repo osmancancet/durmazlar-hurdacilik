@@ -83,7 +83,7 @@ export function AboutPage({ locale }: { locale: Locale }) {
           {ABOUT.principles.items.map((item, index) => (
             <Reveal key={item.title.tr} delay={index * 0.06}>
               <li className="grid gap-x-10 gap-y-3 border-b border-zinc py-7 lg:grid-cols-[10rem_1fr]">
-                <span className="tabular font-mono text-xs font-medium text-oxide">
+                <span className="tabular font-mono text-xs font-medium text-brand">
                   {String(index + 1).padStart(2, "0")}
                 </span>
                 <div>

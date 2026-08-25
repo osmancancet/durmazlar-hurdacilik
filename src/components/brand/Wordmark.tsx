@@ -1,64 +1,76 @@
+import Image from "next/image";
 import { SITE } from "@/config/site";
 
 /**
- * Marka işareti.
+ * Marka işareti — kurumsal kimlik paketinden.
  *
- * Monogram, çelik plakadan oksijenle kesilmiş bir parçayı andırır: köşeleri
- * pahlanmış (chamfered) kare, içinde negatif D. Sahada kesilen her sac
- * parçasının köşesi böyle pahlanır — işaret, işin kendi imalatından geliyor.
+ * Dosyalar `public/brand/` altında ve kimliğin kendi SVG'leridir; burada
+ * yeniden çizilmez, renklendirilmez, oranı bozulmaz. Kimliğin kuralları:
  *
- * Kelime markası Archivo 800 ile sıkı aralıklı; altında mono künye satırı,
- * kantar fişi sesini markaya taşır.
+ *   - Eni/boyu ayrı ayrı değiştirilmez, her zaman orantılı ölçeklenir.
+ *   - Renk değiştirilmez; koyu zemin için hazır BEYAZ varyantı kullanılır.
+ *   - Yazılı logo ekranda 90 pikselin altına indirilmez.
+ *   - Çevresinde amblemin yarısı kadar boş alan bırakılır.
+ *
+ * Inline SVG yerine <Image> tercih edildi: logo hem başlıkta hem altbilgide,
+ * yani her sayfada iki kez görünüyor. Gömülseydi 12 sayfanın HTML'ine ~16'şar
+ * KB eklenirdi; dosya olarak istendiğinde tarayıcı tek sefer indirip tüm site
+ * boyunca önbellekten veriyor.
  */
 
-export function Monogram({ className = "" }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 40 40"
-      className={className}
-      aria-hidden
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      {/* Pahlanmış kare — kesilmiş sac parçası */}
-      <path
-        d="M0 7.5 7.5 0H32.5L40 7.5V32.5L32.5 40H7.5L0 32.5V7.5Z"
-        fill="currentColor"
-      />
-      {/* Negatif D — plakadan oyulmuş gibi */}
-      <path
-        d="M13 11.5H20.4C25.9 11.5 29.5 15 29.5 20S25.9 28.5 20.4 28.5H13V11.5ZM17.6 15.6V24.4H20.2C22.9 24.4 24.7 22.6 24.7 20S22.9 15.6 20.2 15.6H17.6Z"
-        fill="var(--color-paper)"
-      />
-    </svg>
-  );
-}
+/** Yatay logonun kendi oranı (viewBox 689 × 167). */
+const YATAY_RATIO = 689 / 167;
 
 export function Wordmark({
-  /** Dar alanlarda alt künye satırı gizlenir. */
+  /** Dar alanlarda yalnızca amblem gösterilir. */
   compact = false,
+  /** Koyu (lacivert) zeminde kimliğin beyaz varyantı kullanılır. */
+  variant = "renkli",
+  /** Logonun yüksekliği (px). Yatayda genişlik bundan türetilir. */
+  height = 36,
+  /** Başlıktaki logo ilk boyamada görünür; öncelikli yüklenir. */
+  priority = false,
   className = "",
 }: {
   compact?: boolean;
+  variant?: "renkli" | "beyaz";
+  height?: number;
+  priority?: boolean;
   className?: string;
 }) {
-  return (
-    <span className={`flex items-center gap-3 ${className}`}>
-      <Monogram className="size-9 shrink-0 text-ink" />
+  const beyaz = variant === "beyaz";
 
-      <span className="flex flex-col leading-none">
-        <span className="font-display text-[1.0625rem] leading-none font-extrabold tracking-[-0.035em] text-ink">
-          DURMAZLAR
-        </span>
-
-        {!compact && (
-          <span className="mt-1.5 font-mono text-[0.5625rem] leading-none font-medium tracking-[0.2em] text-steel">
-            HURDACILIK · SOMA
-          </span>
-        )}
+  if (compact) {
+    return (
+      <span className={`inline-flex items-center ${className}`}>
+        <Image
+          src={beyaz ? "/brand/ikon-beyaz.svg" : "/brand/ikon.svg"}
+          alt={SITE.name}
+          width={height}
+          height={height}
+          priority={priority}
+        />
       </span>
+    );
+  }
 
-      <span className="sr-only">{SITE.name}</span>
+  /*
+   * 90 piksel alt sınırı kimliğin kuralı. Bu yükseklikte genişlik zaten
+   * ~148 piksel; sınır yine de kodda dursun ki ileride biri yüksekliği
+   * küçültürken farkında olmadan kuralı çiğnemesin.
+   */
+  const width = Math.round(height * YATAY_RATIO);
+
+  return (
+    <span className={`inline-flex items-center ${className}`}>
+      <Image
+        src={beyaz ? "/brand/logo-yatay-beyaz.svg" : "/brand/logo-yatay.svg"}
+        alt={SITE.name}
+        width={width}
+        height={height}
+        priority={priority}
+        style={{ minWidth: 90 }}
+      />
     </span>
   );
 }

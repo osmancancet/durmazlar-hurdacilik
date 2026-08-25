@@ -18,7 +18,7 @@ export function GalleryPage({ locale }: { locale: Locale }) {
         aside={
           <dl className="lg:w-40">
             <dt className="label">{locale === "tr" ? "Kayıt" : "Plates"}</dt>
-            <dd className="tabular mt-2 font-display text-3xl font-extrabold text-ink">
+            <dd className="tabular mt-2 font-display text-3xl font-bold text-ink">
               {GALLERY.length}
             </dd>
           </dl>

@@ -58,7 +58,7 @@ export function Plate({
           <div className="min-w-0">
             <p className="flex items-baseline gap-2.5">
               {index && (
-                <span className="tabular shrink-0 font-mono text-xs font-medium text-oxide">
+                <span className="tabular shrink-0 font-mono text-xs font-medium text-brand">
                   {index}
                 </span>
               )}

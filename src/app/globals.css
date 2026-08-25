@@ -1,48 +1,102 @@
 @import "tailwindcss";
 
 /*
- * ÇELİK BELGE — tasarım sistemi
+ * DURMAZLAR — tasarım sistemi
  *
- * Tez: bu site sahanın dramatize edilmiş reklamı değil, belgelenmiş teknik
- * dosyasıdır. Bu işin belgesi kantar fişidir — numaralı, tablo hâlinde,
- * daktilo yazısıyla basılmış, tonajı kanıtlayan slip. Sahanın malzemesi ise
- * çelik plaka, oksit pas ve galvaniz çinko. Bütün renk ve yazı kararları
- * buradan çıkar.
+ * Kaynak: firmanın kurumsal kimlik paketi (lacivert/mavi palet, Poppins,
+ * hexagon amblem). Renkler uydurulmaz; kimlikte yazılı olan HEX değerleri
+ * doğrudan buraya girer, türetilenler ise gerekçesiyle işaretlenir.
+ *
+ * Sayfa, kartvizitin ARKA yüzünün mantığıyla kurulur: açık zemin, lacivert
+ * metin, çelik grisi saç teli çizgiler, mavi vurgu. Kartvizitin ön yüzündeki
+ * lacivert degrade ise sayfanın durak noktalarına ayrılır (CTA bandı, altbilgi).
  *
  * Renk rolleri:
- *   paper/ink/steel/zinc -> kâğıt ve mürekkep; sayfanın tamamı bunlarla kurulur
- *   oxide                -> YAPI rengi. Saç teli çizgiler, bölüm numaraları,
- *                           mono etiketler. Asla büyük dolu buton olmaz.
+ *   paper/ink/steel/zinc -> zemin ve metin; sayfanın tamamı bunlarla kurulur
+ *   brand                -> YAPI rengi. Bölüm numaraları, etiketler, aktif
+ *                           göstergeler, odak halkası. Asla büyük dolu buton olmaz.
  *   whatsapp             -> AKSİYON rengi. Yalnızca WhatsApp butonları.
  *
- * Oksit ile yeşil karşıt renklerdir; aynı görsel rolde yarışsalar sayfa
- * dağılırdı. Ayrı roller verilerek (yapı / aksiyon) hiç çakışmazlar.
+ * Mavi ile yeşil, oksit turuncusuna göre birbirine daha yakın duruyor. Bu
+ * yüzden rol ayrımı artık daha da katı: marka mavisi yalnızca çizgi, etiket ve
+ * numara olarak görünür; dolu zeminli buton yalnızca yeşildir. İkisi aynı
+ * görsel ağırlıkta yan yana getirilmez.
  */
 @theme {
-  --color-paper: #eff1f1;
-  --color-paper-raised: #f6f7f7;
-  --color-paper-deep: #e4e7e8;
-  --color-ink: #14181b;
-  --color-ink-soft: #2c343a;
-  --color-steel: #5b6770;
-  /* Kâğıt zeminde WCAG AA (4.54:1). Daha açık bir gri metin olarak kalamaz. */
-  --color-steel-light: #646f77;
-  --color-zinc: #c6ccd0;
-  --color-zinc-light: #dde1e3;
-  --color-oxide: #a8401f;
-  --color-oxide-deep: #7f2f16;
+  /*
+   * Zeminler kimliğin mavi ailesine doğru soğutuldu — nötr gri, lacivert
+   * metnin altında ölü duruyordu.
+   */
+  --color-paper: #f2f5f9;
+  --color-paper-raised: #f8fafc;
+  --color-paper-deep: #e6eaf3;
+
+  /* Kimlik: Lacivert. Kâğıt zeminde 16.58:1. */
+  --color-ink: #0f1235;
+  /* Lacivertin yumuşatılmışı — giriş paragrafları. 12.54:1. */
+  --color-ink-soft: #252a52;
+
+  /*
+   * İkincil metin grileri kimlikte YOK; lacivert tonlanarak türetildi.
+   * Kimliğin çelik grisi (#AEB9CE) açık zeminde 1.81:1 veriyor — çizgi
+   * olabilir, metin olamaz. Bu iki ton her üç zeminde de AA geçiyor
+   * (en düşük: paper-deep üzerinde 5.14 ve 4.88).
+   */
+  --color-steel: #576179;
+  --color-steel-light: #5a6480;
+
+  /* Kimlik: Çelik grisi. Yalnızca saç teli çizgi ve koyu zemin metni. */
+  --color-zinc: #aeb9ce;
+  --color-zinc-light: #d5dce8;
+
+  /* Kimlik: Marka mavisi (10.23:1) ve Parlak mavi (7.32:1). */
+  --color-brand: #2323a8;
+  --color-brand-bright: #3232dc;
+  /* Kimlik: Lacivert — degradelerin koyu ucu ve hover koyulaşması. */
+  --color-brand-deep: #0f1235;
 
   /*
    * WhatsApp yeşili açık zemine göre koyultuldu: marka yeşili (#25D366)
    * kâğıt üzerinde hem bağırıyor hem de üstündeki beyaz metinle AA'yı
-   * geçemiyordu. Bu ton 5.24:1 veriyor; parlak sürüm hover'da kullanılıyor.
+   * geçemiyordu. Bu ton 5.44:1 veriyor; parlak sürüm hover'da kullanılıyor.
    */
   --color-whatsapp: #0d733b;
   --color-whatsapp-bright: #25d366;
 
-  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  /*
+   * Kimliğin yazı karakteri Poppins (Bold + Medium): başlıklar ve harf
+   * aralıklı etiketler. Gövde metni Source Sans'ta kalır — Poppins geometrik
+   * ve geniş, uzun Türkçe paragrafta yorar. Sayılar mono kalır: telefon,
+   * tonaj, indeks ve künyelerin hizası buna bağlı.
+   */
+  --font-display: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  --font-label: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-source), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, "SF Mono", monospace;
+}
+
+/*
+ * Kimliğin lacivert→mavi degradesi. Kartvizitin ön yüzünden geliyor.
+ *
+ * UYARI: bu degradenin üzerine MAVİ METİN KONULMAZ. Marka mavisi lacivert
+ * üzerinde 1.62:1, parlak mavi 2.27:1 veriyor. Koyu yüzeyde okunabilir tek
+ * vurgu çelik grisi (9.18:1) ve beyazdır.
+ */
+@layer components {
+  /*
+   * Yön ve duraklar kartvizitin ön yüzünden alındı: parlak uç sol üstte
+   * başlar, lacivert sağ alta doğru alanı ele geçirir. Parlak mavi %28'de
+   * bitiyor — geniş bir bantta ortada bıraksaydık sayfanın yarısı parlar,
+   * kartvizitteki ağırbaşlı denge kaybolurdu.
+   */
+  .brand-gradient {
+    background-image: linear-gradient(
+      135deg,
+      var(--color-brand-bright) 0%,
+      var(--color-brand) 28%,
+      var(--color-brand-deep) 82%
+    );
+  }
 }
 
 /*
@@ -82,22 +136,32 @@ body {
     font-variant-numeric: tabular-nums;
   }
 
-  /* Mono etiket — kantar fişi sesi. Bölüm başlıkları, künye alanları. */
+  /*
+   * Etiket — kartvizitteki "HURDA ALIM • GERİ DÖNÜŞÜM" satırının aynısı:
+   * Poppins Medium, geniş harf aralıklı, büyük harf, çelik grisi tonunda.
+   * Bölüm başlıkları ve künye alanları bu sesle konuşur.
+   */
   .label {
-    font-family: var(--font-mono);
+    font-family: var(--font-label);
     font-size: 0.6875rem;
     font-weight: 500;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--color-steel);
   }
 
-  /* Başlıklar: sıkı aralıklı grotesk. */
+  /*
+   * Başlıklar: kimliğin Poppins Bold'u.
+   *
+   * Aralık, Archivo'nun -0.03em değerinden gevşetildi. Poppins geometrik ve
+   * yuvarlak; o kadar sıkıldığında "O" ile "D" birbirine yapışıyor. 700,
+   * kimliğin kelime markasıyla aynı ağırlık.
+   */
   .display {
     font-family: var(--font-display);
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    line-height: 1.02;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    line-height: 1.06;
     text-wrap: balance;
     color: var(--color-ink);
   }
@@ -150,8 +214,16 @@ body {
 
 /* Klavyeyle gezenler için her yerde görünür odak. */
 :focus-visible {
-  outline: 2px solid var(--color-oxide);
+  outline: 2px solid var(--color-brand);
   outline-offset: 3px;
+}
+
+/*
+ * Koyu (lacivert degrade) yüzeylerde odak halkası marka mavisiyle görünmez
+ * olurdu — 1.62:1. Oralarda halka beyaza döner.
+ */
+.on-brand :focus-visible {
+  outline-color: #ffffff;
 }
 
 /* Kaydırma ile beliren bölümler — IntersectionObserver "is-visible" ekler. */
