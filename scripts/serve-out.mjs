@@ -58,7 +58,24 @@ async function resolve(urlPath) {
 }
 
 const server = createServer(async (request, response) => {
-  const file = await resolve(request.url ?? "/");
+  const url = request.url ?? "/";
+
+  /*
+   * Vercel ölçümleme uçları.
+   *
+   * Yayında `/_vercel/insights/*` ve `/_vercel/speed-insights/*` yollarını
+   * Vercel'in kendi altyapısı karşılıyor; `out/` klasöründe karşılıkları yok.
+   * Bu sunucu onları 404 dönseydi, sayfada hata olmadığını denetleyen
+   * testler sahte biçimde kırılırdı — ölçümleme yüzünden, sitenin kendi
+   * hatası yüzünden değil. Boş bir 204 ile yayındaki davranış taklit edilir.
+   */
+  if (url.startsWith("/_vercel/")) {
+    response.writeHead(204);
+    response.end();
+    return;
+  }
+
+  const file = await resolve(url);
 
   if (!file) {
     const notFound = join(ROOT, "404.html");
