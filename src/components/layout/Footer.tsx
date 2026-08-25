@@ -8,7 +8,7 @@ import { SERVICES } from "@/content/services";
 import { UI } from "@/content/ui";
 import type { Locale } from "@/lib/i18n";
 import { generalMessage } from "@/lib/messages";
-import { EXTERNAL_LINK_PROPS, telHref } from "@/lib/whatsapp";
+import { CONTACTS, EXTERNAL_LINK_PROPS, telHref } from "@/lib/whatsapp";
 
 /**
  * Altbilgi — künye plakası.
@@ -30,22 +30,30 @@ export function Footer({ locale }: { locale: Locale }) {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative overflow-hidden bg-paper-raised">
+    <footer className="relative bg-paper-raised">
       {/* Kimliğin degrade şeridi — altbilgiyi sayfadan ayıran kenar. */}
       <div className="brand-gradient h-1 w-full" />
 
       {/*
         Amblem filigranı. Süs değil, kartvizitin arka yüzündeki aygıtın aynısı.
         aria-hidden: ekran okuyucuya taşıyacak bir bilgisi yok.
+
+        Taşan kısım altbilginin değil, filigranın KENDİ kabında kırpılır:
+        altbilgiye `overflow-hidden` verilseydi içindeki iletişim listesi
+        açıldığında kırpılırdı.
       */}
-      <Image
-        src="/brand/ikon.svg"
-        alt=""
+      <div
         aria-hidden
-        width={340}
-        height={340}
-        className="pointer-events-none absolute -right-16 -bottom-16 -z-0 opacity-[0.05] select-none"
-      />
+        className="pointer-events-none absolute inset-0 overflow-hidden select-none"
+      >
+        <Image
+          src="/brand/ikon.svg"
+          alt=""
+          width={340}
+          height={340}
+          className="absolute -right-16 -bottom-16 opacity-[0.05]"
+        />
+      </div>
 
       <div className="relative z-10 mx-auto max-w-[84rem] px-5 py-14 md:px-8 lg:py-20">
         <div className="grid gap-12 lg:grid-cols-[1fr_auto] lg:gap-20">
@@ -60,6 +68,7 @@ export function Footer({ locale }: { locale: Locale }) {
 
             <WhatsAppButton
               message={generalMessage(locale)}
+              locale={locale}
               size="md"
               className="mt-7"
             >
@@ -86,13 +95,25 @@ export function Footer({ locale }: { locale: Locale }) {
 
             <div>
               <dt className="label">{UI.phone[locale]}</dt>
-              <dd className="mt-2">
-                <a
-                  href={telHref()}
-                  className="tap tabular font-mono text-sm font-medium text-ink transition-colors hover:text-brand"
-                >
-                  {SITE.phone.display}
-                </a>
+              {/*
+                Künye bir veri listesi, aksiyon değil — burada seçim menüsü
+                açmak gereksiz. İki yetkili adıyla birlikte yazılır.
+              */}
+              <dd className="mt-2 space-y-2">
+                {CONTACTS.map((contact) => (
+                  <a
+                    key={contact.id}
+                    href={telHref(contact)}
+                    className="block"
+                  >
+                    <span className="block text-sm font-semibold text-ink">
+                      {contact.name}
+                    </span>
+                    <span className="tabular block font-mono text-sm text-steel transition-colors hover:text-brand">
+                      {contact.display}
+                    </span>
+                  </a>
+                ))}
               </dd>
             </div>
 

@@ -4,7 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Wordmark } from "@/components/brand/Wordmark";
-import { CloseIcon, MenuIcon } from "@/components/ui/Icons";
+import { CloseIcon, MenuIcon, PhoneIcon } from "@/components/ui/Icons";
+import { ContactMenu } from "@/components/whatsapp/ContactMenu";
 import { WhatsAppButton } from "@/components/whatsapp/WhatsAppButton";
 import { ROUTES, hrefFor } from "@/config/routes";
 import { SITE } from "@/config/site";
@@ -12,7 +13,7 @@ import { UI } from "@/content/ui";
 import { resolveActiveRoute } from "@/lib/active-route";
 import { LOCALES, type Locale } from "@/lib/i18n";
 import { generalMessage } from "@/lib/messages";
-import { telHref } from "@/lib/whatsapp";
+import { CONTACTS, telHref } from "@/lib/whatsapp";
 
 /**
  * Başlık.
@@ -56,12 +57,31 @@ export function Header({ locale }: { locale: Locale }) {
           <span className="label">
             {SITE.address.district} / {SITE.address.city}
           </span>
-          <a
-            href={telHref()}
-            className="tap tabular font-mono text-xs font-medium tracking-wide text-ink transition-colors hover:text-brand"
-          >
-            {SITE.phone.display}
-          </a>
+          {/*
+            Burada açılır menü KULLANILMAZ: künye şeridi kaydırmada
+            kapanabilsin diye `overflow-hidden` taşıyor ve açılan listeyi
+            kırpıyordu. Zaten bir veri şeridi — iki numara doğrudan yazılır.
+            Dar ekranda gizlenir; mobilde alt aksiyon çubuğu bu işi görüyor.
+          */}
+          <span className="hidden items-center gap-3 sm:flex">
+            <PhoneIcon className="size-3.5 text-brand" />
+            {CONTACTS.map((contact, position) => (
+              <span key={contact.id} className="flex items-center gap-3">
+                {position > 0 && (
+                  <span aria-hidden className="text-zinc">
+                    |
+                  </span>
+                )}
+                <a
+                  href={telHref(contact)}
+                  className="tabular inline-flex min-h-6 items-center font-mono text-xs font-medium tracking-wide text-ink transition-colors hover:text-brand"
+                >
+                  <span className="sr-only">{contact.name} — </span>
+                  {contact.display}
+                </a>
+              </span>
+            ))}
+          </span>
         </div>
       </div>
 
@@ -95,7 +115,12 @@ export function Header({ locale }: { locale: Locale }) {
             <LanguageSwitcher locale={locale} />
 
             <span className="hidden sm:block">
-              <WhatsAppButton message={generalMessage(locale)} size="sm">
+              <WhatsAppButton
+                message={generalMessage(locale)}
+                locale={locale}
+                size="sm"
+                align="end"
+              >
                 {UI.whatsappWrite[locale]}
               </WhatsAppButton>
             </span>
@@ -171,16 +196,21 @@ export function Header({ locale }: { locale: Locale }) {
         </nav>
 
         <div className="space-y-4 px-5 pt-8">
-          <WhatsAppButton message={generalMessage(locale)} size="lg" fullWidth>
+          <WhatsAppButton
+            message={generalMessage(locale)}
+            locale={locale}
+            size="lg"
+            fullWidth
+          >
             {UI.whatsappWrite[locale]}
           </WhatsAppButton>
 
-          <a
-            href={telHref()}
-            className="tabular flex w-full items-center justify-center border border-zinc px-6 py-3.5 font-mono text-sm font-medium text-ink"
-          >
-            {SITE.phone.display}
-          </a>
+          <ContactMenu mode="tel" locale={locale} className="w-full">
+            <span className="flex w-full cursor-pointer items-center justify-center gap-2.5 border border-zinc px-6 py-3.5 text-sm font-semibold text-ink">
+              <PhoneIcon className="size-4 text-brand" />
+              {UI.callUs[locale]}
+            </span>
+          </ContactMenu>
         </div>
       </div>
     </header>

@@ -5,6 +5,7 @@ export const UI = {
   whatsappWrite: { tr: "WhatsApp'tan Yazın", en: "Message on WhatsApp" },
   whatsappShort: { tr: "WhatsApp", en: "WhatsApp" },
   call: { tr: "Ara", en: "Call" },
+  callUs: { tr: "Bizi Arayın", en: "Call Us" },
   callNow: { tr: "Hemen Arayın", en: "Call Now" },
   getQuote: { tr: "Teklif Alın", en: "Get a Quote" },
   askPrice: { tr: "Fiyat Sor", en: "Ask Price" },
@@ -22,6 +23,7 @@ export const UI = {
     en: "Aerial views of the yard",
   },
   playVideo: { tr: "Videoyu oynat", en: "Play video" },
+  chooseContact: { tr: "Kiminle görüşeceksiniz?", en: "Who would you like to reach?" },
   scrollDown: { tr: "Aşağı kaydırın", en: "Scroll down" },
   address: { tr: "Adres", en: "Address" },
   phone: { tr: "Telefon", en: "Phone" },
@@ -288,6 +290,10 @@ export const CONTACT = {
     },
     quantity: { tr: "Yaklaşık miktar", en: "Approximate quantity" },
     quantityPlaceholder: { tr: "örn. 15 ton", en: "e.g. 15 tonnes" },
+    contact: {
+      tr: "Kiminle görüşmek istersiniz?",
+      en: "Who would you like to speak with?",
+    },
     dismantling: { tr: "Yerinde söküm gerekiyor mu?", en: "Is on-site dismantling needed?" },
     yes: { tr: "Evet", en: "Yes" },
     no: { tr: "Hayır", en: "No" },
@@ -307,6 +313,10 @@ export const CONTACT = {
     phone: {
       tr: "Geçerli bir telefon numarası yazın.",
       en: "Please enter a valid phone number.",
+    },
+    contact: {
+      tr: "Görüşmek istediğiniz kişiyi seçin.",
+      en: "Please choose who to speak with.",
     },
     /** Eksik alan varsa formun başında beliren özet başlığı. */
     summary: {

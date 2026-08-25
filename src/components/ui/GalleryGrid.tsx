@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowRightIcon, CloseIcon, WhatsAppIcon } from "@/components/ui/Icons";
+import { ContactMenu } from "@/components/whatsapp/ContactMenu";
 import {
   GALLERY_CATEGORIES,
   type GalleryCategory,
@@ -11,7 +12,7 @@ import {
 import { UI } from "@/content/ui";
 import type { Locale } from "@/lib/i18n";
 import { galleryMessage } from "@/lib/messages";
-import { EXTERNAL_LINK_PROPS, waHref } from "@/lib/whatsapp";
+
 
 /**
  * Plaka ızgarası + lightbox.
@@ -243,17 +244,23 @@ export function GalleryGrid({
                   <div className="mt-3 flex items-center justify-between gap-4">
                     <span className="label">{categoryLabel(item.category)}</span>
 
-                    <a
-                      href={waHref(
-                        galleryMessage(locale, item.title[locale], item.file),
+                    <ContactMenu
+                      message={galleryMessage(
+                        locale,
+                        item.title[locale],
+                        item.file,
                       )}
-                      {...EXTERNAL_LINK_PROPS}
-                      aria-label={`${item.title[locale]} — ${UI.askAbout[locale]}`}
-                      className="inline-flex min-h-6 items-center gap-1.5 py-1 text-sm font-semibold text-whatsapp underline-offset-4 hover:underline"
+                      locale={locale}
+                      align="end"
                     >
-                      <WhatsAppIcon className="size-[0.9rem]" />
-                      {UI.askAbout[locale]}
-                    </a>
+                      <span
+                        aria-label={`${item.title[locale]} — ${UI.askAbout[locale]}`}
+                        className="inline-flex min-h-6 cursor-pointer items-center gap-1.5 py-1 text-sm font-semibold text-whatsapp underline-offset-4 hover:underline"
+                      >
+                        <WhatsAppIcon className="size-[0.9rem]" />
+                        {UI.askAbout[locale]}
+                      </span>
+                    </ContactMenu>
                   </div>
                 </figcaption>
               </figure>
@@ -332,16 +339,22 @@ export function GalleryGrid({
               </p>
             </div>
 
-            <a
-              href={waHref(
-                galleryMessage(locale, active.title[locale], active.file),
+            <ContactMenu
+              message={galleryMessage(
+                locale,
+                active.title[locale],
+                active.file,
               )}
-              {...EXTERNAL_LINK_PROPS}
-              className="inline-flex shrink-0 items-center justify-center gap-2.5 bg-whatsapp px-6 py-3 text-sm font-semibold text-paper transition-colors hover:bg-whatsapp-bright hover:text-ink"
+              locale={locale}
+              align="end"
+              up
+              className="shrink-0"
             >
-              <WhatsAppIcon className="size-4" />
-              {UI.askAbout[locale]}
-            </a>
+              <span className="inline-flex cursor-pointer items-center justify-center gap-2.5 bg-whatsapp px-6 py-3 text-sm font-semibold text-paper transition-colors hover:bg-whatsapp-bright hover:text-ink">
+                <WhatsAppIcon className="size-4" />
+                {UI.askAbout[locale]}
+              </span>
+            </ContactMenu>
           </div>
         </div>
       )}

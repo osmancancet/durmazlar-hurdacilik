@@ -1,5 +1,6 @@
-import { EXTERNAL_LINK_PROPS, waHref } from "@/lib/whatsapp";
+import { ContactMenu } from "@/components/whatsapp/ContactMenu";
 import { WhatsAppIcon } from "@/components/ui/Icons";
+import type { Locale } from "@/lib/i18n";
 
 type Variant = "solid" | "outline" | "quiet";
 type Size = "sm" | "md" | "lg";
@@ -32,44 +33,58 @@ type Props = {
   /** Sohbete önceden yazılacak metin — lib/messages.ts'ten gelir. */
   message: string;
   children: React.ReactNode;
+  locale: Locale;
   variant?: Variant;
   size?: Size;
   /** Ekran okuyucular için, görünen metinden daha açıklayıcı bir etiket. */
   ariaLabel?: string;
   className?: string;
   fullWidth?: boolean;
+  /** Açılır listenin hizası ve yönü — sayfa kenarlarında taşmasın diye. */
+  align?: "start" | "end";
+  up?: boolean;
 };
 
 /**
  * Sitedeki tüm WhatsApp aksiyonlarının tek kaynağı.
  *
- * NOT: Görünüm değişebilir, `waHref(message)` çağrısı değişmez — bağlantı
- * ve ön doldurulmuş mesaj mantığı tasarımdan bağımsızdır.
+ * İşletmede iki yetkili olduğu için buton doğrudan sohbeti açmıyor, önce
+ * kişiyi seçtiriyor (ContactMenu). Görünüm değişebilir; hangi numaraya
+ * gidileceği ve ön doldurulmuş mesaj mantığı tasarımdan bağımsız kalır.
  */
 export function WhatsAppButton({
   message,
   children,
+  locale,
   variant = "solid",
   size = "md",
   ariaLabel,
   className = "",
   fullWidth = false,
+  align = "start",
+  up = false,
 }: Props) {
   const isQuiet = variant === "quiet";
 
   return (
-    <a
-      href={waHref(message)}
-      {...EXTERNAL_LINK_PROPS}
-      aria-label={ariaLabel}
-      className={`inline-flex items-center justify-center font-semibold whitespace-nowrap transition-colors duration-150 ${
-        VARIANTS[variant]
-      } ${isQuiet ? "gap-2 text-sm" : SIZES[size]} ${
-        fullWidth ? "w-full" : ""
-      } ${className}`}
+    <ContactMenu
+      message={message}
+      locale={locale}
+      align={align}
+      up={up}
+      className={fullWidth ? `w-full ${className}` : className}
     >
-      <WhatsAppIcon className={`${ICON_SIZES[size]} shrink-0`} />
-      <span>{children}</span>
-    </a>
+      <span
+        aria-label={ariaLabel}
+        className={`inline-flex cursor-pointer items-center justify-center font-semibold whitespace-nowrap transition-colors duration-150 ${
+          VARIANTS[variant]
+        } ${isQuiet ? "gap-2 text-sm" : SIZES[size]} ${
+          fullWidth ? "w-full" : ""
+        }`}
+      >
+        <WhatsAppIcon className={`${ICON_SIZES[size]} shrink-0`} />
+        <span>{children}</span>
+      </span>
+    </ContactMenu>
   );
 }

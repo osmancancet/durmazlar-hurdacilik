@@ -30,11 +30,27 @@ test.describe("her sayfadaki bağlantılar", () => {
       const hrefs = await waHrefs(page);
       expect(hrefs.length, `${path} en az bir WhatsApp bağlantısı`).toBeGreaterThan(0);
 
+      /*
+       * İki yetkili var; her bağlantı ikisinden birine gitmeli. Numaralar
+       * yine tek kaynaktan (config/site.ts) geliyor — testte elle yazılmaz.
+       */
+      const gecerli = SITE.contacts.map((contact) => `wa.me/${contact.raw}`);
+
       for (const href of hrefs) {
-        // Numara tek kaynaktan geliyor mu?
-        expect(href).toContain(`wa.me/${SITE.phone.raw}`);
+        expect(
+          gecerli.some((parca) => href.includes(parca)),
+          `${href} tanınmayan bir numaraya gidiyor`,
+        ).toBe(true);
         // Boş mesajla açılan bir buton kalmamalı.
         expect(waText(href).length, `${href} mesajı boş`).toBeGreaterThan(0);
+      }
+
+      // Her iki yetkili de sunulmalı — biri unutulmuş olmasın.
+      for (const parca of gecerli) {
+        expect(
+          hrefs.some((href) => href.includes(parca)),
+          `${path} sayfasında ${parca} hiç geçmiyor`,
+        ).toBe(true);
       }
     });
   }
@@ -98,8 +114,15 @@ test("tıkla-ara bağlantıları tek kaynaktan gelir", async ({ page }) => {
     );
 
   expect(telHrefs.length).toBeGreaterThan(0);
+
+  const gecerliTel = SITE.contacts.map((contact) => `tel:${contact.e164}`);
   for (const href of telHrefs) {
-    expect(href).toBe(`tel:${SITE.phone.e164}`);
+    expect(gecerliTel).toContain(href);
+  }
+
+  // İki yetkilinin de numarası sayfada bulunmalı.
+  for (const tel of gecerliTel) {
+    expect(telHrefs).toContain(tel);
   }
 });
 

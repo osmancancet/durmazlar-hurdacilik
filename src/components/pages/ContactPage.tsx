@@ -6,7 +6,7 @@ import { MAPS_EMBED_URL, MAPS_LINK_URL, SITE } from "@/config/site";
 import { CONTACT, PAGE_HEADERS, UI } from "@/content/ui";
 import type { Locale } from "@/lib/i18n";
 import { generalMessage, stockRequestMessage } from "@/lib/messages";
-import { EXTERNAL_LINK_PROPS, telHref } from "@/lib/whatsapp";
+import { CONTACTS, EXTERNAL_LINK_PROPS, telHref } from "@/lib/whatsapp";
 
 export function ContactPage({ locale }: { locale: Locale }) {
   const header = PAGE_HEADERS.contact;
@@ -18,12 +18,21 @@ export function ContactPage({ locale }: { locale: Locale }) {
         title={header.title[locale]}
         lead={header.lead[locale]}
         aside={
-          <a href={telHref()} className="block">
+          <div>
             <span className="label">{UI.phone[locale]}</span>
-            <span className="tabular mt-2 block font-display text-xl font-bold whitespace-nowrap text-ink transition-colors hover:text-brand">
-              {SITE.phone.display}
-            </span>
-          </a>
+            <div className="mt-2 space-y-2">
+              {CONTACTS.map((contact) => (
+                <a key={contact.id} href={telHref(contact)} className="block">
+                  <span className="block text-sm font-semibold text-ink">
+                    {contact.name}
+                  </span>
+                  <span className="tabular block font-display font-bold whitespace-nowrap text-ink transition-colors hover:text-brand">
+                    {contact.display}
+                  </span>
+                </a>
+              ))}
+            </div>
+          </div>
         }
       />
 
@@ -58,6 +67,7 @@ export function ContactPage({ locale }: { locale: Locale }) {
               <div className="mt-6 space-y-2.5">
                 <WhatsAppButton
                   message={generalMessage(locale)}
+                  locale={locale}
                   size="md"
                   fullWidth
                 >
@@ -66,6 +76,7 @@ export function ContactPage({ locale }: { locale: Locale }) {
 
                 <WhatsAppButton
                   message={stockRequestMessage(locale)}
+                  locale={locale}
                   variant="outline"
                   size="md"
                   fullWidth
@@ -96,13 +107,17 @@ export function ContactPage({ locale }: { locale: Locale }) {
 
               <div className="border-b border-zinc py-4">
                 <dt className="label">{UI.phone[locale]}</dt>
-                <dd className="mt-2">
-                  <a
-                    href={telHref()}
-                    className="tap tabular inline-flex font-mono font-medium text-ink transition-colors hover:text-brand"
-                  >
-                    {SITE.phone.display}
-                  </a>
+                <dd className="mt-2 space-y-2">
+                  {CONTACTS.map((contact) => (
+                    <a key={contact.id} href={telHref(contact)} className="block">
+                      <span className="block text-sm font-semibold text-ink">
+                        {contact.name}
+                      </span>
+                      <span className="tabular block font-mono font-medium text-steel transition-colors hover:text-brand">
+                        {contact.display}
+                      </span>
+                    </a>
+                  ))}
                 </dd>
               </div>
 

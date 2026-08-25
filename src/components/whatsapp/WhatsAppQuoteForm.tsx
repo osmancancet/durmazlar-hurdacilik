@@ -5,7 +5,8 @@ import { WhatsAppIcon } from "@/components/ui/Icons";
 import { CONTACT } from "@/content/ui";
 import { QUOTE_MATERIAL_OPTIONS } from "@/content/materials";
 import { quoteMessage, type QuoteFormValues } from "@/lib/messages";
-import { waHref } from "@/lib/whatsapp";
+import { CONTACTS, waHref } from "@/lib/whatsapp";
+import type { Contact } from "@/config/site";
 import type { Locale } from "@/lib/i18n";
 
 /**
@@ -37,7 +38,20 @@ export function WhatsAppQuoteForm({ locale }: { locale: Locale }) {
     note: "",
   });
 
-  const [errors, setErrors] = useState<{ name?: string; phone?: string }>({});
+  const [errors, setErrors] = useState<{
+    name?: string;
+    phone?: string;
+    contact?: string;
+  }>({});
+
+  /*
+   * İşletmede iki yetkili var. Formda açılır menü kullanılmadı: burada
+   * seçim zaten bir form kararı, sayfanın geri kalanındaki gibi anlık bir
+   * aksiyon değil. Alttaki "Yerinde söküm" alanıyla aynı düğme grubu
+   * deseni kullanılıyor — kullanıcı formu doldururken kimi arayacağına da
+   * karar veriyor, gönderim anında ek bir adım çıkmıyor.
+   */
+  const [contact, setContact] = useState<Contact | null>(null);
 
   /*
    * Gönderim başarısız olursa odak, formun başındaki özete taşınır. Yalnızca
@@ -89,18 +103,19 @@ export function WhatsAppQuoteForm({ locale }: { locale: Locale }) {
     const nextErrors: typeof errors = {
       name: validateField("name", values.name),
       phone: validateField("phone", values.phone),
+      contact: contact ? undefined : CONTACT.errors.contact[locale],
     };
 
     setErrors(nextErrors);
 
-    if (nextErrors.name || nextErrors.phone) {
+    if (nextErrors.name || nextErrors.phone || nextErrors.contact) {
       /* Özet DOM'a bu render'da giriyor; odak bir sonraki kareye bırakılır. */
       requestAnimationFrame(() => summaryRef.current?.focus());
       return;
     }
 
     window.open(
-      waHref(quoteMessage(locale, values)),
+      waHref(contact!, quoteMessage(locale, values)),
       "_blank",
       "noopener,noreferrer",
     );
@@ -134,6 +149,16 @@ export function WhatsAppQuoteForm({ locale }: { locale: Locale }) {
                   className="text-sm font-semibold text-brand underline underline-offset-4"
                 >
                   {errors.phone}
+                </a>
+              </li>
+            )}
+            {errors.contact && (
+              <li>
+                <a
+                  href="#quote-contact"
+                  className="text-sm font-semibold text-brand underline underline-offset-4"
+                >
+                  {errors.contact}
                 </a>
               </li>
             )}
@@ -289,6 +314,46 @@ export function WhatsAppQuoteForm({ locale }: { locale: Locale }) {
           className={`${FIELD} mt-1 resize-y`}
         />
       </div>
+
+      <fieldset id="quote-contact">
+        <legend className="label">
+          {CONTACT.fields.contact[locale]}{" "}
+          <span className="text-brand">*</span>
+        </legend>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {CONTACTS.map((option) => {
+            const active = contact?.id === option.id;
+            return (
+              <button
+                key={option.id}
+                type="button"
+                onClick={() => {
+                  setContact(option);
+                  setErrors((previous) => ({ ...previous, contact: undefined }));
+                }}
+                aria-pressed={active}
+                className={`border px-4 py-2.5 text-start text-sm transition-colors ${
+                  active
+                    ? "border-ink bg-ink text-paper"
+                    : "border-zinc text-steel hover:border-ink hover:text-ink"
+                }`}
+              >
+                <span className="block font-semibold">{option.name}</span>
+                <span
+                  className={`tabular block font-mono text-xs ${
+                    active ? "text-zinc" : "text-steel-light"
+                  }`}
+                >
+                  {option.display}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+        {errors.contact && (
+          <p className="mt-2 text-sm text-brand">{errors.contact}</p>
+        )}
+      </fieldset>
 
       <div className="space-y-3 border-t border-zinc pt-7">
         <button

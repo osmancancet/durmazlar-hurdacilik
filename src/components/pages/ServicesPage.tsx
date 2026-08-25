@@ -112,6 +112,7 @@ export function ServicesPage({ locale }: { locale: Locale }) {
 
                     <WhatsAppButton
                       message={serviceMessage(locale, service.title[locale])}
+                      locale={locale}
                       size="lg"
                       className="mt-8"
                       ariaLabel={`${service.title[locale]} — ${UI.whatsappWrite[locale]}`}

@@ -69,8 +69,8 @@ const META: Record<RouteKey, { title: Localized; description: Localized }> = {
       en: "Contact & Quote Request",
     },
     description: {
-      tr: `Hürriyet Mahallesi, Rüzgar Sokak No: 11, Soma / Manisa. Telefon ${SITE.phone.display}. Teklif formunu doldurun, bilgiler WhatsApp'ta açılsın.`,
-      en: `Hürriyet Mahallesi, Rüzgar Sokak No: 11, Soma / Manisa. Phone ${SITE.phone.display}. Fill in the quote form and it opens as a WhatsApp message.`,
+      tr: `Hürriyet Mahallesi, Rüzgar Sokak No: 11, Soma / Manisa. Telefon ${SITE.contacts[0].display}. Teklif formunu doldurun, bilgiler WhatsApp'ta açılsın.`,
+      en: `Hürriyet Mahallesi, Rüzgar Sokak No: 11, Soma / Manisa. Phone ${SITE.contacts[0].display}. Fill in the quote form and it opens as a WhatsApp message.`,
     },
   },
 };
@@ -148,7 +148,19 @@ export function localBusinessJsonLd(locale: Locale) {
     name: SITE.name,
     description: META.home.description[locale],
     url: `${SITE.url}${hrefFor("home", locale)}`,
-    telephone: SITE.phone.e164,
+    /*
+     * İki yetkili de bildirilir. schema.org `telephone` tek değer beklediği
+     * için ilki oraya, ikisi birden `contactPoint` listesine yazılır —
+     * Google'ın işletme kartında ikisi de görünebilsin.
+     */
+    telephone: SITE.contacts[0].e164,
+    contactPoint: SITE.contacts.map((contact) => ({
+      "@type": "ContactPoint",
+      name: contact.name,
+      telephone: contact.e164,
+      contactType: "sales",
+      availableLanguage: ["tr", "en", "ru", "ar"],
+    })),
     image: `${SITE.url}/images/konveyor-sasi-2.webp`,
     /* Google'ın işletme kartında marka işareti olarak gösterilir. */
     logo: `${SITE.url}/brand/ikon-512.png`,

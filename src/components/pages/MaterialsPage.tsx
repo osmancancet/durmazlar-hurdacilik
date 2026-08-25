@@ -3,12 +3,13 @@ import { CtaBand } from "@/components/ui/CtaBand";
 import { WhatsAppIcon } from "@/components/ui/Icons";
 import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
+import { ContactMenu } from "@/components/whatsapp/ContactMenu";
 import { WhatsAppButton } from "@/components/whatsapp/WhatsAppButton";
 import { MATERIAL_GROUPS } from "@/content/materials";
 import { PAGE_HEADERS, UI } from "@/content/ui";
 import type { Locale } from "@/lib/i18n";
 import { materialMessage, sendPhotosMessage } from "@/lib/messages";
-import { EXTERNAL_LINK_PROPS, waHref } from "@/lib/whatsapp";
+
 
 /**
  * Aldığımız malzemeler — sitenin künye tablosu.
@@ -65,6 +66,7 @@ export function MaterialsPage({ locale }: { locale: Locale }) {
 
           <WhatsAppButton
             message={sendPhotosMessage(locale)}
+            locale={locale}
             size="md"
             className="shrink-0"
           >
@@ -104,15 +106,20 @@ export function MaterialsPage({ locale }: { locale: Locale }) {
                       {item.name[locale]}
                     </h3>
 
-                    <a
-                      href={waHref(materialMessage(locale, item.name[locale]))}
-                      {...EXTERNAL_LINK_PROPS}
-                      aria-label={`${item.name[locale]} — ${UI.askPrice[locale]}`}
-                      className="row-span-2 inline-flex min-h-6 items-center gap-1.5 self-center py-1 text-sm font-semibold whitespace-nowrap text-whatsapp underline-offset-4 hover:underline"
+                    <ContactMenu
+                      message={materialMessage(locale, item.name[locale])}
+                      locale={locale}
+                      align="end"
+                      className="row-span-2 self-center"
                     >
-                      <WhatsAppIcon className="size-[0.9rem]" />
-                      {UI.askPrice[locale]}
-                    </a>
+                      <span
+                        aria-label={`${item.name[locale]} — ${UI.askPrice[locale]}`}
+                        className="inline-flex min-h-6 cursor-pointer items-center gap-1.5 py-1 text-sm font-semibold whitespace-nowrap text-whatsapp underline-offset-4 hover:underline"
+                      >
+                        <WhatsAppIcon className="size-[0.9rem]" />
+                        {UI.askPrice[locale]}
+                      </span>
+                    </ContactMenu>
 
                     <p className="col-start-2 text-sm leading-relaxed text-steel">
                       {item.note[locale]}

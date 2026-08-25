@@ -1,8 +1,19 @@
 import { expect, test } from "@playwright/test";
 import { hrefFor } from "@/config/routes";
+import { SITE } from "@/config/site";
 import { CONTACT } from "@/content/ui";
 import { quoteMessage } from "@/lib/messages";
 import { stubWhatsApp, waText } from "./helpers";
+
+/**
+ * Formda kiminle görüşüleceği de seçilir (işletmede iki yetkili var).
+ * Numara testte elle yazılmaz; config/site.ts'ten gelir.
+ */
+const SECILEN = SITE.contacts[0];
+
+async function kisiSec(page: import("@playwright/test").Page) {
+  await page.getByRole("button", { name: SECILEN.name }).click();
+}
 
 /**
  * Teklif formu.
@@ -72,10 +83,14 @@ test("dolu form doğru WhatsApp mesajını üretir", async ({ page, context }) =
     .getByRole("button", { name: CONTACT.fields.yes.tr, exact: true })
     .click();
   await page.fill("#quote-note", values.note);
+  await kisiSec(page);
 
   const popupPromise = context.waitForEvent("page");
   await page.getByRole("button", { name: CONTACT.submit.tr }).click();
   const popup = await popupPromise;
+
+  // Mesaj seçilen yetkilinin numarasına gitmeli.
+  expect(popup.url()).toContain(`wa.me/${SECILEN.raw}`);
 
   const message = waText(popup.url());
   expect(message).toBe(quoteMessage("tr", values));
@@ -94,6 +109,7 @@ test("seçilmeyen alanlar mesaja hiç girmez", async ({ page, context }) => {
   // Yalnızca zorunlu alanlar dolduruluyor.
   await page.fill("#quote-name", "Ayşe Demir");
   await page.fill("#quote-phone", "05321112233");
+  await kisiSec(page);
 
   const popupPromise = context.waitForEvent("page");
   await page.getByRole("button", { name: CONTACT.submit.tr }).click();
@@ -165,6 +181,7 @@ test("hata düzeltildikten sonra form gönderilir", async ({ page, context }) =>
 
   await page.fill("#quote-name", "Ayşe Demir");
   await page.fill("#quote-phone", "05321112233");
+  await kisiSec(page);
   await expect(page.locator('form [role="alert"]')).toHaveCount(0);
 
   const popupPromise = context.waitForEvent("page");

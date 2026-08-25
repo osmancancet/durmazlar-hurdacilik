@@ -1,9 +1,9 @@
+import { PhoneIcon } from "@/components/ui/Icons";
+import { ContactMenu } from "@/components/whatsapp/ContactMenu";
 import { WhatsAppButton } from "@/components/whatsapp/WhatsAppButton";
-import { SITE } from "@/config/site";
 import { HOME, UI } from "@/content/ui";
 import type { Locale } from "@/lib/i18n";
 import { sendPhotosMessage } from "@/lib/messages";
-import { telHref } from "@/lib/whatsapp";
 
 /**
  * Her sayfanın sonundaki çağrı.
@@ -30,16 +30,22 @@ export function CtaBand({ locale }: { locale: Locale }) {
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
-          <WhatsAppButton message={sendPhotosMessage(locale)} size="lg">
+          <WhatsAppButton
+            message={sendPhotosMessage(locale)}
+            locale={locale}
+            size="lg"
+            up
+          >
             {UI.sendPhotos[locale]}
           </WhatsAppButton>
 
-          <a
-            href={telHref()}
-            className="tabular border border-zinc/60 px-6 py-3.5 font-mono text-sm font-medium text-paper transition-colors hover:border-paper"
-          >
-            {SITE.phone.display}
-          </a>
+          {/* İki yetkili var; tek numara yerine seçim sunulur. */}
+          <ContactMenu mode="tel" locale={locale} up>
+            <span className="inline-flex cursor-pointer items-center gap-2.5 border border-zinc/60 px-6 py-3.5 text-sm font-semibold text-paper transition-colors hover:border-paper">
+              <PhoneIcon className="size-4" />
+              {UI.callUs[locale]}
+            </span>
+          </ContactMenu>
         </div>
       </div>
     </section>

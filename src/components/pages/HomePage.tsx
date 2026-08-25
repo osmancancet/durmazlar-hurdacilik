@@ -1,20 +1,19 @@
 import Link from "next/link";
 import { CtaBand } from "@/components/ui/CtaBand";
 import { GalleryGrid } from "@/components/ui/GalleryGrid";
-import { ArrowRightIcon } from "@/components/ui/Icons";
+import { ArrowRightIcon, PhoneIcon } from "@/components/ui/Icons";
+import { ContactMenu } from "@/components/whatsapp/ContactMenu";
 import { Reveal } from "@/components/ui/Reveal";
 import { Rule, Section, SectionHeading } from "@/components/ui/Section";
 import { SpecStrip } from "@/components/ui/SpecStrip";
 import { VideoSlider } from "@/components/ui/VideoSlider";
 import { WhatsAppButton } from "@/components/whatsapp/WhatsAppButton";
 import { hrefFor } from "@/config/routes";
-import { SITE } from "@/config/site";
 import { GALLERY_PREVIEW } from "@/content/gallery";
 import { SERVICES } from "@/content/services";
 import { HOME, UI } from "@/content/ui";
 import type { Locale } from "@/lib/i18n";
 import { sendPhotosMessage, serviceMessage } from "@/lib/messages";
-import { telHref } from "@/lib/whatsapp";
 
 export function HomePage({ locale }: { locale: Locale }) {
   return (
@@ -54,16 +53,21 @@ function Hero({ locale }: { locale: Locale }) {
             </p>
 
             <div className="mt-7 flex flex-wrap items-center gap-3">
-              <WhatsAppButton message={sendPhotosMessage(locale)} size="lg">
+              <WhatsAppButton
+                message={sendPhotosMessage(locale)}
+                locale={locale}
+                size="lg"
+              >
                 {UI.sendPhotos[locale]}
               </WhatsAppButton>
 
-              <a
-                href={telHref()}
-                className="tabular border border-zinc px-6 py-3.5 font-mono text-sm font-medium text-ink transition-colors hover:border-ink"
-              >
-                {SITE.phone.display}
-              </a>
+              {/* İki yetkili var; numara yerine seçim açılır. */}
+              <ContactMenu mode="tel" locale={locale}>
+                <span className="inline-flex cursor-pointer items-center gap-2.5 border border-zinc px-6 py-3.5 text-sm font-semibold text-ink transition-colors hover:border-ink">
+                  <PhoneIcon className="size-4 text-brand" />
+                  {UI.callUs[locale]}
+                </span>
+              </ContactMenu>
             </div>
 
             <p className="mt-4 text-sm text-steel">{HOME.hero.note[locale]}</p>
@@ -135,6 +139,8 @@ function Services({ locale }: { locale: Locale }) {
                 <div className="lg:col-start-3 lg:row-span-2 lg:row-start-1 lg:self-center">
                   <WhatsAppButton
                     message={serviceMessage(locale, service.title[locale])}
+                    locale={locale}
+                    align="end"
                     variant="outline"
                     size="sm"
                     ariaLabel={`${service.title[locale]} — ${UI.whatsappWrite[locale]}`}

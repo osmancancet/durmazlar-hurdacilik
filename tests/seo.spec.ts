@@ -75,7 +75,12 @@ test("işletme verisi (LocalBusiness) doğru ve eksiksiz", async ({ page }) => {
   expect(typesOf(business)).toContain("RecyclingCenter");
 
   expect(business.name).toBe(SITE.name);
-  expect(business.telephone).toBe(SITE.phone.e164);
+  expect(business.telephone).toBe(SITE.contacts[0].e164);
+
+  // İki yetkili de yapılandırılmış veride bildirilmeli.
+  expect(business.contactPoint.map((point: { telephone: string }) => point.telephone)).toEqual(
+    SITE.contacts.map((contact) => contact.e164),
+  );
   expect(business.address.addressLocality).toBe(SITE.address.district);
   expect(business.address.addressRegion).toBe(SITE.address.city);
   expect(business.address.postalCode).toBe(SITE.address.postalCode);

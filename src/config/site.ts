@@ -12,15 +12,35 @@ export const SITE = {
   legalName: "Durmazlar Hurdacılık",
 
   /**
-   * Telefon.
-   * `raw` -> yalnızca rakam, ülke kodu dahil (wa.me adresleri bunu kullanır).
-   * `display` -> ekranda gösterilen biçim.
+   * İletişim kişileri.
+   *
+   * İşletmede iki yetkili var ve kartvizitte ikisi de aynı unvanla duruyor:
+   * aralarında "birincil" ayrımı yok. Bu yüzden site de birini öne
+   * çıkarmıyor; her WhatsApp ve arama aksiyonu iki kişiyi birlikte sunuyor.
+   *
+   * `raw`     -> yalnızca rakam, ülke kodu dahil (wa.me adresleri bunu kullanır)
+   * `display` -> ekranda gösterilen biçim
+   * `e164`    -> tel: bağlantıları ve JSON-LD için
+   *
+   * Sıra ekranda göründükleri sıradır; değiştirmek listeyi her yerde
+   * birlikte değiştirir.
    */
-  phone: {
-    raw: "905340882679",
-    display: "+90 534 088 26 79",
-    e164: "+905340882679",
-  },
+  contacts: [
+    {
+      id: "veysel",
+      name: "Veysel Sırçancı",
+      raw: "905340882679",
+      display: "+90 534 088 26 79",
+      e164: "+905340882679",
+    },
+    {
+      id: "yusuf",
+      name: "Yusuf Sırçancı",
+      raw: "905318595395",
+      display: "+90 531 859 53 95",
+      e164: "+905318595395",
+    },
+  ],
 
   email: "",
 
@@ -77,6 +97,9 @@ export const SITE = {
     facebook: "",
   },
 } as const;
+
+/** Tek bir iletişim kişisi. */
+export type Contact = (typeof SITE.contacts)[number];
 
 /** Google Haritalar gömme adresi — iletişim sayfasındaki harita bunu kullanır. */
 export const MAPS_QUERY = encodeURIComponent(
