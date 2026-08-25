@@ -4,34 +4,42 @@ import { SITE } from "@/config/site";
 import { HTML_LANG, LOCALES } from "@/lib/i18n";
 
 /**
- * İki dillilik.
+ * Dört dillilik.
  *
  * En kolay bozulan yer dil değiştirici: çoğu sitede kullanıcıyı ana sayfaya
  * atar. Burada her sayfanın *karşılığına* gitmesi gerekiyor
- * (/tr/aldigimiz-malzemeler/ → /en/materials/).
+ * (/tr/aldigimiz-malzemeler/ → /ru/materialy/).
+ *
+ * Değiştirici bir <details> açılır listesi. Bağlantılar kapalıyken de
+ * belgede duruyor (JavaScript'siz çalışsın diye) — bu yüzden href her
+ * durumda okunabiliyor, ama tıklamadan önce liste açılmalı.
  */
 
 test.describe("dil değiştirici aynı sayfanın karşılığına gider", () => {
   for (const route of ROUTES) {
     for (const from of LOCALES) {
-      const to = LOCALES.find((locale) => locale !== from)!;
+      for (const to of LOCALES) {
+        if (to === from) continue;
 
-      test(`${hrefFor(route.key, from)} → ${to}`, async ({ page }) => {
-        await page.goto(hrefFor(route.key, from));
+        test(`${hrefFor(route.key, from)} → ${to}`, async ({ page }) => {
+          await page.goto(hrefFor(route.key, from));
 
-        const link = page.locator(`header a[hreflang="${to}"]`).first();
-        const expected = hrefFor(route.key, to);
+          const link = page.locator(`header a[hreflang="${to}"]`).first();
+          const expected = hrefFor(route.key, to);
 
-        await expect(link).toHaveAttribute("href", expected);
+          // Bağlantı liste kapalıyken bile belgede olmalı.
+          await expect(link).toHaveAttribute("href", expected);
 
-        await link.click();
-        await page.waitForURL(
-          (url) => new URL(url).pathname === expected,
-          { timeout: 10_000 },
-        );
+          await page.locator("header details > summary").first().click();
+          await link.click();
+          await page.waitForURL(
+            (url) => new URL(url).pathname === expected,
+            { timeout: 10_000 },
+          );
 
-        expect(new URL(page.url()).pathname).toBe(expected);
-      });
+          expect(new URL(page.url()).pathname).toBe(expected);
+        });
+      }
     }
   }
 });

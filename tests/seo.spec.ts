@@ -126,7 +126,7 @@ test("hakkımızda sayfası SSS verisi taşır", async ({ page }) => {
   expect(faq.mainEntity.length).toBe(FAQ.length);
 });
 
-test("site haritası 12 adresi ve karşılıklarını listeler", async ({
+test("site haritası tüm dillerdeki adresleri listeler", async ({
   request,
 }) => {
   const response = await request.get("/sitemap.xml");
@@ -134,7 +134,8 @@ test("site haritası 12 adresi ve karşılıklarını listeler", async ({
 
   const xml = await response.text();
   const locations = xml.match(/<loc>/g) ?? [];
-  expect(locations.length).toBe(12);
+  // Beklenen sayı elle yazılmaz; rota × dil sayısından türetilir.
+  expect(locations.length).toBe(ALL_PAGES.length);
 
   for (const { path } of ALL_PAGES) {
     expect(xml).toContain(`${SITE.url}${path}`);

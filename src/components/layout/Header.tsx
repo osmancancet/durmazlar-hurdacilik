@@ -51,7 +51,8 @@ export function Header({ locale }: { locale: Locale }) {
   const navLinks = ROUTES.filter((route) => route.inNav);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 bg-paper/95 backdrop-blur-sm">
+    <>
+      <header className="fixed inset-x-0 top-0 z-50 bg-paper/95 backdrop-blur-sm">
       {/* Künye şeridi — konum ve telefon, veri olarak. */}
       <div
         className={`overflow-hidden border-b border-zinc transition-all duration-300 ${
@@ -144,8 +145,18 @@ export function Header({ locale }: { locale: Locale }) {
         </div>
       </div>
 
+      </header>
+
       {/*
         Mobil tam ekran menü.
+
+        DİKKAT — bu blok <header>'ın DIŞINDA durur.
+
+        Başlıkta `backdrop-blur-sm` var ve `backdrop-filter`, içindeki
+        `position: fixed` öğeler için kapsayıcı blok oluşturur. Menü başlığın
+        içindeyken `inset-0` viewport'a değil başlık kutusuna göre çözülüyordu:
+        panel 390×81 piksele sıkışıyor, arka planı sayfanın tamamını
+        örtemiyor ve satırlar taşıp üst üste biniyordu.
 
         Kapalıyken `visibility: hidden` uygulanır — yalnızca opacity ile
         gizlemek yetmez: görünmeyen bağlantılar sekme sırasında kalır ve
@@ -218,7 +229,7 @@ export function Header({ locale }: { locale: Locale }) {
           </ContactMenu>
         </div>
       </div>
-    </header>
+    </>
   );
 }
 

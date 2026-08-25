@@ -85,3 +85,41 @@ test("hiçbir sayfa yatay kaymıyor", async ({ page }) => {
     expect(overflow, `${path} yatay taşıyor`).toBeLessThanOrEqual(1);
   }
 });
+
+/*
+ * Mobil menü paneli gerçekten tüm ekranı örtmeli.
+ *
+ * Bir kez şöyle kırıldı: panel <header>'ın içindeydi ve başlıktaki
+ * `backdrop-blur` (backdrop-filter), içindeki `position: fixed` öğeler için
+ * kapsayıcı blok oluşturuyor. `inset-0` viewport'a değil başlık kutusuna göre
+ * çözülünce panel 390×81 piksele sıkışıyor; arka planı sayfayı örtemiyor ve
+ * menü satırları taşıp sayfanın üstüne biniyordu. Gözle bakmadan fark
+ * edilmesi zor, o yüzden ölçülüyor.
+ */
+test("mobil menü paneli tüm ekranı örter", async ({ page }) => {
+  await page.goto(hrefFor("home", "tr"));
+
+  // Kaydırıldığında başlık kısalıyor; hata da o durumda ortaya çıkıyordu.
+  await page.evaluate(() => window.scrollTo(0, 900));
+  await page.getByRole("button", { name: UI.menu.tr }).click();
+
+  const olculer = await page.locator("#mobil-menu").evaluate((node) => {
+    const rect = node.getBoundingClientRect();
+    return {
+      genislik: Math.round(rect.width),
+      yukseklik: Math.round(rect.height),
+      ekranGenislik: window.innerWidth,
+      ekranYukseklik: window.innerHeight,
+      zemin: getComputedStyle(node).backgroundColor,
+    };
+  });
+
+  expect(olculer.genislik).toBe(olculer.ekranGenislik);
+  expect(
+    olculer.yukseklik,
+    "panel ekranın tamamını örtmüyor — arkasındaki sayfa görünür",
+  ).toBeGreaterThanOrEqual(olculer.ekranYukseklik);
+
+  // Zemin saydam olmamalı; saydamsa altındaki fotoğraf görünür.
+  expect(olculer.zemin).not.toContain("rgba(0, 0, 0, 0)");
+});
