@@ -97,14 +97,19 @@ export const SITE = {
   /**
    * Sitenin canlı adresi (sonunda / olmadan).
    *
-   * Canonical adresler, hreflang etiketleri, site haritası ve sosyal medya
-   * önizlemeleri bu değerden üretilir; var olmayan bir adres yazılırsa
-   * arama motorları siteyi indekslemez.
+   * Canonical adresler, hreflang etiketleri, site haritası, robots.txt ve
+   * sosyal medya önizlemeleri bu tek değerden üretilir.
    *
-   * Kendi alan adınızı aldığınızda (ör. https://durmazlarhurdacilik.com)
-   * Vercel'de alan adını projeye ekleyin ve burayı tek satırda güncelleyin.
+   * NEDEN `www` VAR:
+   * Vercel'de birincil (Production) alan adı www sürümü; www'suz hâli oraya
+   * 308 ile yönlendiriliyor. Canonical adres, yönlendirmenin kendisini değil
+   * HEDEFİNİ göstermeli — yoksa arama motoruna "asıl adresim burası" diye
+   * her seferinde bir yönlendirme adımı tarif etmiş oluruz.
+   *
+   * Birincil alan adı ileride www'suz hâle çevrilirse burası da güncellenir;
+   * ikisi her zaman aynı olmalı.
    */
-  url: "https://durmazlar-hurdacilik.vercel.app",
+  url: "https://www.durmazlarhurdacilik.com",
 
   /** Sosyal medya hesapları (boş bırakılanlar arayüzde gösterilmez). */
   social: {
