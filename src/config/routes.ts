@@ -20,48 +20,74 @@ export type RouteKey =
 export type Route = {
   key: RouteKey;
   /** Adres parçası; ana sayfada boş. */
-  slug: { tr: string; en: string };
+  slug: Record<Locale, string>;
   /** Menüde görünen ad. */
   label: Localized;
   /** Menüde gösterilsin mi (tümü gösteriliyor, ileride ayrım gerekirse hazır). */
   inNav: boolean;
 };
 
+/*
+ * Adres parçaları Latin harfleriyle yazılır — Rusça ve Arapça sayfalarda da.
+ * Kiril veya Arap harfli bir adres tarayıcıda punycode/yüzde kodlamasına
+ * dönüşür, WhatsApp'ta paylaşıldığında okunmaz bir dizi olur. Dilin kendisi
+ * `/ru/` ve `/ar/` ön ekiyle zaten belli.
+ */
 export const ROUTES: Route[] = [
   {
     key: "home",
-    slug: { tr: "", en: "" },
-    label: { tr: "Anasayfa", en: "Home" },
+    slug: { tr: "", en: "", ru: "", ar: "" },
+    label: { tr: "Anasayfa", en: "Home", ru: "Главная", ar: "الرئيسية" },
     inNav: true,
   },
   {
     key: "services",
-    slug: { tr: "hizmetler", en: "services" },
-    label: { tr: "Hizmetler", en: "Services" },
+    slug: { tr: "hizmetler", en: "services", ru: "uslugi", ar: "khadamat" },
+    label: { tr: "Hizmetler", en: "Services", ru: "Услуги", ar: "خدماتنا" },
     inNav: true,
   },
   {
     key: "materials",
-    slug: { tr: "aldigimiz-malzemeler", en: "materials" },
-    label: { tr: "Aldığımız Malzemeler", en: "Materials We Buy" },
+    slug: {
+      tr: "aldigimiz-malzemeler",
+      en: "materials",
+      ru: "materialy",
+      ar: "mawad",
+    },
+    label: {
+      tr: "Aldığımız Malzemeler",
+      en: "Materials We Buy",
+      ru: "Что мы покупаем",
+      ar: "المواد التي نشتريها",
+    },
     inNav: true,
   },
   {
     key: "gallery",
-    slug: { tr: "galeri", en: "gallery" },
-    label: { tr: "Galeri", en: "Gallery" },
+    slug: { tr: "galeri", en: "gallery", ru: "galereya", ar: "maarid" },
+    label: { tr: "Galeri", en: "Gallery", ru: "Галерея", ar: "معرض الصور" },
     inNav: true,
   },
   {
     key: "about",
-    slug: { tr: "hakkimizda", en: "about" },
-    label: { tr: "Hakkımızda", en: "About Us" },
+    slug: { tr: "hakkimizda", en: "about", ru: "o-nas", ar: "man-nahnu" },
+    label: {
+      tr: "Hakkımızda",
+      en: "About Us",
+      ru: "О нас",
+      ar: "من نحن",
+    },
     inNav: true,
   },
   {
     key: "contact",
-    slug: { tr: "iletisim", en: "contact" },
-    label: { tr: "İletişim", en: "Contact" },
+    slug: { tr: "iletisim", en: "contact", ru: "kontakty", ar: "ittisal" },
+    label: {
+      tr: "İletişim",
+      en: "Contact",
+      ru: "Контакты",
+      ar: "اتصل بنا",
+    },
     inNav: true,
   },
 ];

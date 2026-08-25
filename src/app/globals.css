@@ -108,6 +108,56 @@
   color-scheme: light;
 }
 
+/*
+ * Kiril ve Arap alfabesinde yazı aileleri değişir.
+ *
+ * Kimliğin karakteri Poppins yalnızca Latin taşıyor; Rusça ve Arapça
+ * sayfalarda tarayıcı rastgele bir yedeğe düşerdi. Rubik iki alfabeyi de
+ * taşıyor ve geometrik yapısıyla Poppins'e yakın duruyor.
+ *
+ * Arapçada gövde metni de Rubik'e geçer: Source Sans'ta Arap alfabesi yok.
+ * Rusçada gövde Source Sans'ta kalabilir — Kiril alt kümesi mevcut.
+ */
+[data-script="cyrillic"] {
+  --font-display: var(--font-rubik), ui-sans-serif, system-ui, sans-serif;
+  --font-label: var(--font-rubik), ui-sans-serif, system-ui, sans-serif;
+}
+
+[data-script="arabic"] {
+  --font-display: var(--font-rubik), ui-sans-serif, system-ui, sans-serif;
+  --font-label: var(--font-rubik), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-rubik), ui-sans-serif, system-ui, sans-serif;
+}
+
+/*
+ * Arapçada harf aralığı açılmaz.
+ *
+ * `.label` sınıfı Latin büyük harflerde 0.18em aralıkla çalışıyor; Arap
+ * alfabesinde harfler birbirine bağlandığı için aynı aralık kelimeleri
+ * kopartır ve okunmaz hâle getirir. Büyük harf dönüşümünün de Arapçada
+ * karşılığı yok.
+ */
+[data-script="arabic"] .label {
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: 0.75rem;
+}
+
+[data-script="arabic"] .display {
+  letter-spacing: 0;
+  line-height: 1.35;
+}
+
+/*
+ * Sayılar her dilde Latin rakamlarla ve soldan sağa yazılır: telefon
+ * numaraları, tonaj ve indeksler böyle okunur. `direction: ltr` Arapça
+ * sayfada numaranın ters dizilmesini engeller.
+ */
+[data-script="arabic"] .tabular {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 6rem;
@@ -210,6 +260,17 @@ body {
   .measure-tight {
     max-width: 46ch;
   }
+}
+
+/*
+ * Yön bildiren ikonlar sağdan sola dillerde aynalanır.
+ *
+ * "İleri" oku Arapçada sola bakmalı; aksi hâlde ok, okuma yönünün tersini
+ * gösterir ve "sonraki" yerine "önceki" gibi okunur. Yalnızca bu sınıfı
+ * taşıyan ikonlar döner — logo ve WhatsApp gibi simgeler aynalanmaz.
+ */
+[dir="rtl"] .rtl-flip {
+  scale: -1 1;
 }
 
 /* Klavyeyle gezenler için her yerde görünür odak. */

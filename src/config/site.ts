@@ -55,10 +55,25 @@ export const SITE = {
 
   /** Çalışma saatleri. Metin alanları ekranda, `schema` alanı JSON-LD'de kullanılır. */
   hours: {
-    weekdays: { tr: "Pazartesi – Cumartesi", en: "Monday – Saturday" },
+    weekdays: {
+      tr: "Pazartesi – Cumartesi",
+      en: "Monday – Saturday",
+      ru: "Понедельник – суббота",
+      ar: "الاثنين – السبت",
+    },
     weekdayHours: "08:00 – 19:00",
-    sunday: { tr: "Pazar", en: "Sunday" },
-    sundayHours: { tr: "Kapalı", en: "Closed" },
+    sunday: {
+      tr: "Pazar",
+      en: "Sunday",
+      ru: "Воскресенье",
+      ar: "الأحد",
+    },
+    sundayHours: {
+      tr: "Kapalı",
+      en: "Closed",
+      ru: "Закрыто",
+      ar: "مغلق",
+    },
     /** JSON-LD openingHoursSpecification için */
     schema: [
       {

@@ -1,9 +1,10 @@
+import { ArrowRightIcon } from "@/components/ui/Icons";
 import { PageHero } from "@/components/pages/PageHero";
 import { Section } from "@/components/ui/Section";
 import { WhatsAppButton } from "@/components/whatsapp/WhatsAppButton";
 import { WhatsAppQuoteForm } from "@/components/whatsapp/WhatsAppQuoteForm";
 import { MAPS_EMBED_URL, MAPS_LINK_URL, SITE } from "@/config/site";
-import { CONTACT, PAGE_HEADERS, UI } from "@/content/ui";
+import { CONTACT, LABELS, PAGE_HEADERS, UI } from "@/content/ui";
 import type { Locale } from "@/lib/i18n";
 import { generalMessage, stockRequestMessage } from "@/lib/messages";
 import { CONTACTS, EXTERNAL_LINK_PROPS, telHref } from "@/lib/whatsapp";
@@ -40,7 +41,7 @@ export function ContactPage({ locale }: { locale: Locale }) {
         <div className="grid gap-14 lg:grid-cols-[1fr_20rem] lg:gap-20">
           <div>
             <p className="label">
-              {locale === "tr" ? "Form" : "Form"}
+              {LABELS.form[locale]}
             </p>
             <h2 className="display mt-3 text-[1.75rem] sm:text-[2.25rem]">
               {CONTACT.formTitle[locale]}
@@ -81,7 +82,7 @@ export function ContactPage({ locale }: { locale: Locale }) {
                   size="md"
                   fullWidth
                 >
-                  {locale === "tr" ? "Ekipman Arıyorum" : "I Need Equipment"}
+                  {LABELS.needEquipment[locale]}
                 </WhatsAppButton>
               </div>
             </div>
@@ -100,7 +101,8 @@ export function ContactPage({ locale }: { locale: Locale }) {
                     {...EXTERNAL_LINK_PROPS}
                     className="mt-2 inline-flex min-h-6 items-center py-1 text-sm font-semibold text-brand underline-offset-4 hover:underline"
                   >
-                    {UI.openInMaps[locale]} →
+                    {UI.openInMaps[locale]}
+                    <ArrowRightIcon className="rtl-flip size-3.5" />
                   </a>
                 </dd>
               </div>

@@ -5,7 +5,7 @@ import { WhatsAppButton } from "@/components/whatsapp/WhatsAppButton";
 import { ROUTES, hrefFor } from "@/config/routes";
 import { MAPS_LINK_URL, SITE } from "@/config/site";
 import { SERVICES } from "@/content/services";
-import { UI } from "@/content/ui";
+import { FOOTER, UI } from "@/content/ui";
 import type { Locale } from "@/lib/i18n";
 import { generalMessage } from "@/lib/messages";
 import { CONTACTS, EXTERNAL_LINK_PROPS, telHref } from "@/lib/whatsapp";
@@ -51,7 +51,7 @@ export function Footer({ locale }: { locale: Locale }) {
           alt=""
           width={340}
           height={340}
-          className="absolute -right-16 -bottom-16 opacity-[0.05]"
+          className="absolute -end-16 -bottom-16 opacity-[0.05]"
         />
       </div>
 
@@ -61,9 +61,7 @@ export function Footer({ locale }: { locale: Locale }) {
             <Wordmark />
 
             <p className="mt-6 leading-relaxed text-steel">
-              {locale === "tr"
-                ? "Soma / Manisa merkezli endüstriyel hurda alımı, tesis sökümü ve ikinci el makine satışı. Fotoğrafınızı gönderin, aynı gün fiyat konuşalım."
-                : "Industrial scrap purchasing, plant dismantling and used machinery sales based in Soma / Manisa. Send a photo and we will talk price the same day."}
+              {FOOTER.blurb[locale]}
             </p>
 
             <WhatsAppButton
@@ -136,8 +134,8 @@ export function Footer({ locale }: { locale: Locale }) {
         </div>
 
         <div className="mt-14 grid gap-10 border-t border-zinc pt-10 sm:grid-cols-2">
-          <nav aria-label={locale === "tr" ? "Sayfalar" : "Pages"}>
-            <h2 className="label">{locale === "tr" ? "Sayfalar" : "Pages"}</h2>
+          <nav aria-label={FOOTER.pages[locale]}>
+            <h2 className="label">{FOOTER.pages[locale]}</h2>
             <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-2.5">
               {ROUTES.map((route) => (
                 <li key={route.key}>
@@ -153,9 +151,7 @@ export function Footer({ locale }: { locale: Locale }) {
           </nav>
 
           <div>
-            <h2 className="label">
-              {locale === "tr" ? "Hizmetler" : "Services"}
-            </h2>
+            <h2 className="label">{FOOTER.services[locale]}</h2>
             <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-2.5">
               {SERVICES.map((service) => (
                 <li key={service.id}>
@@ -173,7 +169,7 @@ export function Footer({ locale }: { locale: Locale }) {
 
         <p className="mt-12 border-t border-zinc pt-6 font-mono text-xs text-steel-light">
           © {year} {SITE.name} ·{" "}
-          {locale === "tr" ? "Tüm hakları saklıdır" : "All rights reserved"}
+          {FOOTER.rights[locale]}
         </p>
       </div>
     </footer>

@@ -6,7 +6,7 @@ import { Section } from "@/components/ui/Section";
 import { ContactMenu } from "@/components/whatsapp/ContactMenu";
 import { WhatsAppButton } from "@/components/whatsapp/WhatsAppButton";
 import { MATERIAL_GROUPS } from "@/content/materials";
-import { PAGE_HEADERS, UI } from "@/content/ui";
+import { LABELS, PAGE_HEADERS, UI } from "@/content/ui";
 import type { Locale } from "@/lib/i18n";
 import { materialMessage, sendPhotosMessage } from "@/lib/messages";
 
@@ -33,12 +33,12 @@ export function MaterialsPage({ locale }: { locale: Locale }) {
         lead={header.lead[locale]}
         aside={
           <dl className="lg:w-40">
-            <dt className="label">{locale === "tr" ? "Kalem" : "Items"}</dt>
+            <dt className="label">{LABELS.items[locale]}</dt>
             <dd className="tabular mt-2 font-display text-3xl font-bold text-ink">
               {totalItems}
             </dd>
             <dt className="label mt-6">
-              {locale === "tr" ? "Grup" : "Groups"}
+              {LABELS.groups[locale]}
             </dt>
             <dd className="tabular mt-2 font-display text-3xl font-bold text-ink">
               {MATERIAL_GROUPS.length}
@@ -50,13 +50,13 @@ export function MaterialsPage({ locale }: { locale: Locale }) {
       {/* Fiyat notu — uyarı kutusu değil, sayfanın başındaki bir dipnot. */}
       <Section ruled={false} className="py-10 lg:py-12">
         {/* Sol kenar şeridi kartvizitin arka yüzünden gelen aygıt. */}
-        <div className="relative grid gap-6 pl-6 lg:grid-cols-[1fr_auto] lg:items-center lg:gap-12">
+        <div className="relative grid gap-6 ps-6 lg:grid-cols-[1fr_auto] lg:items-center lg:gap-12">
           <span
             aria-hidden
-            className="brand-gradient absolute inset-y-0 left-0 w-[3px]"
+            className="brand-gradient absolute inset-y-0 start-0 w-[3px]"
           />
           <div className="measure">
-            <p className="label">{locale === "tr" ? "Not" : "Note"}</p>
+            <p className="label">{LABELS.note[locale]}</p>
             <p className="mt-2 leading-relaxed text-ink-soft">
               {locale === "tr"
                 ? "Hurda fiyatları borsaya ve malzemenin kalitesine göre değiştiği için sitede sabit rakam yayınlamıyoruz. Elinizdekini yazın ya da fotoğrafını gönderin — o günkü fiyatı söyleyelim."

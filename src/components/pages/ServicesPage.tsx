@@ -6,7 +6,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { Section } from "@/components/ui/Section";
 import { WhatsAppButton } from "@/components/whatsapp/WhatsAppButton";
 import { SERVICES } from "@/content/services";
-import { PAGE_HEADERS, UI } from "@/content/ui";
+import { LABELS, PAGE_HEADERS, UI } from "@/content/ui";
 import type { Locale } from "@/lib/i18n";
 import { serviceMessage } from "@/lib/messages";
 
@@ -23,11 +23,11 @@ export function ServicesPage({ locale }: { locale: Locale }) {
           // Gerçek bir içindekiler tablosu — numaralar burada bilgi taşıyor,
           // süs değil: her satır sayfadaki bölüme götürüyor.
           <nav
-            aria-label={locale === "tr" ? "Sayfa içeriği" : "On this page"}
+            aria-label={LABELS.onThisPage[locale]}
             className="lg:w-56"
           >
             <p className="label">
-              {locale === "tr" ? "İçindekiler" : "Contents"}
+              {LABELS.contents[locale]}
             </p>
             <ol className="mt-3 border-t border-zinc">
               {SERVICES.map((service, index) => (
@@ -64,7 +64,7 @@ export function ServicesPage({ locale }: { locale: Locale }) {
                   {String(index + 1).padStart(2, "0")}
                 </span>
                 <span className="label">
-                  {locale === "tr" ? "Hizmet" : "Service"}
+                  {LABELS.service[locale]}
                 </span>
               </div>
 
@@ -96,7 +96,7 @@ export function ServicesPage({ locale }: { locale: Locale }) {
                     </div>
 
                     <p className="label mt-8">
-                      {locale === "tr" ? "Kapsam" : "Scope"}
+                      {LABELS.scope[locale]}
                     </p>
                     <ul className="mt-3 border-t border-zinc">
                       {service.bullets[locale].map((bullet) => (

@@ -115,7 +115,7 @@ function Services({ locale }: { locale: Locale }) {
             className="inline-flex items-center gap-2 border-b border-ink pb-1 text-sm font-semibold text-ink transition-colors hover:border-brand hover:text-brand"
           >
             {UI.allServices[locale]}
-            <ArrowRightIcon className="size-4" />
+            <ArrowRightIcon className="rtl-flip size-4" />
           </Link>
         }
       />
@@ -198,7 +198,7 @@ function GalleryPreview({ locale }: { locale: Locale }) {
             className="inline-flex items-center gap-2 border-b border-ink pb-1 text-sm font-semibold text-ink transition-colors hover:border-brand hover:text-brand"
           >
             {UI.allPhotos[locale]}
-            <ArrowRightIcon className="size-4" />
+            <ArrowRightIcon className="rtl-flip size-4" />
           </Link>
         }
       />

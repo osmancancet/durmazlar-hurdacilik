@@ -1,12 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Mono, Poppins, Source_Sans_3 } from "next/font/google";
+import { IBM_Plex_Mono, Poppins, Rubik, Source_Sans_3 } from "next/font/google";
 import { notFound } from "next/navigation";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { FloatingWhatsApp } from "@/components/whatsapp/FloatingWhatsApp";
 import { MobileCallBar } from "@/components/whatsapp/MobileCallBar";
 import { SITE } from "@/config/site";
-import { HTML_LANG, LOCALES, isLocale } from "@/lib/i18n";
+import { UI } from "@/content/ui";
+import { DIR, HTML_LANG, LOCALES, isLocale } from "@/lib/i18n";
 import { localBusinessJsonLd, siteNavigationJsonLd } from "@/lib/seo";
 import "../globals.css";
 
@@ -38,6 +39,20 @@ const sourceSans = Source_Sans_3({
   display: "swap",
 });
 
+/**
+ * Kiril ve Arap alfabesi: Poppins bu iki yazı sistemini taşımıyor.
+ *
+ * Rubik hem Kiril hem Arapça alt kümesini içeriyor, üstelik geometrik yapısı
+ * Poppins'e yakın duruyor — böylece Rusça ve Arapça sayfalar markanın yazı
+ * karakterinden kopmuyor. Tek bir ek aile iki dili birden karşılıyor.
+ */
+const rubik = Rubik({
+  subsets: ["latin", "cyrillic", "arabic"],
+  weight: ["500", "700"],
+  variable: "--font-rubik",
+  display: "swap",
+});
+
 /** Veri: kantar fişi sesi — etiketler, telefon, tonaj, künyeler, indeksler. */
 const plexMono = IBM_Plex_Mono({
   subsets: ["latin", "latin-ext"],
@@ -45,6 +60,14 @@ const plexMono = IBM_Plex_Mono({
   variable: "--font-plex-mono",
   display: "swap",
 });
+
+/** Hangi dilin hangi yazı sistemine düştüğü. */
+const SCRIPT: Record<string, string> = {
+  tr: "latin",
+  en: "latin",
+  ru: "cyrillic",
+  ar: "arabic",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
@@ -83,7 +106,13 @@ export default async function LocaleLayout({
   return (
     <html
       lang={HTML_LANG[locale]}
-      className={`${poppins.variable} ${sourceSans.variable} ${plexMono.variable}`}
+      dir={DIR[locale]}
+      /*
+       * `data-script`, globals.css'te yazı ailelerini dile göre değiştirir:
+       * Latin dillerde Poppins + Source Sans, Kiril ve Arapçada Rubik.
+       */
+      data-script={SCRIPT[locale]}
+      className={`${poppins.variable} ${rubik.variable} ${sourceSans.variable} ${plexMono.variable}`}
     >
       <head>
         {/* Beliriş efekti JavaScript'e bağlı; JS kapalıysa bölümler
@@ -95,9 +124,9 @@ export default async function LocaleLayout({
       <body className="antialiased">
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-100 focus:bg-ink focus:px-5 focus:py-3 focus:font-semibold focus:text-paper"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:start-4 focus:z-100 focus:bg-ink focus:px-5 focus:py-3 focus:font-semibold focus:text-paper"
         >
-          {locale === "tr" ? "İçeriğe geç" : "Skip to content"}
+          {UI.skipToContent[locale]}
         </a>
 
         <Header locale={locale} />

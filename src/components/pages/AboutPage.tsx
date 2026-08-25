@@ -5,7 +5,7 @@ import { FullBleedPlate, Plate } from "@/components/ui/Plate";
 import { Reveal } from "@/components/ui/Reveal";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { SITE } from "@/config/site";
-import { ABOUT, PAGE_HEADERS } from "@/content/ui";
+import { ABOUT, LABELS, PAGE_HEADERS, UI } from "@/content/ui";
 import type { Locale } from "@/lib/i18n";
 
 export function AboutPage({ locale }: { locale: Locale }) {
@@ -19,12 +19,12 @@ export function AboutPage({ locale }: { locale: Locale }) {
         lead={header.lead[locale]}
         aside={
           <dl className="lg:w-44">
-            <dt className="label">{locale === "tr" ? "Merkez" : "Based in"}</dt>
+            <dt className="label">{LABELS.basedIn[locale]}</dt>
             <dd className="mt-2 font-mono text-sm text-ink">
               {SITE.address.district} / {SITE.address.city}
             </dd>
             <dt className="label mt-5">
-              {locale === "tr" ? "Hizmet Bölgesi" : "Service Area"}
+              {UI.serviceArea[locale]}
             </dt>
             <dd className="mt-2 font-mono text-sm leading-relaxed text-ink">
               {SITE.serviceAreas.join(" · ")}
@@ -37,7 +37,7 @@ export function AboutPage({ locale }: { locale: Locale }) {
       <Section ruled={false}>
         <div className="grid gap-10 lg:grid-cols-[10rem_1fr] lg:gap-12">
           <p className="label lg:pt-2">
-            {locale === "tr" ? "Hikâye" : "Story"}
+            {LABELS.story[locale]}
           </p>
 
           <div className="measure">
@@ -75,7 +75,7 @@ export function AboutPage({ locale }: { locale: Locale }) {
 
       <Section ruled={false}>
         <SectionHeading
-          label={locale === "tr" ? "Nasıl çalışırız" : "How we work"}
+          label={LABELS.howWeWork[locale]}
           title={ABOUT.principles.title[locale]}
         />
 
@@ -103,7 +103,7 @@ export function AboutPage({ locale }: { locale: Locale }) {
           <Reveal>
             <div>
               <p className="label">
-                {locale === "tr" ? "Geri dönüşüm" : "Recycling"}
+                {LABELS.recycling[locale]}
               </p>
               <h2 className="display mt-4 text-[1.75rem] sm:text-[2.25rem]">
                 {ABOUT.environment.title[locale]}
@@ -148,13 +148,13 @@ export function AboutPage({ locale }: { locale: Locale }) {
 
       <Section>
         <SectionHeading
-          label={locale === "tr" ? "Sık sorulanlar" : "FAQ"}
+          label={LABELS.faqLabel[locale]}
           title={
-            locale === "tr" ? "Merak Edilenler" : "Questions We Are Asked Often"
+            LABELS.faqTitle[locale]
           }
         />
 
-        <div className="mt-12 lg:pl-[13rem]">
+        <div className="mt-12 lg:ps-[13rem]">
           <FaqAccordion locale={locale} />
         </div>
       </Section>

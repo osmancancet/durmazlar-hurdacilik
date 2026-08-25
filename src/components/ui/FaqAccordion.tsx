@@ -16,7 +16,7 @@ export function FaqAccordion({ locale }: { locale: Locale }) {
     <div className="border-t border-zinc">
       {FAQ.map((item, index) => (
         <details key={item.question.tr} className="group border-b border-zinc">
-          <summary className="flex cursor-pointer list-none items-baseline gap-4 py-5 text-left [&::-webkit-details-marker]:hidden">
+          <summary className="flex cursor-pointer list-none items-baseline gap-4 py-5 text-start [&::-webkit-details-marker]:hidden">
             <span className="tabular shrink-0 font-mono text-xs font-medium text-brand">
               {String(index + 1).padStart(2, "0")}
             </span>
@@ -34,7 +34,7 @@ export function FaqAccordion({ locale }: { locale: Locale }) {
             </span>
           </summary>
 
-          <p className="measure pb-6 pl-[2.5rem] leading-relaxed text-pretty text-steel">
+          <p className="measure pb-6 ps-[2.5rem] leading-relaxed text-pretty text-steel">
             {item.answer[locale]}
           </p>
         </details>

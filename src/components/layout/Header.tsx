@@ -2,16 +2,21 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Wordmark } from "@/components/brand/Wordmark";
-import { CloseIcon, MenuIcon, PhoneIcon } from "@/components/ui/Icons";
+import { CloseIcon, GlobeIcon, MenuIcon, PhoneIcon } from "@/components/ui/Icons";
 import { ContactMenu } from "@/components/whatsapp/ContactMenu";
 import { WhatsAppButton } from "@/components/whatsapp/WhatsAppButton";
 import { ROUTES, hrefFor } from "@/config/routes";
 import { SITE } from "@/config/site";
 import { UI } from "@/content/ui";
 import { resolveActiveRoute } from "@/lib/active-route";
-import { LOCALES, type Locale } from "@/lib/i18n";
+import {
+  LOCALES,
+  LOCALE_LABEL,
+  LOCALE_NAME,
+  type Locale,
+} from "@/lib/i18n";
 import { generalMessage } from "@/lib/messages";
 import { CONTACTS, telHref } from "@/lib/whatsapp";
 
@@ -91,7 +96,7 @@ export function Header({ locale }: { locale: Locale }) {
             <Wordmark priority />
           </Link>
 
-          <nav className="ml-auto hidden items-center gap-7 lg:flex">
+          <nav className="ms-auto hidden items-center gap-7 lg:flex">
             {navLinks.map((route) => {
               const active = route.key === activeRoute.key;
               return (
@@ -111,7 +116,7 @@ export function Header({ locale }: { locale: Locale }) {
             })}
           </nav>
 
-          <div className="ml-auto flex items-center gap-3 lg:ml-0">
+          <div className="ms-auto flex items-center gap-3 lg:ms-0">
             <LanguageSwitcher locale={locale} />
 
             <span className="hidden sm:block">
@@ -218,38 +223,75 @@ export function Header({ locale }: { locale: Locale }) {
 }
 
 /**
- * TR ↔ EN geçişi.
- * Bulunulan sayfanın karşılığına gider (örn. /tr/galeri/ → /en/gallery/),
+ * Dil değiştirici — dört dil.
+ *
+ * Bulunulan sayfanın karşılığına gider (örn. /tr/galeri/ → /ru/galereya/),
  * ana sayfaya düşmez.
+ *
+ * Dört kısaltmayı yan yana dizmek dar ekranda başlığı taşırıyordu; bunun
+ * yerine açılır liste kullanılıyor. İletişim listesiyle aynı gerekçeyle
+ * <details>: bağlantılar her zaman belgede duruyor, JavaScript çalışmasa da
+ * dil değiştirilebiliyor ve arama motoru dört sürümü de görüyor.
  */
 function LanguageSwitcher({ locale }: { locale: Locale }) {
   const pathname = usePathname();
   const { route } = resolveActiveRoute(pathname);
+  const ref = useRef<HTMLDetailsElement | null>(null);
+
+  useEffect(() => {
+    const details = ref.current;
+    if (!details) return;
+    const onPointerDown = (event: PointerEvent) => {
+      if (details.open && !details.contains(event.target as Node)) {
+        details.open = false;
+      }
+    };
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") details.open = false;
+    };
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, []);
 
   return (
-    <div className="flex items-center gap-1.5 font-mono text-xs font-medium">
-      {LOCALES.map((candidate, position) => {
-        const active = candidate === locale;
-        return (
-          <span key={candidate} className="flex items-center gap-1.5">
-            {position > 0 && (
-              <span aria-hidden className="text-steel-light">
-                /
-              </span>
-            )}
+    <details ref={ref} className="relative">
+      <summary
+        aria-label={UI.language[locale]}
+        className="flex min-h-8 cursor-pointer list-none items-center gap-1 px-1.5 font-mono text-xs font-medium text-ink transition-colors hover:text-brand [&::-webkit-details-marker]:hidden"
+      >
+        {LOCALE_LABEL[locale]}
+        <GlobeIcon className="size-3.5" />
+      </summary>
+
+      <div className="absolute end-0 top-full z-50 mt-2 min-w-[9rem] border border-zinc bg-paper-raised shadow-[0_8px_28px_rgba(15,18,53,0.16)]">
+        {LOCALES.map((candidate) => {
+          const active = candidate === locale;
+          return (
             <Link
+              key={candidate}
               href={hrefFor(route.key, candidate)}
               hrefLang={candidate}
+              lang={candidate}
               aria-current={active ? "true" : undefined}
-              className={`inline-flex min-h-6 min-w-6 items-center justify-center px-1 uppercase transition-colors ${
-                active ? "text-ink" : "text-steel-light hover:text-ink"
+              onClick={() => {
+                if (ref.current) ref.current.open = false;
+              }}
+              className={`flex items-center justify-between gap-3 border-b border-zinc px-4 py-2.5 text-sm transition-colors last:border-b-0 hover:bg-paper-deep ${
+                active ? "font-semibold text-ink" : "text-steel"
               }`}
             >
-              {candidate}
+              <span>{LOCALE_NAME[candidate]}</span>
+              <span className="font-mono text-xs text-steel-light">
+                {LOCALE_LABEL[candidate]}
+              </span>
             </Link>
-          </span>
-        );
-      })}
-    </div>
+          );
+        })}
+      </div>
+    </details>
   );
 }

@@ -161,7 +161,7 @@ export function VideoSlider({ locale }: { locale: Locale }) {
         )}
 
         {/* Gezinme okları — plaka üzerinde, künye şeridiyle aynı hizada. */}
-        <div className="absolute right-4 bottom-4 flex gap-2 md:right-6 md:bottom-6">
+        <div className="absolute end-4 bottom-4 flex gap-2 md:end-6 md:bottom-6">
           <SliderButton
             onClick={() => step(-1)}
             label={UI.previous[locale]}
@@ -205,7 +205,7 @@ function SliderButton({
       aria-label={label}
       className="grid size-11 place-items-center border border-paper/50 bg-ink/45 text-paper backdrop-blur-sm transition-colors hover:bg-ink/70"
     >
-      <ArrowRightIcon className={`size-5 ${rotate ? "rotate-180" : ""}`} />
+      <ArrowRightIcon className={`rtl-flip size-5 ${rotate ? "rotate-180" : ""}`} />
     </button>
   );
 }

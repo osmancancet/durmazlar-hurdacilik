@@ -3,7 +3,7 @@ import { CtaBand } from "@/components/ui/CtaBand";
 import { GalleryGrid } from "@/components/ui/GalleryGrid";
 import { Section } from "@/components/ui/Section";
 import { GALLERY } from "@/content/gallery";
-import { PAGE_HEADERS } from "@/content/ui";
+import { LABELS, PAGE_HEADERS } from "@/content/ui";
 import type { Locale } from "@/lib/i18n";
 
 export function GalleryPage({ locale }: { locale: Locale }) {
@@ -17,7 +17,7 @@ export function GalleryPage({ locale }: { locale: Locale }) {
         lead={header.lead[locale]}
         aside={
           <dl className="lg:w-40">
-            <dt className="label">{locale === "tr" ? "Kayıt" : "Plates"}</dt>
+            <dt className="label">{LABELS.plates[locale]}</dt>
             <dd className="tabular mt-2 font-display text-3xl font-bold text-ink">
               {GALLERY.length}
             </dd>

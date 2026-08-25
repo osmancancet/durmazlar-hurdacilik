@@ -17,60 +17,84 @@ const META: Record<RouteKey, { title: Localized; description: Localized }> = {
     title: {
       tr: "Durmazlar Hurdacılık | Soma Hurda Alımı",
       en: "Durmazlar Hurdacılık | Scrap Dealer in Soma",
+      ru: "Durmazlar Hurdacılık | Приём лома в Соме",
+      ar: "Durmazlar Hurdacılık | شراء الخردة في صوما",
     },
     description: {
       tr: "Soma / Manisa'da endüstriyel hurda alımı, tesis sökümü ve ikinci el makine satışı. Fotoğrafınızı WhatsApp'tan gönderin, aynı gün fiyat alın.",
       en: "Industrial scrap purchasing, plant dismantling and used machinery sales in Soma / Manisa. Send a photo on WhatsApp and get a price the same day.",
+      ru: "Приём промышленного лома, демонтаж производств и продажа б/у техники в Соме (Маниса). Пришлите фото в WhatsApp и получите цену в тот же день.",
+      ar: "شراء الخردة الصناعية وتفكيك المنشآت وبيع الآلات المستعملة في صوما / مانيسا. أرسلوا صورتكم عبر واتساب واحصلوا على السعر في اليوم نفسه.",
     },
   },
   services: {
     title: {
       tr: "Hurda Alımı ve Tesis Sökümü",
       en: "Scrap Purchasing & Dismantling",
+      ru: "Приём лома и демонтаж производств",
+      ar: "شراء الخردة وتفكيك المنشآت",
     },
     description: {
       tr: "Endüstriyel hurda alımı, ikinci el makine satışı, tesis sökümü ve demontaj, araç ile konteyner temini. Kesim, yükleme ve nakliye dahil.",
       en: "Industrial scrap purchasing, used machinery sales, plant dismantling and container supply. Cutting, loading and haulage included.",
+      ru: "Приём промышленного лома, продажа б/у техники, демонтаж производств, контейнеры и транспорт. Резка, погрузка и перевозка включены.",
+      ar: "شراء الخردة الصناعية وبيع الآلات المستعملة وتفكيك المنشآت وتوفير الحاويات والنقل. القصّ والتحميل والنقل مشمولة.",
     },
   },
   materials: {
     title: {
       tr: "Aldığımız Malzemeler",
       en: "Materials We Buy",
+      ru: "Что мы покупаем",
+      ar: "المواد التي نشتريها",
     },
     description: {
       tr: "Hurda demir, bakır, alüminyum, pirinç, paslanmaz, kablo, elektrik motoru, konveyör ve komple tesis hurdası alıyoruz. Güncel fiyat için yazın.",
       en: "We buy scrap iron, copper, aluminium, brass, stainless, cable, electric motors, conveyors and complete plant scrap. Message us for today's price.",
+      ru: "Покупаем стальной лом, медь, алюминий, латунь, нержавейку, кабель, электродвигатели, конвейеры и лом целых производств. Напишите — назовём актуальную цену.",
+      ar: "نشتري حديد الخردة والنحاس والألمنيوم والنحاس الأصفر والستانلس والكابلات والمحركات الكهربائية والسيور وخردة المنشآت الكاملة. راسلونا لمعرفة السعر الحالي.",
     },
   },
   gallery: {
     title: {
       tr: "Galeri — Hurda ve Ekipman",
       en: "Gallery — Scrap & Equipment",
+      ru: "Галерея — лом и оборудование",
+      ar: "معرض الصور — خردة ومعدات",
     },
     description: {
       tr: "Sahamızdaki hurda metal, konveyör tamburu, redüktör, tank, çelik boru ve konstrüksiyon fotoğrafları. İlgilendiğiniz parçayı WhatsApp'tan sorun.",
       en: "Photos of scrap metal, conveyor drums, gearboxes, tanks, steel pipe and structures in our yard. Ask about any piece over WhatsApp.",
+      ru: "Фотографии металлолома, барабанов конвейеров, редукторов, ёмкостей, стальных труб и конструкций с нашей площадки. Спросите о нужной позиции в WhatsApp.",
+      ar: "صور للخردة المعدنية وأسطوانات السيور وعلب التروس والخزانات والأنابيب والهياكل الفولاذية في ساحتنا. اسألوا عن القطعة التي تهمكم عبر واتساب.",
     },
   },
   about: {
     title: {
       tr: "Hakkımızda",
       en: "About Us",
+      ru: "О нас",
+      ar: "من نحن",
     },
     description: {
       tr: "Soma sanayisinde çalışan bir hurda ve ikinci el ekipman işletmesi. Çalışma prensiplerimiz, geri dönüşüm yaklaşımımız ve sık sorulan sorular.",
       en: "A scrap and used-equipment business working in Soma's industrial district. How we work, our approach to recycling, and frequently asked questions.",
+      ru: "Предприятие по приёму лома и продаже б/у оборудования в промзоне Сомы. Наши принципы работы, подход к переработке и частые вопросы.",
+      ar: "منشأة لشراء الخردة وبيع المعدات المستعملة في صناعة صوما. مبادئ عملنا ونهجنا في إعادة التدوير والأسئلة الشائعة.",
     },
   },
   contact: {
     title: {
       tr: "İletişim ve Teklif",
       en: "Contact & Quote Request",
+      ru: "Контакты и запрос цены",
+      ar: "اتصل بنا وطلب عرض سعر",
     },
     description: {
       tr: `Hürriyet Mahallesi, Rüzgar Sokak No: 11, Soma / Manisa. Telefon ${SITE.contacts[0].display}. Teklif formunu doldurun, bilgiler WhatsApp'ta açılsın.`,
       en: `Hürriyet Mahallesi, Rüzgar Sokak No: 11, Soma / Manisa. Phone ${SITE.contacts[0].display}. Fill in the quote form and it opens as a WhatsApp message.`,
+      ru: `Hürriyet Mahallesi, Rüzgar Sokak No: 11, Сома / Маниса. Телефон ${SITE.contacts[0].display}. Заполните форму — данные откроются сообщением в WhatsApp.`,
+      ar: `Hürriyet Mahallesi, Rüzgar Sokak No: 11، صوما / مانيسا. الهاتف ${SITE.contacts[0].display}. املأوا نموذج الطلب لتُفتح البيانات كرسالة واتساب.`,
     },
   },
 };

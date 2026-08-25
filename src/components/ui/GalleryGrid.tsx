@@ -9,7 +9,7 @@ import {
   type GalleryCategory,
   type GalleryItem,
 } from "@/content/gallery";
-import { UI } from "@/content/ui";
+import { LABELS, UI } from "@/content/ui";
 import type { Locale } from "@/lib/i18n";
 import { galleryMessage } from "@/lib/messages";
 
@@ -211,7 +211,7 @@ export function GalleryGrid({
                     wide ? "aspect-3/2" : "aspect-3/2 lg:aspect-4/3"
                   }`}
                   aria-label={`${item.title[locale]} — ${
-                    locale === "tr" ? "büyüt" : "enlarge"
+                    LABELS.enlarge[locale]
                   }`}
                 >
                   <Image
@@ -302,9 +302,9 @@ export function GalleryGrid({
               type="button"
               onClick={() => step(-1)}
               aria-label={UI.previous[locale]}
-              className="absolute left-2 z-10 grid size-11 place-items-center border border-zinc bg-paper text-ink transition-colors hover:border-ink md:left-6"
+              className="absolute start-2 z-10 grid size-11 place-items-center border border-zinc bg-paper text-ink transition-colors hover:border-ink md:start-6"
             >
-              <ArrowRightIcon className="size-5 rotate-180" />
+              <ArrowRightIcon className="rtl-flip size-5 rotate-180" />
             </button>
 
             <Image
@@ -321,9 +321,9 @@ export function GalleryGrid({
               type="button"
               onClick={() => step(1)}
               aria-label={UI.next[locale]}
-              className="absolute right-2 z-10 grid size-11 place-items-center border border-zinc bg-paper text-ink transition-colors hover:border-ink md:right-6"
+              className="absolute end-2 z-10 grid size-11 place-items-center border border-zinc bg-paper text-ink transition-colors hover:border-ink md:end-6"
             >
-              <ArrowRightIcon className="size-5" />
+              <ArrowRightIcon className="rtl-flip size-5" />
             </button>
           </div>
 

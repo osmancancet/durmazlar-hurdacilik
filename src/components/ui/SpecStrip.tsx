@@ -18,7 +18,7 @@ export function SpecStrip({
       {items.map((item) => (
         <div
           key={item.label}
-          className="border-b border-zinc px-0 py-5 sm:border-r sm:px-6 sm:first:pl-0 sm:last:border-r-0 lg:py-6"
+          className="border-b border-zinc px-0 py-5 sm:border-e sm:px-6 sm:first:ps-0 sm:last:border-e-0 lg:py-6"
         >
           <dt className="label">{item.label}</dt>
           <dd className="tabular mt-2 font-display text-xl font-bold text-ink">

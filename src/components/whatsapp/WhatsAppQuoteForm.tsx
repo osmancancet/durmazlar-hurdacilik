@@ -128,7 +128,7 @@ export function WhatsAppQuoteForm({ locale }: { locale: Locale }) {
           ref={summaryRef}
           role="alert"
           tabIndex={-1}
-          className="border-l-2 border-brand bg-paper-deep px-5 py-4 focus:outline-none"
+          className="border-s-2 border-brand bg-paper-deep px-5 py-4 focus:outline-none"
         >
           <p className="label text-brand">{CONTACT.errors.summary[locale]}</p>
           <ul className="mt-2 space-y-1">
