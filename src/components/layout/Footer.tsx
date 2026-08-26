@@ -115,6 +115,25 @@ export function Footer({ locale }: { locale: Locale }) {
               </dd>
             </div>
 
+            {/*
+              E-posta künyede tam satır kaplar: adres 30 karakter, iki
+              sütunlu ızgarada bir sütuna sığmaz ve ortasından bölünürdü.
+              `SITE.email` boşsa satır hiç basılmaz.
+            */}
+            {SITE.email && (
+              <div className="sm:col-span-2">
+                <dt className="label">{UI.email[locale]}</dt>
+                <dd className="mt-2">
+                  <a
+                    href={`mailto:${SITE.email}`}
+                    className="font-mono text-sm break-all text-steel transition-colors hover:text-brand"
+                  >
+                    {SITE.email}
+                  </a>
+                </dd>
+              </div>
+            )}
+
             <div>
               <dt className="label">{UI.workingHours[locale]}</dt>
               <dd className="tabular mt-2 font-mono text-sm text-ink">

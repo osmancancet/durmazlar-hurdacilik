@@ -123,6 +123,20 @@ export function ContactPage({ locale }: { locale: Locale }) {
                 </dd>
               </div>
 
+              {SITE.email && (
+                <div className="border-b border-zinc py-4">
+                  <dt className="label">{UI.email[locale]}</dt>
+                  <dd className="mt-2">
+                    <a
+                      href={`mailto:${SITE.email}`}
+                      className="font-mono text-sm break-all text-steel transition-colors hover:text-brand"
+                    >
+                      {SITE.email}
+                    </a>
+                  </dd>
+                </div>
+              )}
+
               <div className="border-b border-zinc py-4">
                 <dt className="label">{UI.workingHours[locale]}</dt>
                 <dd className="tabular mt-2 space-y-1 font-mono text-sm">

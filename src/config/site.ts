@@ -42,7 +42,14 @@ export const SITE = {
     },
   ],
 
-  email: "",
+  /**
+   * Genel e-posta adresi.
+   *
+   * WhatsApp kullanmayan ya da yazılı kayıt isteyen kurumsal müşteriler için
+   * ikinci kanal. Altbilgi, iletişim sayfası ve JSON-LD bu tek değeri okur.
+   * Boş bırakılırsa arayüzde hiç gösterilmez; satırın kendisi kaybolur.
+   */
+  email: "durmazlarhurdacilik45@gmail.com",
 
   address: {
     street: "Hürriyet Mahallesi, Rüzgar Sokak, No: 11",

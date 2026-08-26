@@ -1,21 +1,28 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { WhatsAppIcon } from "@/components/ui/Icons";
+import { MailIcon, WhatsAppIcon } from "@/components/ui/Icons";
 import { CONTACT } from "@/content/ui";
 import { QUOTE_MATERIAL_OPTIONS } from "@/content/materials";
-import { quoteMessage, type QuoteFormValues } from "@/lib/messages";
+import { mailtoHref } from "@/lib/mailto";
+import { quoteMessage, quoteSubject, type QuoteFormValues } from "@/lib/messages";
 import { CONTACTS, waHref } from "@/lib/whatsapp";
-import type { Contact } from "@/config/site";
+import { SITE, type Contact } from "@/config/site";
 import type { Locale } from "@/lib/i18n";
 
 /**
  * Teklif formu — sunucusuz.
  *
- * Site statik olarak yayınlandığı için arkada bir uç nokta yok. Form e-posta
- * göndermez; alanları biçimli bir WhatsApp mesajına çevirip sohbeti açar.
- * Kullanıcı tanıdık bir form doldurur, işletme ise WhatsApp'ta hazır bir özet
- * görür — ve kullanıcı mesajı göndermeden önce görüp düzeltebilir.
+ * Site statik olarak yayınlandığı için arkada bir uç nokta yok. Form alanları
+ * biçimli bir metne çevrilir ve kullanıcının seçtiği kanalda hazır mesaj
+ * olarak açılır: WhatsApp sohbeti ya da kendi e-posta uygulaması. Kullanıcı
+ * tanıdık bir form doldurur, işletme hazır bir özet görür — ve kullanıcı
+ * göndermeden önce mesajı görüp düzeltebilir.
+ *
+ * İki yol da aynı `quoteMessage` metnini kullanır; fark yalnızca taşıyıcıda.
+ * WhatsApp birincil buton: sitenin geri kalanı (kayan buton, mobil çubuk, iki
+ * yetkili) o kanal üzerine kurulu ve e-posta uygulaması tanımlı olmayan bir
+ * masaüstü tarayıcıda `mailto:` hiçbir şey açmayabiliyor.
  *
  * Görsel dil: doldurulan bir fiş. Alanlar kutu değil, alt çizgili satırlar;
  * etiketler mono. Böylece form sayfanın belge diline yabancı durmuyor.
@@ -97,13 +104,21 @@ export function WhatsAppQuoteForm({ locale }: { locale: Locale }) {
         : [...previous.materials, label],
     }));
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-
+  /**
+   * Ortak doğrulama.
+   *
+   * `requireContact` iki yolu ayırır: WhatsApp mesajı belirli bir kişinin
+   * sohbetinde açıldığı için yetkili seçimi şart; e-posta tek bir kutuya
+   * düştüğü için orada seçim istemek gereksiz bir engel olurdu.
+   */
+  const validate = (requireContact: boolean) => {
     const nextErrors: typeof errors = {
       name: validateField("name", values.name),
       phone: validateField("phone", values.phone),
-      contact: contact ? undefined : CONTACT.errors.contact[locale],
+      contact:
+        !requireContact || contact
+          ? undefined
+          : CONTACT.errors.contact[locale],
     };
 
     setErrors(nextErrors);
@@ -111,8 +126,15 @@ export function WhatsAppQuoteForm({ locale }: { locale: Locale }) {
     if (nextErrors.name || nextErrors.phone || nextErrors.contact) {
       /* Özet DOM'a bu render'da giriyor; odak bir sonraki kareye bırakılır. */
       requestAnimationFrame(() => summaryRef.current?.focus());
-      return;
+      return false;
     }
+
+    return true;
+  };
+
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!validate(true)) return;
 
     window.open(
       waHref(contact!, quoteMessage(locale, values)),
@@ -121,9 +143,26 @@ export function WhatsAppQuoteForm({ locale }: { locale: Locale }) {
     );
   };
 
+  /*
+   * E-posta yolu bir <a href="mailto:…"> — buton değil.
+   *
+   * `mailto:` sonuçta bir adres; bağlantı olarak vermek hem semantik olarak
+   * doğru (kullanıcı sağ tıklayıp kopyalayabilir, tarayıcı ne olacağını
+   * durum çubuğunda gösterir) hem de script'e bağlı değil. Adres her
+   * render'da güncel form değerlerinden üretilir; tıklama anında yalnızca
+   * doğrulama yapılır, geçersizse gidiş iptal edilir.
+   */
+  const emailHref = SITE.email
+    ? mailtoHref(quoteSubject(locale, values), quoteMessage(locale, values))
+    : "";
+
+  const handleEmailClick = (event: React.MouseEvent) => {
+    if (!validate(false)) event.preventDefault();
+  };
+
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-9">
-      {(errors.name || errors.phone) && (
+      {(errors.name || errors.phone || errors.contact) && (
         <div
           ref={summaryRef}
           role="alert"
@@ -317,9 +356,11 @@ export function WhatsAppQuoteForm({ locale }: { locale: Locale }) {
 
       <fieldset id="quote-contact">
         <legend className="label">
-          {CONTACT.fields.contact[locale]}{" "}
-          <span className="text-brand">*</span>
+          {CONTACT.fields.contact[locale]}
         </legend>
+        <p className="mt-1 text-sm text-steel-light">
+          {CONTACT.fields.contactNote[locale]}
+        </p>
         <div className="mt-3 flex flex-wrap gap-2">
           {CONTACTS.map((option) => {
             const active = contact?.id === option.id;
@@ -356,13 +397,31 @@ export function WhatsAppQuoteForm({ locale }: { locale: Locale }) {
       </fieldset>
 
       <div className="space-y-3 border-t border-zinc pt-7">
-        <button
-          type="submit"
-          className="inline-flex w-full items-center justify-center gap-3 bg-whatsapp px-7 py-3.5 font-semibold text-paper transition-colors hover:bg-whatsapp-bright hover:text-ink sm:w-auto"
-        >
-          <WhatsAppIcon className="size-5" />
-          {CONTACT.submit[locale]}
-        </button>
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          <button
+            type="submit"
+            className="inline-flex w-full items-center justify-center gap-3 bg-whatsapp px-7 py-3.5 font-semibold text-paper transition-colors hover:bg-whatsapp-bright hover:text-ink sm:w-auto"
+          >
+            <WhatsAppIcon className="size-5" />
+            {CONTACT.submit[locale]}
+          </button>
+
+          {/*
+            İkinci yol. Bağlantı olduğu için formun submit'ini tetiklemez —
+            Enter tuşu birincil yolda, WhatsApp'ta kalır. SITE.email boşsa
+            hiç basılmaz.
+          */}
+          {SITE.email && (
+            <a
+              href={emailHref}
+              onClick={handleEmailClick}
+              className="inline-flex w-full items-center justify-center gap-3 border border-ink px-7 py-3.5 font-semibold text-ink transition-colors hover:bg-ink hover:text-paper sm:w-auto"
+            >
+              <MailIcon className="size-5" />
+              {CONTACT.submitEmail[locale]}
+            </a>
+          )}
+        </div>
         <p className="measure text-sm leading-relaxed text-steel">
           {CONTACT.submitHint[locale]}
         </p>

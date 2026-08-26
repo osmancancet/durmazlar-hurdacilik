@@ -118,6 +118,15 @@ export function ClockIcon(props: IconProps) {
   );
 }
 
+export function MailIcon(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <rect x="2.5" y="4.5" width="19" height="15" rx="1.5" />
+      <path d="m2.5 6.5 8.6 6.05a1.6 1.6 0 0 0 1.8 0L21.5 6.5" />
+    </svg>
+  );
+}
+
 export function ArrowRightIcon(props: IconProps) {
   return (
     <svg {...base} {...props}>

@@ -146,6 +146,12 @@ export const UI = {
     ru: "Телефон",
     ar: "الهاتف",
   },
+  email: {
+    tr: "E-posta",
+    en: "Email",
+    ru: "Эл. почта",
+    ar: "البريد الإلكتروني",
+  },
   workingHours: {
     tr: "Çalışma Saatleri",
     en: "Working Hours",
@@ -722,6 +728,17 @@ export const CONTACT = {
       ru: "С кем вы хотите поговорить?",
       ar: "مع من تودّون التحدث؟",
     },
+    /*
+     * Seçim yalnızca WhatsApp yolunu ilgilendirir: mesaj o kişinin sohbetinde
+     * açılır. E-posta tek bir kutuya düştüğü için orada bir anlamı yok —
+     * yıldız işareti bu yüzden koşullu, notu da yanında duruyor.
+     */
+    contactNote: {
+      tr: "WhatsApp'tan gönderecekseniz gerekli.",
+      en: "Required if you send over WhatsApp.",
+      ru: "Нужно, если отправляете в WhatsApp.",
+      ar: "مطلوب إذا كنتم سترسلون عبر واتساب.",
+    },
     dismantling: {
       tr: "Yerinde söküm gerekiyor mu?",
       en: "Is on-site dismantling needed?",
@@ -759,11 +776,17 @@ export const CONTACT = {
     ru: "Открыть в WhatsApp",
     ar: "افتح في واتساب",
   },
+  submitEmail: {
+    tr: "E-posta ile Gönder",
+    en: "Send by Email",
+    ru: "Отправить по почте",
+    ar: "أرسل بالبريد الإلكتروني",
+  },
   submitHint: {
-    tr: "Form e-posta göndermez; bilgileri WhatsApp mesajına dönüştürür. Göndermeden önce mesajı görüp düzenleyebilirsiniz.",
-    en: "This form sends no email; it turns your details into a WhatsApp message. You can review and edit it before sending.",
-    ru: "Форма не отправляет письмо: она превращает данные в сообщение WhatsApp. Перед отправкой вы можете его прочитать и изменить.",
-    ar: "النموذج لا يرسل بريداً؛ بل يحوّل بياناتكم إلى رسالة واتساب. يمكنكم مراجعتها وتعديلها قبل الإرسال.",
+    tr: "Form bilgilerinizi hazır bir mesaja dönüştürür — WhatsApp sohbetinde ya da e-posta uygulamanızda. İki durumda da göndermeden önce mesajı görüp düzenleyebilirsiniz.",
+    en: "The form turns your details into a ready message — either in WhatsApp or in your email app. Either way you can review and edit it before sending.",
+    ru: "Форма превращает ваши данные в готовое сообщение — в WhatsApp или в вашей почтовой программе. В обоих случаях перед отправкой его можно прочитать и изменить.",
+    ar: "يحوّل النموذج بياناتكم إلى رسالة جاهزة — في واتساب أو في تطبيق بريدكم. في الحالتين يمكنكم مراجعتها وتعديلها قبل الإرسال.",
   },
   errors: {
     name: {
@@ -779,10 +802,10 @@ export const CONTACT = {
       ar: "اكتبوا رقم هاتف صحيحاً.",
     },
     contact: {
-      tr: "Görüşmek istediğiniz kişiyi seçin.",
-      en: "Please choose who to speak with.",
-      ru: "Выберите, с кем связаться.",
-      ar: "اختاروا الشخص الذي تودّون التحدث إليه.",
+      tr: "WhatsApp'tan göndermek için görüşmek istediğiniz kişiyi seçin.",
+      en: "To send over WhatsApp, please choose who to speak with.",
+      ru: "Чтобы отправить в WhatsApp, выберите, с кем связаться.",
+      ar: "للإرسال عبر واتساب، اختاروا الشخص الذي تودّون التحدث إليه.",
     },
     /** Eksik alan varsa formun başında beliren özet başlığı. */
     summary: {

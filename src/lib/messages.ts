@@ -209,6 +209,26 @@ const QUOTE_LABELS: Record<Locale, QuoteLabels> = {
   },
 };
 
+/**
+ * E-posta konu satırı.
+ *
+ * Gövdedeki Türkçe not satırıyla aynı mantık: ziyaretçi kendi dilinde
+ * yazdığını görür, ama gelen kutusunu tarayan yetkili Rusça/Arapça okumaz.
+ * Bu iki dilde konunun sonuna Türkçe karşılığı eklenir.
+ */
+export function quoteSubject(locale: Locale, values: QuoteFormValues): string {
+  const subject: Record<Locale, string> = {
+    tr: `Teklif Talebi — ${values.name}`,
+    en: `Quote Request — ${values.name}`,
+    ru: `Запрос цены — ${values.name}`,
+    ar: `طلب عرض سعر — ${values.name}`,
+  };
+
+  return locale === "tr" || locale === "en"
+    ? subject[locale]
+    : `${subject[locale]} / Teklif Talebi`;
+}
+
 export function quoteMessage(locale: Locale, values: QuoteFormValues): string {
   const labels = QUOTE_LABELS[locale];
 

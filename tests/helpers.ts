@@ -35,6 +35,21 @@ export async function waHrefs(page: Page): Promise<string[]> {
     );
 }
 
+/** Bir mailto: bağlantısını alıcı, konu ve gövdesine ayırır. */
+export function mailtoParts(href: string): {
+  to: string;
+  subject: string;
+  body: string;
+} {
+  const url = new URL(href);
+  return {
+    // mailto:adres?… — alıcı, sorgu dizesinden önceki kısımdır.
+    to: decodeURIComponent(url.pathname),
+    subject: url.searchParams.get("subject") ?? "",
+    body: url.searchParams.get("body") ?? "",
+  };
+}
+
 /**
  * Sayfa hatalarını toplar: konsol hataları, yakalanmamış istisnalar ve
  * 400+ dönen istekler. Dinleyiciler goto'dan ÖNCE bağlanmalı.

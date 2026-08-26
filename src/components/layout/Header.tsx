@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Wordmark } from "@/components/brand/Wordmark";
-import { CloseIcon, GlobeIcon, MenuIcon, PhoneIcon } from "@/components/ui/Icons";
+import { CloseIcon, GlobeIcon, MailIcon, MenuIcon, PhoneIcon } from "@/components/ui/Icons";
 import { ContactMenu } from "@/components/whatsapp/ContactMenu";
 import { WhatsAppButton } from "@/components/whatsapp/WhatsAppButton";
 import { ROUTES, hrefFor } from "@/config/routes";
@@ -87,6 +87,25 @@ export function Header({ locale }: { locale: Locale }) {
                 </a>
               </span>
             ))}
+            {/*
+              E-posta yalnızca lg ve üstünde. Şerit dar bir künye satırı;
+              30 karakterlik adresi iki numaranın yanına sm'de sıkıştırmak
+              satırı taşırıyordu. Küçük ekranda mobil menüdeki karşılığı var.
+            */}
+            {SITE.email && (
+              <span className="hidden items-center gap-3 lg:flex">
+                <span aria-hidden className="text-zinc">
+                  |
+                </span>
+                <a
+                  href={`mailto:${SITE.email}`}
+                  className="inline-flex min-h-6 items-center gap-2 font-mono text-xs font-medium tracking-wide text-ink transition-colors hover:text-brand"
+                >
+                  <MailIcon className="size-3.5 text-brand" />
+                  {SITE.email}
+                </a>
+              </span>
+            )}
           </span>
         </div>
       </div>
@@ -227,6 +246,18 @@ export function Header({ locale }: { locale: Locale }) {
               {UI.callUs[locale]}
             </span>
           </ContactMenu>
+
+          {/* Üçüncü kanal. Menü kapanır ki geri dönünce sayfa açıkta olsun. */}
+          {SITE.email && (
+            <a
+              href={`mailto:${SITE.email}`}
+              onClick={() => setMenuOpen(false)}
+              className="flex w-full items-center justify-center gap-2.5 border border-zinc px-6 py-3.5 text-sm font-semibold text-ink"
+            >
+              <MailIcon className="size-4 text-brand" />
+              {UI.email[locale]}
+            </a>
+          )}
         </div>
       </div>
     </>
