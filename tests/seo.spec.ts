@@ -3,6 +3,7 @@ import { hrefFor } from "@/config/routes";
 import { SITE } from "@/config/site";
 import { FAQ } from "@/content/faq";
 import { SERVICES } from "@/content/services";
+import { HTML_LANG, LOCALES } from "@/lib/i18n";
 import { ALL_PAGES } from "./helpers";
 
 /**
@@ -149,4 +150,67 @@ test("robots.txt site haritasını gösterir", async ({ request }) => {
   const text = await response.text();
   expect(text).toContain(`${SITE.url}/sitemap.xml`);
   expect(text).toContain("Allow: /");
+});
+
+/*
+ * Dil eşlemesi (hreflang).
+ *
+ * Dört dilin birbirini karşılıklı göstermesi, Google'ın ziyaretçiye doğru
+ * sürümü sunmasının tek yolu. `x-default` ise listedeki hiçbir dile uymayan
+ * ziyaretçinin nereye düşeceğini söyler — tanımlanmazsa karar tahmine kalır.
+ */
+test.describe("dil eşlemesi", () => {
+  for (const { path, key } of ALL_PAGES) {
+    test(`${path} — hreflang ve x-default`, async ({ page }) => {
+      await page.goto(path);
+
+      // Her dil için karşılığı bildirilmeli.
+      for (const other of LOCALES) {
+        const href = await page.getAttribute(
+          `link[rel="alternate"][hreflang="${HTML_LANG[other]}"]`,
+          "href",
+        );
+        expect(href, `${HTML_LANG[other]} eşlemesi yok: ${path}`).toBe(
+          `${SITE.url}${hrefFor(key, other)}`,
+        );
+      }
+
+      // Tanımsız dilden gelen ziyaretçi Türkçe sürüme düşer.
+      const fallback = await page.getAttribute(
+        'link[rel="alternate"][hreflang="x-default"]',
+        "href",
+      );
+      expect(fallback).toBe(`${SITE.url}${hrefFor(key, "tr")}`);
+    });
+  }
+});
+
+test("site haritası her adres için x-default taşır", async ({ request }) => {
+  const xml = await (await request.get("/sitemap.xml")).text();
+
+  const defaults = xml.match(/hreflang="x-default"/g) ?? [];
+  expect(defaults.length).toBe(ALL_PAGES.length);
+});
+
+/*
+ * Bu test bir kez gerçekten kaçmış bir hatayı bekliyor: site Rusça ve
+ * Arapçaya açıldığında `knowsLanguage` elle yazılmış "tr, en" listesi olarak
+ * kalmıştı. Artık LOCALES'ten türetiliyor; test de aynı kaynakla karşılaştırır
+ * ki liste bir daha sessizce eskiyemesin.
+ */
+test("işletme verisi sitenin tüm dillerini bildirir", async ({ page }) => {
+  await page.goto(hrefFor("home", "tr"));
+
+  const blobs = await page
+    .locator('script[type="application/ld+json"]')
+    .allTextContents();
+
+  const business = blobs
+    .flatMap((blob) => {
+      const parsed = JSON.parse(blob);
+      return Array.isArray(parsed) ? parsed : [parsed];
+    })
+    .find((entry) => JSON.stringify(entry["@type"]).includes("LocalBusiness"));
+
+  expect(business.knowsLanguage).toEqual([...LOCALES]);
 });

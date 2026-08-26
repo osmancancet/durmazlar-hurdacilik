@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ROUTES, hrefFor, routeByKey, type RouteKey } from "@/config/routes";
 import { SERVICES } from "@/content/services";
-import { SITE } from "@/config/site";
+import { MAPS_LINK_URL, SITE } from "@/config/site";
 import { LOCALES, HTML_LANG, type Locale, type Localized } from "@/lib/i18n";
 
 /**
@@ -104,13 +104,20 @@ export function buildMetadata(key: RouteKey, locale: Locale): Metadata {
   const meta = META[key];
   const path = hrefFor(key, locale);
 
-  // Her sayfanın iki dildeki adresi — arama motoru doğru sürümü göstersin.
-  const languages = Object.fromEntries(
+  // Her sayfanın dört dildeki adresi — arama motoru doğru sürümü göstersin.
+  const languages: Record<string, string> = Object.fromEntries(
     LOCALES.map((candidate) => [
       HTML_LANG[candidate],
       `${SITE.url}${hrefFor(key, candidate)}`,
     ]),
   );
+
+  /*
+   * x-default: listedeki hiçbir dile uymayan bir ziyaretçi (örn. Almanya'dan
+   * Almanca tarayıcı) hangi sürümü görsün? Tanımlanmazsa karar Google'ın
+   * tahminine kalır. İşletme Türkiye'de, birincil pazar Türkçe.
+   */
+  languages["x-default"] = `${SITE.url}${hrefFor(key, "tr")}`;
 
   return {
     // Ana sayfa başlığı marka adını zaten içeriyor; şablonun ikinci kez
@@ -131,6 +138,10 @@ export function buildMetadata(key: RouteKey, locale: Locale): Metadata {
       description: meta.description[locale],
       url: `${SITE.url}${path}`,
       locale: HTML_LANG[locale].replace("-", "_"),
+      /* Paylaşım önizlemesinde diğer dil sürümlerinin de var olduğunu bildirir. */
+      alternateLocale: LOCALES.filter((other) => other !== locale).map((other) =>
+        HTML_LANG[other].replace("-", "_"),
+      ),
       images: [
         {
           /*
@@ -178,6 +189,7 @@ export function localBusinessJsonLd(locale: Locale) {
      * Google'ın işletme kartında ikisi de görünebilsin.
      */
     telephone: SITE.contacts[0].e164,
+    ...(SITE.email ? { email: SITE.email } : {}),
     contactPoint: SITE.contacts.map((contact) => ({
       "@type": "ContactPoint",
       name: contact.name,
@@ -189,6 +201,9 @@ export function localBusinessJsonLd(locale: Locale) {
     /* Google'ın işletme kartında marka işareti olarak gösterilir. */
     logo: `${SITE.url}/brand/ikon-512.png`,
     priceRange: "$$",
+    /* Arama motorunu adresi metinden çözmeye bırakmak yerine harita
+       kaydına doğrudan bağlar. */
+    hasMap: MAPS_LINK_URL,
     address: {
       "@type": "PostalAddress",
       streetAddress: SITE.address.street,
@@ -207,7 +222,12 @@ export function localBusinessJsonLd(locale: Locale) {
       opens: entry.opens,
       closes: entry.closes,
     })),
-    knowsLanguage: ["tr", "en"],
+    /*
+     * Elle yazılmaz: dil eklendiğinde bu satırın güncellenmesi unutuluyordu
+     * (Rusça ve Arapça eklendikten sonra veri hâlâ "tr, en" diyordu).
+     * LOCALES tek kaynak — liste kendiliğinden doğru kalır.
+     */
+    knowsLanguage: [...LOCALES],
     /*
      * Hizmet kataloğu — arama motoru "ne yapıyorlar" sorusunu sayfa metnini
      * ayrıştırarak değil, listeyi okuyarak yanıtlar.

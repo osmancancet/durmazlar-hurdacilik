@@ -5,11 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Durmazlar Hurdacılık</title>
     <!--
-      Kök adres (/) için yönlendirme.
+      Kök adres (/) için YEDEK yönlendirme.
 
-      Statik export'ta next.config redirects çalışmadığından yönlendirme
-      HTML düzeyinde yapılır. Arama motoru bu sayfayı dizine almasın,
-      hedef sayfayı alsın diye canonical Türkçe sürümü gösterir.
+      Vercel'de bu dosyaya sıra gelmez: vercel.json'daki 308 yönlendirmesi
+      istek statik dosyaya ulaşmadan önce devreye girer. Sunucu düzeyinde
+      yönlendirmek daha iyidir — arama motoru meta refresh'i zayıf bir sinyal
+      sayar, 308'i kesin bir taşınma bildirimi olarak okur.
+
+      Burası, sitenin vercel.json okumayan bir hostinge (cPanel, GitHub
+      Pages) atılması hâlinde çalışan yedek. Statik export'ta next.config
+      redirects çalışmadığı için tek yol HTML düzeyi. Arama motoru bu sayfayı
+      dizine almasın, hedef sayfayı alsın diye canonical Türkçe sürümü
+      gösterir.
     -->
     <meta http-equiv="refresh" content="0; url=/tr/" />
     <link rel="canonical" href="/tr/" />
