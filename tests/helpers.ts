@@ -1,5 +1,7 @@
 import type { Page } from "@playwright/test";
 import { ROUTES, hrefFor, type RouteKey } from "@/config/routes";
+import { AREAS, areaHref, areaIndexHref } from "@/content/areas";
+import { BLOG_POSTS, blogIndexHref, blogPostHref } from "@/content/blog";
 import { LOCALES, type Locale } from "@/lib/i18n";
 
 /**
@@ -10,7 +12,7 @@ import { LOCALES, type Locale } from "@/lib/i18n";
  * kopyaları değil.
  */
 
-/** 12 sayfa: 6 rota × 2 dil. */
+/** Dört dilli sayfalar: 6 rota × 4 dil. */
 export const ALL_PAGES: { locale: Locale; key: RouteKey; path: string }[] =
   LOCALES.flatMap((locale) =>
     ROUTES.map((route) => ({
@@ -19,6 +21,26 @@ export const ALL_PAGES: { locale: Locale; key: RouteKey; path: string }[] =
       path: hrefFor(route.key, locale),
     })),
   );
+
+/**
+ * Türkçe rehber adresleri: liste + yazılar.
+ *
+ * `ALL_PAGES`ten AYRI durur, çünkü rehber tek dilli: hreflang beklentisi
+ * yoktur ve dört dilli sayaçlara karışmamalıdır.
+ */
+export const BLOG_PAGES: { path: string; slug?: string }[] = [
+  { path: blogIndexHref() },
+  ...BLOG_POSTS.map((post) => ({
+    path: blogPostHref(post.slug),
+    slug: post.slug,
+  })),
+];
+
+/** Türkçe bölge sayfaları: dizin + 21 bölge. Rehberle aynı gerekçeyle ayrı. */
+export const AREA_PAGES: { path: string; slug?: string }[] = [
+  { path: areaIndexHref() },
+  ...AREAS.map((area) => ({ path: areaHref(area.slug), slug: area.slug })),
+];
 
 /** Bir wa.me bağlantısındaki ön doldurulmuş mesajı çözer. */
 export function waText(href: string): string {

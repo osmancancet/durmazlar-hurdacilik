@@ -2,6 +2,18 @@ import type { Metadata } from "next";
 import { ROUTES, hrefFor, routeByKey, type RouteKey } from "@/config/routes";
 import { SERVICES } from "@/content/services";
 import { MAPS_LINK_URL, SITE } from "@/config/site";
+import {
+  AREA_LOCALE,
+  areaHref,
+  areaIndexHref,
+  type Area,
+} from "@/content/areas";
+import {
+  BLOG_LOCALE,
+  blogIndexHref,
+  blogPostHref,
+  type BlogPost,
+} from "@/content/blog";
 import { LOCALES, HTML_LANG, type Locale, type Localized } from "@/lib/i18n";
 
 /**
@@ -212,10 +224,24 @@ export function localBusinessJsonLd(locale: Locale) {
       postalCode: SITE.address.postalCode,
       addressCountry: SITE.address.countryCode,
     },
-    areaServed: SITE.serviceAreas.map((area) => ({
-      "@type": "AdministrativeArea",
-      name: area,
-    })),
+    /*
+     * Hizmet alanı iki düzeyde bildirilir.
+     *
+     * Yalnızca il yazmak, yerel aramanın gerçekte nasıl yapıldığını
+     * karşılamıyordu: kimse "manisa hurdacı" yazmıyor, "kırkağaç hurdacı"
+     * yazıyor. İl `AdministrativeArea`, ilçe `City` olarak verilir; ikisi
+     * `SITE` içindeki listelerden türetilir, burada elle sayılmaz.
+     */
+    areaServed: [
+      ...SITE.serviceAreas.map((area) => ({
+        "@type": "AdministrativeArea",
+        name: area,
+      })),
+      ...SITE.serviceDistricts.map((district) => ({
+        "@type": "City",
+        name: district,
+      })),
+    ],
     openingHoursSpecification: SITE.hours.schema.map((entry) => ({
       "@type": "OpeningHoursSpecification",
       dayOfWeek: entry.days,
@@ -304,5 +330,373 @@ export function faqJsonLd(
       name: item.question[locale],
       acceptedAnswer: { "@type": "Answer", text: item.answer[locale] },
     })),
+  };
+}
+
+
+/* ------------------------------------------------------------------ *
+ * REHBER (/tr/blog/)
+ *
+ * Rehber tek dilli olduğu için buradaki üstveri, sitenin geri kalanından
+ * bir noktada AYRILIR: `languages` (hreflang) verilmez. Bir sayfanın
+ * olmayan bir çevirisini bildirmek, Google'ın o adresi tarayıp 404 alması
+ * demektir. Kendi kendine canonical yeterli.
+ * ------------------------------------------------------------------ */
+
+/** Rehber listesinin başlığı ve açıklaması — tek yerde durur. */
+export const BLOG_INDEX = {
+  /*
+   * `<title>` yer adını taşır, H1 taşımaz. Sebep: arama sonucunda görünen
+   * satır title'dır ve aranan şey "soma hurda" — sayfanın kendi başlığında
+   * ise yer adını tekrarlamak gereksiz, ziyaretçi zaten sitede.
+   */
+  seoTitle: "Soma Hurda Rehberi",
+  title: "Hurda Rehberi",
+  eyebrow: "Rehber",
+  description:
+    "Soma ve çevresinde hurda satmadan önce bilinmesi gerekenler: fiyatın nasıl belirlendiği, metallerin nasıl ayrıştırıldığı, kantar ve ödeme usulü, tesis sökümünün adımları.",
+  lead: "Hurda satarken tartışma çıkan yerler bellidir: fiyatın neye göre belirlendiği, tartının nasıl yapıldığı, teklifin içinde neyin olduğu. Bu yazıları, aynı soruları sahada defalarca cevapladığımız için yazdık.",
+};
+
+/** Rehber listesinin üstverisi. */
+export function buildBlogIndexMetadata(): Metadata {
+  const url = `${SITE.url}${blogIndexHref()}`;
+
+  return {
+    title: BLOG_INDEX.seoTitle,
+    description: BLOG_INDEX.description,
+    alternates: { canonical: url },
+    openGraph: {
+      type: "website",
+      siteName: SITE.name,
+      title: BLOG_INDEX.title,
+      description: BLOG_INDEX.description,
+      url,
+      locale: HTML_LANG[BLOG_LOCALE].replace("-", "_"),
+      images: [
+        { url: `${SITE.url}/brand/og.jpg`, width: 1200, height: 630, alt: SITE.name },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: BLOG_INDEX.title,
+      description: BLOG_INDEX.description,
+      images: [`${SITE.url}/brand/og.jpg`],
+    },
+  };
+}
+
+/** Tek bir rehber yazısının üstverisi. */
+export function buildBlogPostMetadata(post: BlogPost): Metadata {
+  const url = `${SITE.url}${blogPostHref(post.slug)}`;
+
+  return {
+    title: post.seoTitle,
+    description: post.description,
+    alternates: { canonical: url },
+    openGraph: {
+      /* Yazı sayfası `article` — paylaşımda tarih ve yazar alanları taşınır. */
+      type: "article",
+      siteName: SITE.name,
+      title: post.title,
+      description: post.description,
+      url,
+      locale: HTML_LANG[BLOG_LOCALE].replace("-", "_"),
+      publishedTime: post.published,
+      modifiedTime: post.updated,
+      images: [
+        { url: `${SITE.url}/brand/og.jpg`, width: 1200, height: 630, alt: SITE.name },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.description,
+      images: [`${SITE.url}/brand/og.jpg`],
+    },
+  };
+}
+
+/**
+ * Yazı için `BlogPosting` verisi.
+ *
+ * `publisher` işletmeye `@id` ile bağlanır — düzendeki LocalBusiness kaydını
+ * yeniden yazmak yerine ona işaret eder. Böylece Google yazıyı işletmenin
+ * yayınladığı bir metin olarak görür; ikisi ayrı iki kurum sanılmaz.
+ */
+export function blogPostJsonLd(post: BlogPost) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "@id": `${SITE.url}${blogPostHref(post.slug)}#article`,
+    mainEntityOfPage: `${SITE.url}${blogPostHref(post.slug)}`,
+    headline: post.title,
+    description: post.description,
+    inLanguage: HTML_LANG[BLOG_LOCALE],
+    datePublished: post.published,
+    dateModified: post.updated,
+    image: `${SITE.url}/brand/og.jpg`,
+    author: { "@type": "Organization", name: SITE.name, url: SITE.url },
+    publisher: { "@id": `${SITE.url}/#business` },
+    isPartOf: {
+      "@type": "Blog",
+      "@id": `${SITE.url}${blogIndexHref()}#blog`,
+      name: BLOG_INDEX.title,
+    },
+  };
+}
+
+/** Rehber listesi için `Blog` verisi — yazıları tek listede bildirir. */
+export function blogIndexJsonLd(posts: BlogPost[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "@id": `${SITE.url}${blogIndexHref()}#blog`,
+    name: BLOG_INDEX.title,
+    description: BLOG_INDEX.description,
+    url: `${SITE.url}${blogIndexHref()}`,
+    inLanguage: HTML_LANG[BLOG_LOCALE],
+    publisher: { "@id": `${SITE.url}/#business` },
+    blogPost: posts.map((post) => ({
+      "@type": "BlogPosting",
+      "@id": `${SITE.url}${blogPostHref(post.slug)}#article`,
+      headline: post.title,
+      url: `${SITE.url}${blogPostHref(post.slug)}`,
+      datePublished: post.published,
+      dateModified: post.updated,
+    })),
+  };
+}
+
+/**
+ * Rehberin kırıntı yolu. `post` verilirse üç basamak (ana sayfa › rehber ›
+ * yazı), verilmezse iki basamak üretir.
+ */
+export function blogBreadcrumbJsonLd(post?: BlogPost) {
+  const items = [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: SITE.name,
+      item: `${SITE.url}${hrefFor("home", BLOG_LOCALE)}`,
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: BLOG_INDEX.title,
+      item: `${SITE.url}${blogIndexHref()}`,
+    },
+  ];
+
+  if (post) {
+    items.push({
+      "@type": "ListItem",
+      position: 3,
+      name: post.title,
+      item: `${SITE.url}${blogPostHref(post.slug)}`,
+    });
+  }
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items,
+  };
+}
+
+/**
+ * Tek dilli sorulardan SSS zengin sonucu.
+ *
+ * Yukarıdaki `faqJsonLd` dört dilli `Localized` bekliyor; rehber yazıları ve
+ * bölge sayfaları ise düz Türkçe dize taşıyor. İkisi ayrı fonksiyon çünkü
+ * tek bir imzada birleştirmek her çağrıda tür dönüşümü gerektirirdi.
+ */
+export function plainFaqJsonLd(items: { question: string; answer: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+  };
+}
+
+
+/* ------------------------------------------------------------------ *
+ * BÖLGE SAYFALARI (/tr/hurdaci/)
+ *
+ * Rehberle aynı kural: tek dilli, hreflang yok, kendi kendine canonical.
+ * ------------------------------------------------------------------ */
+
+export const AREA_INDEX = {
+  seoTitle: "Hurda Alımı Yaptığımız Bölgeler",
+  title: "Hizmet bölgelerimiz",
+  eyebrow: "Bölgeler",
+  description:
+    "Soma merkezli hurda alımı ve tesis sökümü: Manisa, Balıkesir, İzmir ve Kütahya'da hangi ilçelere gidiyoruz, nakliye kimin üzerinde, hangi bölgede ne çıkıyor?",
+  lead: "Hurdada mesafe doğrudan fiyattır: nakliyeye harcanmayan para yükün rakamına gider. Merkezimiz Soma; aşağıda hangi ile ve ilçeye gittiğimizi, oralarda ne tür iş yaptığımızı tek tek yazdık.",
+};
+
+export function buildAreaIndexMetadata(): Metadata {
+  const url = `${SITE.url}${areaIndexHref()}`;
+
+  return {
+    title: AREA_INDEX.seoTitle,
+    description: AREA_INDEX.description,
+    alternates: { canonical: url },
+    openGraph: {
+      type: "website",
+      siteName: SITE.name,
+      title: AREA_INDEX.title,
+      description: AREA_INDEX.description,
+      url,
+      locale: HTML_LANG[AREA_LOCALE].replace("-", "_"),
+      images: [
+        { url: `${SITE.url}/brand/og.jpg`, width: 1200, height: 630, alt: SITE.name },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: AREA_INDEX.title,
+      description: AREA_INDEX.description,
+      images: [`${SITE.url}/brand/og.jpg`],
+    },
+  };
+}
+
+export function buildAreaMetadata(area: Area): Metadata {
+  const url = `${SITE.url}${areaHref(area.slug)}`;
+
+  return {
+    title: area.seoTitle,
+    description: area.description,
+    alternates: { canonical: url },
+    openGraph: {
+      type: "website",
+      siteName: SITE.name,
+      title: area.title,
+      description: area.description,
+      url,
+      locale: HTML_LANG[AREA_LOCALE].replace("-", "_"),
+      images: [
+        { url: `${SITE.url}/brand/og.jpg`, width: 1200, height: 630, alt: SITE.name },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: area.title,
+      description: area.description,
+      images: [`${SITE.url}/brand/og.jpg`],
+    },
+  };
+}
+
+/**
+ * Bölge sayfasının yapılandırılmış verisi.
+ *
+ * Sayfa başına AYRI bir `LocalBusiness` kaydı ÜRETİLMEZ. Bu, yerel SEO'da
+ * sık yapılan ve zarar veren bir hata: yirmi bir sayfada yirmi bir işletme
+ * kaydı, Google'a yirmi bir ayrı şube gibi görünür ve hiçbirinin adresi
+ * doğrulanamaz. Bunun yerine tek işletme kaydına (`#business`) işaret eden
+ * bir `Service` yayımlanır; hizmetin verildiği yer `areaServed` ile
+ * bildirilir. İşletme bir tane, hizmet alanı çok.
+ */
+export function areaServiceJsonLd(area: Area) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "@id": `${SITE.url}${areaHref(area.slug)}#service`,
+    name: `${area.name} hurda alımı ve tesis sökümü`,
+    description: area.description,
+    serviceType: "Hurda alımı, tesis sökümü ve ikinci el ekipman",
+    provider: { "@id": `${SITE.url}/#business` },
+    areaServed: {
+      "@type": area.kind === "il" ? "AdministrativeArea" : "City",
+      name: area.name,
+      ...(area.kind === "ilce"
+        ? {
+            containedInPlace: {
+              "@type": "AdministrativeArea",
+              name: area.province,
+            },
+          }
+        : {}),
+    },
+    availableChannel: {
+      "@type": "ServiceChannel",
+      serviceUrl: `${SITE.url}${areaHref(area.slug)}`,
+      servicePhone: SITE.contacts[0].e164,
+    },
+  };
+}
+
+/** Bölge listesi — hangi sayfaların olduğunu tek listede bildirir. */
+export function areaIndexJsonLd(areas: Area[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "@id": `${SITE.url}${areaIndexHref()}#areas`,
+    name: AREA_INDEX.title,
+    itemListElement: areas.map((area, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: area.name,
+      url: `${SITE.url}${areaHref(area.slug)}`,
+    })),
+  };
+}
+
+/**
+ * Bölgelerin kırıntı yolu.
+ *
+ * İlçe sayfalarında dört basamak olur: ana sayfa › bölgeler › il › ilçe.
+ * Bu, Google'a hiyerarşiyi anlatmanın yanı sıra ziyaretçiye de "bu ilçe
+ * hangi ilin altında" bilgisini veriyor.
+ */
+export function areaBreadcrumbJsonLd(area?: Area, province?: Area) {
+  const items: {
+    "@type": string;
+    position: number;
+    name: string;
+    item: string;
+  }[] = [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: SITE.name,
+      item: `${SITE.url}${hrefFor("home", AREA_LOCALE)}`,
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: AREA_INDEX.title,
+      item: `${SITE.url}${areaIndexHref()}`,
+    },
+  ];
+
+  if (area && province) {
+    items.push({
+      "@type": "ListItem",
+      position: 3,
+      name: province.name,
+      item: `${SITE.url}${areaHref(province.slug)}`,
+    });
+  }
+
+  if (area) {
+    items.push({
+      "@type": "ListItem",
+      position: items.length + 1,
+      name: area.name,
+      item: `${SITE.url}${areaHref(area.slug)}`,
+    });
+  }
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items,
   };
 }

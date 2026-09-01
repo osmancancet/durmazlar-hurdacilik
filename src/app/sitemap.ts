@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 import { ROUTES, hrefFor } from "@/config/routes";
 import { SITE } from "@/config/site";
+import { AREAS, areaHref, areaIndexHref } from "@/content/areas";
+import { BLOG_POSTS, blogIndexHref, blogPostHref } from "@/content/blog";
 import { HTML_LANG, LOCALES } from "@/lib/i18n";
 
 // Statik export, metadata rotalarının derleme anında üretilmesini ister.
@@ -14,11 +16,18 @@ export const dynamic = "force-static";
  * bırakır. Burası elle tutulan bir tarih — sayfa metinlerinde gerçek bir
  * değişiklik yaptığınızda güncelleyin.
  */
-const CONTENT_UPDATED = new Date("2026-08-26");
+const CONTENT_UPDATED = new Date("2026-09-01");
 
-/** 12 adres (6 sayfa × 2 dil), her biri diğer dildeki karşılığıyla eşleşmiş. */
+/**
+ * Site haritası iki bölümden oluşur:
+ *
+ *  1. Dört dilli sayfalar — her biri diğer üç dildeki karşılığıyla eşleşmiş.
+ *  2. Türkçe rehber (/tr/blog/) ve bölge sayfaları (/tr/hurdaci/) —
+ *     TEK DİLLİ, bu yüzden `alternates` YOK. Olmayan bir çeviriyi bildirmek
+ *     Google'ı 404'e gönderirdi.
+ */
 export default function sitemap(): MetadataRoute.Sitemap {
-  return LOCALES.flatMap((locale) =>
+  const pages = LOCALES.flatMap((locale) =>
     ROUTES.map((route) => ({
       url: `${SITE.url}${hrefFor(route.key, locale)}`,
       lastModified: CONTENT_UPDATED,
@@ -38,4 +47,54 @@ export default function sitemap(): MetadataRoute.Sitemap {
       },
     })),
   );
+
+  /*
+   * Rehber. `lastModified` yazının kendi güncelleme tarihinden gelir —
+   * sayfaların elle tutulan ortak tarihinden değil, çünkü bir yazı
+   * güncellendiğinde diğerleri güncellenmiş olmaz.
+   *
+   * Öncelik 0.7: rehber, hizmet ve malzeme sayfalarından sonra gelir.
+   * Yazıların işi ziyaretçiyi o sayfalara taşımak.
+   */
+  const blog: MetadataRoute.Sitemap = [
+    {
+      url: `${SITE.url}${blogIndexHref()}`,
+      lastModified: new Date(
+        BLOG_POSTS.reduce(
+          (latest, post) => (post.updated > latest ? post.updated : latest),
+          BLOG_POSTS[0].updated,
+        ),
+      ),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    },
+    ...BLOG_POSTS.map((post) => ({
+      url: `${SITE.url}${blogPostHref(post.slug)}`,
+      lastModified: new Date(post.updated),
+      changeFrequency: "yearly" as const,
+      priority: 0.6,
+    })),
+  ];
+
+  /*
+   * Bölge sayfaları. Öncelik dizini için 0.8, tek tek bölgeler için 0.7:
+   * bunlar rehber yazılarından daha ticari sayfalar — arama sonucunda
+   * görünmeleri doğrudan iş getiriyor.
+   */
+  const areas: MetadataRoute.Sitemap = [
+    {
+      url: `${SITE.url}${areaIndexHref()}`,
+      lastModified: CONTENT_UPDATED,
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    },
+    ...AREAS.map((area) => ({
+      url: `${SITE.url}${areaHref(area.slug)}`,
+      lastModified: CONTENT_UPDATED,
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })),
+  ];
+
+  return [...pages, ...areas, ...blog];
 }

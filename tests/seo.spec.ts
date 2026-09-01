@@ -4,7 +4,7 @@ import { SITE } from "@/config/site";
 import { FAQ } from "@/content/faq";
 import { SERVICES } from "@/content/services";
 import { HTML_LANG, LOCALES } from "@/lib/i18n";
-import { ALL_PAGES } from "./helpers";
+import { ALL_PAGES, AREA_PAGES, BLOG_PAGES } from "./helpers";
 
 /**
  * SEO ve yapılandırılmış veri.
@@ -86,7 +86,12 @@ test("işletme verisi (LocalBusiness) doğru ve eksiksiz", async ({ page }) => {
   expect(business.address.addressRegion).toBe(SITE.address.city);
   expect(business.address.postalCode).toBe(SITE.address.postalCode);
   expect(business.openingHoursSpecification.length).toBeGreaterThan(0);
-  expect(business.areaServed.length).toBe(SITE.serviceAreas.length);
+  /* Hizmet alanı iki düzeyde bildirilir: iller + düzenli gidilen ilçeler. */
+  expect(business.areaServed.length).toBe(
+    SITE.serviceAreas.length + SITE.serviceDistricts.length,
+  );
+  const served = business.areaServed.map((area: { name: string }) => area.name);
+  expect(served).toContain(SITE.address.district);
 
   // Hizmet kataloğu, hizmet sayfasındaki dört başlığı taşır.
   expect(business.hasOfferCatalog.itemListElement.length).toBe(SERVICES.length);
@@ -135,10 +140,12 @@ test("site haritası tüm dillerdeki adresleri listeler", async ({
 
   const xml = await response.text();
   const locations = xml.match(/<loc>/g) ?? [];
-  // Beklenen sayı elle yazılmaz; rota × dil sayısından türetilir.
-  expect(locations.length).toBe(ALL_PAGES.length);
+  // Beklenen sayı elle yazılmaz; rota × dil + bölge + rehber sayısından gelir.
+  expect(locations.length).toBe(
+    ALL_PAGES.length + AREA_PAGES.length + BLOG_PAGES.length,
+  );
 
-  for (const { path } of ALL_PAGES) {
+  for (const { path } of [...ALL_PAGES, ...AREA_PAGES, ...BLOG_PAGES]) {
     expect(xml).toContain(`${SITE.url}${path}`);
   }
 });
@@ -188,6 +195,11 @@ test.describe("dil eşlemesi", () => {
 test("site haritası her adres için x-default taşır", async ({ request }) => {
   const xml = await (await request.get("/sitemap.xml")).text();
 
+  /*
+   * Rehber ve bölge adresleri bu sayıya GİRMEZ: tek dilli oldukları için
+   * hiçbir hreflang taşımazlar. Sayı dört dilli sayfaların sayısı kadar kalmalı —
+   * rehber sitemap'e eklenirken bu ayrımın kaybolmadığını da doğrular.
+   */
   const defaults = xml.match(/hreflang="x-default"/g) ?? [];
   expect(defaults.length).toBe(ALL_PAGES.length);
 });

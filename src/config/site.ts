@@ -102,6 +102,52 @@ export const SITE = {
   serviceAreas: ["Manisa", "Balıkesir", "İzmir", "Kütahya"],
 
   /**
+   * Düzenli gidilen ilçeler.
+   *
+   * `serviceAreas` (il) arayüzde görünür; bu liste GÖRÜNMEZ, yalnızca
+   * yapılandırılmış veriye (areaServed) girer. Ayrı durmasının sebebi bu:
+   * altbilgideki künye satırına on altı ilçe adı sığmaz ve sığsa da okunmaz.
+   *
+   * NEDEN İLÇE DÜZEYİ: yerel aramanın kendisi ilçe adıyla yapılıyor —
+   * "kırkağaç hurdacı", "savaştepe hurda alan yerler". Arama motoruna
+   * "Manisa'ya hizmet veriyoruz" demek bu sorguları karşılamıyor; işletmenin
+   * hangi ilçelere gerçekten gittiğini söylemek karşılıyor.
+   *
+   * Buraya yalnızca GERÇEKTEN gidilen yerler yazılır ve bu liste
+   * `src/content/areas.ts`in ÜST KÜMESİDİR: bölge sayfası olan her ilçe
+   * burada da bulunmak zorunda (test bunu denetliyor). Tersi şart değil —
+   * gidilen ama hakkında sayfa yazacak kadar somut şey olmayan ilçeler
+   * burada durur, kendi sayfaları olmadan.
+   */
+  serviceDistricts: [
+    // Manisa
+    "Soma",
+    "Kırkağaç",
+    "Akhisar",
+    "Gördes",
+    "Gölmarmara",
+    "Demirci",
+    "Selendi",
+    "Kula",
+    "Turgutlu",
+    "Salihli",
+    // Balıkesir
+    "Savaştepe",
+    "Sındırgı",
+    "Bigadiç",
+    "Dursunbey",
+    "İvrindi",
+    // İzmir
+    "Kınık",
+    "Bergama",
+    "Dikili",
+    "Aliağa",
+    // Kütahya
+    "Simav",
+    "Gediz",
+  ],
+
+  /**
    * Sitenin canlı adresi (sonunda / olmadan).
    *
    * Canonical adresler, hreflang etiketleri, site haritası, robots.txt ve

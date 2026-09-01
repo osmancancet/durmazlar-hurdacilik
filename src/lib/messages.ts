@@ -115,6 +115,27 @@ export function sendPhotosMessage(locale: Locale): string {
   );
 }
 
+/**
+ * Bir bölge sayfasından yazılan mesaj.
+ *
+ * Yer adını mesaja koymak, işletmenin ilk bakışta "nereden yazıyor"
+ * sorusunu cevaplamasını sağlıyor — nakliye ve keşif planı doğrudan buna
+ * bağlı. Bölge sayfaları yalnızca Türkçe, ama şablon diğer dilleri de
+ * taşıyor ki ileride bir bölge sayfası çevrilirse mesaj kırılmasın.
+ */
+export function areaMessage(locale: Locale, areaName: string): string {
+  return build(
+    locale,
+    {
+      tr: `${areaName} bölgesindeyim, hurdamın fotoğraflarını gönderip fiyat öğrenmek istiyorum.`,
+      en: `I am in the ${areaName} area and would like to send photos of my scrap and get a price.`,
+      ru: `Я нахожусь в районе ${areaName}, хочу отправить фотографии лома и узнать цену.`,
+      ar: `أنا في منطقة ${areaName} وأرغب في إرسال صور الخردة ومعرفة السعر.`,
+    },
+    `Bölge: ${areaName} — fotoğraf gönderecek, fiyat soruyor`,
+  );
+}
+
 /** İkinci el ekipman arayanlar için. */
 export function stockRequestMessage(locale: Locale): string {
   return build(

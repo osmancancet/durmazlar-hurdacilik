@@ -4,8 +4,11 @@ import { Wordmark } from "@/components/brand/Wordmark";
 import { WhatsAppButton } from "@/components/whatsapp/WhatsAppButton";
 import { ROUTES, hrefFor } from "@/config/routes";
 import { MAPS_LINK_URL, SITE } from "@/config/site";
+import { AREAS, areaHref, areaIndexHref } from "@/content/areas";
+import { BLOG_LOCALE, BLOG_POSTS, blogIndexHref, blogPostHref } from "@/content/blog";
 import { SERVICES } from "@/content/services";
 import { FOOTER, UI } from "@/content/ui";
+import { AREA_INDEX, BLOG_INDEX } from "@/lib/seo";
 import type { Locale } from "@/lib/i18n";
 import { generalMessage } from "@/lib/messages";
 import { CONTACTS, EXTERNAL_LINK_PROPS, telHref } from "@/lib/whatsapp";
@@ -152,7 +155,20 @@ export function Footer({ locale }: { locale: Locale }) {
           </dl>
         </div>
 
-        <div className="mt-14 grid gap-10 border-t border-zinc pt-10 sm:grid-cols-2">
+        {/*
+          Rehber bloğu yalnızca Türkçe sayfalarda basılır — yazılar yalnızca
+          Türkçe var (bkz. src/content/blog.ts). Diğer dillerde ızgara iki
+          sütuna döner; boş bir sütun bırakılmaz.
+
+          Bu blok aynı zamanda rehberin iç bağlantı düzeni: her yazı, sitenin
+          HER Türkçe sayfasından bir bağlantı alır. Yalnızca liste sayfasından
+          bağlanan yazılar arama motoru tarafından geç ve seyrek taranır.
+        */}
+        <div
+          className={`mt-14 grid gap-10 border-t border-zinc pt-10 sm:grid-cols-2 ${
+            locale === BLOG_LOCALE ? "lg:grid-cols-4" : ""
+          }`}
+        >
           <nav aria-label={FOOTER.pages[locale]}>
             <h2 className="label">{FOOTER.pages[locale]}</h2>
             <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-2.5">
@@ -184,6 +200,69 @@ export function Footer({ locale }: { locale: Locale }) {
               ))}
             </ul>
           </div>
+
+          {/*
+            Bölgeler sütununda YALNIZCA iller listelenir, 21 sayfanın hepsi
+            değil. Altbilgi bir künye; ilçe ilçe dökmek onu bağlantı duvarına
+            çevirirdi. İlçelere il sayfalarından ve dizinden gidiliyor.
+          */}
+          {locale === BLOG_LOCALE && (
+            <nav aria-label={AREA_INDEX.title}>
+              <h2 className="label">
+                <Link
+                  href={areaIndexHref()}
+                  className="transition-colors hover:text-brand"
+                >
+                  Hizmet Bölgeleri
+                </Link>
+              </h2>
+              <ul className="mt-4 space-y-2.5">
+                {AREAS.filter((area) => area.kind === "il").map((area) => (
+                  <li key={area.slug}>
+                    <Link
+                      href={areaHref(area.slug)}
+                      className="inline-flex min-h-6 items-center py-1 text-sm text-steel transition-colors hover:text-brand"
+                    >
+                      {area.name} hurda alımı
+                    </Link>
+                  </li>
+                ))}
+                <li>
+                  <Link
+                    href={areaIndexHref()}
+                    className="inline-flex min-h-6 items-center py-1 text-sm font-semibold text-ink transition-colors hover:text-brand"
+                  >
+                    Tüm ilçeler
+                  </Link>
+                </li>
+              </ul>
+            </nav>
+          )}
+
+          {locale === BLOG_LOCALE && (
+            <nav aria-label={BLOG_INDEX.title}>
+              <h2 className="label">
+                <Link
+                  href={blogIndexHref()}
+                  className="transition-colors hover:text-brand"
+                >
+                  {BLOG_INDEX.title}
+                </Link>
+              </h2>
+              <ul className="mt-4 space-y-2.5">
+                {BLOG_POSTS.map((post) => (
+                  <li key={post.slug}>
+                    <Link
+                      href={blogPostHref(post.slug)}
+                      className="inline-flex min-h-6 items-center py-1 text-sm text-steel transition-colors hover:text-brand"
+                    >
+                      {post.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )}
         </div>
 
         <p className="mt-12 border-t border-zinc pt-6 font-mono text-xs text-steel-light">
