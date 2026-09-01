@@ -1,5 +1,6 @@
 import { ArrowRightIcon } from "@/components/ui/Icons";
 import { PageHero } from "@/components/pages/PageHero";
+import { ServiceAreaValue } from "@/components/ui/ServiceAreaValue";
 import { Section } from "@/components/ui/Section";
 import { WhatsAppButton } from "@/components/whatsapp/WhatsAppButton";
 import { WhatsAppQuoteForm } from "@/components/whatsapp/WhatsAppQuoteForm";
@@ -154,7 +155,7 @@ export function ContactPage({ locale }: { locale: Locale }) {
               <div className="py-4">
                 <dt className="label">{UI.serviceArea[locale]}</dt>
                 <dd className="mt-2 leading-relaxed text-ink">
-                  {SITE.serviceAreas.join(", ")}
+                  <ServiceAreaValue locale={locale} />
                 </dd>
               </div>
             </dl>

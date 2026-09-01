@@ -171,22 +171,29 @@ test("dizin her bölgeye bağlanır", async ({ page }) => {
   }
 });
 
-test("menü ve altbilgi bölgelere bağlanır, yalnızca Türkçede", async ({
-  page,
-}) => {
+/*
+ * Bölge sayfaları üst menüde YER ALMAZ — menü altı girdide tutuluyor.
+ * Bunun karşılığı, sitenin her Türkçe sayfasında iki bağlantı olması:
+ * altbilgideki bölge sütunu ve künyedeki "Hizmet Bölgesi" satırı. Bu test
+ * o iki bağlantının sessizce kaybolmasını engelliyor.
+ */
+test("altbilgi bölgelere bağlanır, yalnızca Türkçede", async ({ page }) => {
   await page.goto(hrefFor("home", "tr"));
-  /*
-   * `toBeVisible` değil `toHaveCount`: masaüstü menüsü mobil genişlikte
-   * gizli, mobil menü ise kapalı duruyor. Aranan şey bağlantının BELGEDE
-   * olması — arama motoru da onu böyle görüyor.
-   */
-  await expect(
-    page.locator(`header a[href="${areaIndexHref()}"]`),
-  ).not.toHaveCount(0);
+
   await expect(
     page.locator(`footer a[href="${areaHref("manisa")}"]`),
   ).toHaveCount(1);
+  await expect(
+    page.locator(`footer a[href="${areaIndexHref()}"]`),
+    "künyedeki hizmet bölgesi satırı ve sütun başlığı dizine bağlanmalı",
+  ).not.toHaveCount(0);
 
   await page.goto(hrefFor("home", "en"));
   await expect(page.locator('a[href*="/hurdaci/"]')).toHaveCount(0);
+});
+
+test("üst menü altı girdide kalır", async ({ page }) => {
+  await page.goto(hrefFor("home", "tr"));
+  await expect(page.locator('header a[href*="/hurdaci/"]')).toHaveCount(0);
+  await expect(page.locator('header a[href*="/blog/"]')).toHaveCount(0);
 });

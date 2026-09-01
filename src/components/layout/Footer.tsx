@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Wordmark } from "@/components/brand/Wordmark";
+import { ServiceAreaValue } from "@/components/ui/ServiceAreaValue";
 import { WhatsAppButton } from "@/components/whatsapp/WhatsAppButton";
 import { ROUTES, hrefFor } from "@/config/routes";
 import { MAPS_LINK_URL, SITE } from "@/config/site";
@@ -149,7 +150,7 @@ export function Footer({ locale }: { locale: Locale }) {
             <div>
               <dt className="label">{UI.serviceArea[locale]}</dt>
               <dd className="mt-2 text-sm leading-relaxed text-ink">
-                {SITE.serviceAreas.join(", ")}
+                <ServiceAreaValue locale={locale} />
               </dd>
             </div>
           </dl>

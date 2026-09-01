@@ -9,8 +9,6 @@ import { ContactMenu } from "@/components/whatsapp/ContactMenu";
 import { WhatsAppButton } from "@/components/whatsapp/WhatsAppButton";
 import { ROUTES, hrefFor } from "@/config/routes";
 import { SITE } from "@/config/site";
-import { AREA_LOCALE, areaIndexHref } from "@/content/areas";
-import { blogIndexHref } from "@/content/blog";
 import { UI } from "@/content/ui";
 import { resolveActiveRoute } from "@/lib/active-route";
 import {
@@ -52,36 +50,6 @@ export function Header({ locale }: { locale: Locale }) {
 
   const navLinks = ROUTES.filter((route) => route.inNav);
 
-  /*
-   * Türkçeye özel iki menü girdisi.
-   *
-   * Bölgeler ve rehber `ROUTES` kayıt defterinde YOK — orası dört dilli
-   * `Record<Locale, string>` bekliyor, bu iki bölüm ise yalnızca Türkçe
-   * yayımlanıyor. Menüye buradan, ayrı bir liste olarak ekleniyorlar.
-   *
-   * Menüde durmaları önemli: bölge sayfalarının işi yerel aramada
-   * görünmek ve sitenin HER Türkçe sayfasından bağlantı almaları taranma
-   * sıklığını doğrudan etkiliyor.
-   */
-  /*
-   * Menü sekiz girdiye çıkınca 1024 pikselde WhatsApp butonunun üzerine
-   * taşıyordu (ölçüldü: 1128 piksel gerekiyor, 1024 var). Bu yüzden Türkçede
-   * masaüstü menüsü bir kırılma noktası GEÇ açılıyor: 1024–1279 arası tam
-   * ekran menü kullanılır, 1280'den itibaren satır menüsü.
-   *
-   * Sınıf adları tam yazılır (`lg:flex` / `xl:flex`), birleştirilerek
-   * üretilmez — Tailwind kaynak dosyada göremediği sınıfı derlemeye almaz.
-   */
-  const extraLinks =
-    locale === AREA_LOCALE
-      ? [
-          { href: areaIndexHref(), label: "Bölgeler" },
-          { href: blogIndexHref(), label: "Rehber" },
-        ]
-      : [];
-
-  /** Sekiz girdili menü: masaüstü satırı bir kırılma noktası geç açılır. */
-  const wideNav = extraLinks.length > 0;
 
   return (
     <>
@@ -149,9 +117,7 @@ export function Header({ locale }: { locale: Locale }) {
             <Wordmark priority />
           </Link>
 
-          <nav className={`ms-auto hidden items-center gap-7 ${
-              wideNav ? "xl:flex" : "lg:flex"
-            }`}>
+          <nav className="ms-auto hidden items-center gap-7 lg:flex">
             {navLinks.map((route) => {
               const active = matched && route.key === activeRoute.key;
               return (
@@ -169,31 +135,9 @@ export function Header({ locale }: { locale: Locale }) {
                 </Link>
               );
             })}
-
-            {extraLinks.map((link) => {
-              const active = pathname.startsWith(link.href);
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  aria-current={active ? "page" : undefined}
-                  className={`relative py-1 text-sm font-semibold whitespace-nowrap transition-colors ${
-                    active
-                      ? "text-ink after:absolute after:inset-x-0 after:-bottom-px after:h-0.5 after:bg-brand"
-                      : "text-steel hover:text-ink"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              );
-            })}
           </nav>
 
-          <div
-            className={`ms-auto flex items-center gap-3 ${
-              wideNav ? "xl:ms-0" : "lg:ms-0"
-            }`}
-          >
+          <div className="ms-auto flex items-center gap-3 lg:ms-0">
             <LanguageSwitcher locale={locale} />
 
             <span className="hidden sm:block">
@@ -213,9 +157,7 @@ export function Header({ locale }: { locale: Locale }) {
               aria-label={UI.menu[locale]}
               aria-expanded={menuOpen}
               aria-controls="mobil-menu"
-              className={`tap grid size-9 place-items-center border border-zinc text-ink transition-colors hover:border-ink ${
-                wideNav ? "xl:hidden" : "lg:hidden"
-              }`}
+              className="tap grid size-9 place-items-center border border-zinc text-ink transition-colors hover:border-ink lg:hidden"
             >
               <MenuIcon className="size-5" />
             </button>
@@ -245,9 +187,7 @@ export function Header({ locale }: { locale: Locale }) {
         id="mobil-menu"
         inert={!menuOpen}
         aria-label={UI.menu[locale]}
-        className={`fixed inset-0 z-50 bg-paper transition-[opacity,visibility] duration-200 ${
-          wideNav ? "xl:hidden" : "lg:hidden"
-        } ${
+        className={`fixed inset-0 z-50 bg-paper transition-[opacity,visibility] duration-200 lg:hidden ${
           menuOpen
             ? "visible opacity-100"
             : "invisible pointer-events-none opacity-0"
@@ -285,30 +225,6 @@ export function Header({ locale }: { locale: Locale }) {
                   }`}
                 >
                   {route.label[locale]}
-                </span>
-              </Link>
-            );
-          })}
-
-          {extraLinks.map((link, position) => {
-            const active = pathname.startsWith(link.href);
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setMenuOpen(false)}
-                aria-current={active ? "page" : undefined}
-                className="flex items-baseline gap-4 border-b border-zinc py-5"
-              >
-                <span className="tabular font-mono text-xs text-brand">
-                  {String(navLinks.length + position + 1).padStart(2, "0")}
-                </span>
-                <span
-                  className={`display text-2xl ${
-                    active ? "text-brand" : "text-ink"
-                  }`}
-                >
-                  {link.label}
                 </span>
               </Link>
             );

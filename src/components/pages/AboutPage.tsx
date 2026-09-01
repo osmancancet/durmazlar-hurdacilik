@@ -3,6 +3,7 @@ import { CtaBand } from "@/components/ui/CtaBand";
 import { FaqAccordion } from "@/components/ui/FaqAccordion";
 import { FullBleedPlate, Plate } from "@/components/ui/Plate";
 import { Reveal } from "@/components/ui/Reveal";
+import { ServiceAreaValue } from "@/components/ui/ServiceAreaValue";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { SITE } from "@/config/site";
 import { ABOUT, LABELS, PAGE_HEADERS, UI } from "@/content/ui";
@@ -27,7 +28,7 @@ export function AboutPage({ locale }: { locale: Locale }) {
               {UI.serviceArea[locale]}
             </dt>
             <dd className="mt-2 font-mono text-sm leading-relaxed text-ink">
-              {SITE.serviceAreas.join(" · ")}
+              <ServiceAreaValue locale={locale} separator=" · " />
             </dd>
           </dl>
         }
