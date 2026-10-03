@@ -52,12 +52,12 @@ export const SITE = {
   email: "durmazlarhurdacilik45@gmail.com",
 
   address: {
-    street: "Hürriyet Mahallesi, Rüzgar Sokak, No: 11",
+    street: "Hürriyet Mahallesi, İğde Sokak, No: 10",
     district: "Soma",
     city: "Manisa",
     country: "Türkiye",
     countryCode: "TR",
-    postalCode: "45520",
+    postalCode: "45500",
   },
 
   /** Çalışma saatleri. Metin alanları ekranda, `schema` alanı JSON-LD'de kullanılır. */
@@ -68,7 +68,7 @@ export const SITE = {
       ru: "Понедельник – суббота",
       ar: "الاثنين – السبت",
     },
-    weekdayHours: "08:00 – 19:00",
+    weekdayHours: "08:00 – 17:30",
     sunday: {
       tr: "Pazar",
       en: "Sunday",
@@ -93,7 +93,7 @@ export const SITE = {
           "Saturday",
         ],
         opens: "08:00",
-        closes: "19:00",
+        closes: "17:30",
       },
     ],
   },

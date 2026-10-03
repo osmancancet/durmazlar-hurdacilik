@@ -142,7 +142,7 @@ export const AREAS: Area[] = [
     title: "Soma'da hurdacı: sahamız burada",
     description:
       "Soma'da hurda alımı, maden ve santral ekipmanı sökümü, ikinci el makine satışı. Hürriyet Mahallesi'ndeki sahamıza yükünüzü getirin ya da fotoğrafını gönderin, aynı gün fiyat alın.",
-    lead: "Sahamız Soma'da, Hürriyet Mahallesi Rüzgar Sokak'ta. Yani buradaki işlerde nakliye mesafesi neredeyse yok — bu, ton başına maliyeti düşürdüğü için Soma'daki yükler için verdiğimiz rakam çevre ilçelere göre daha güçlü çıkıyor.",
+    lead: "Sahamız Soma'da, Hürriyet Mahallesi İğde Sokak'ta. Yani buradaki işlerde nakliye mesafesi neredeyse yok — bu, ton başına maliyeti düşürdüğü için Soma'daki yükler için verdiğimiz rakam çevre ilçelere göre daha güçlü çıkıyor.",
     profile: [
       "Soma bir linyit havzası ve buradan çıkan hurda genel sanayi hurdasına benzemiyor: kalın cidarlı, ağır ve çoğu zaman hâlâ bir işe yarayan parçalar. Kömür ocaklarından ve hazırlama tesislerinden konveyör tamburu, bant şasisi, titreşimli elek, kırıcı merdane, redüktör ve hidrolik ünite çıkıyor. Bunların bir bölümü hurda değil, ikinci el ekipman olarak değerlenmesi gereken parçalar.",
       "İlçedeki küçük sanayi sitesi, atölyeler ve inşaat sahaları da düzenli hurda üretiyor: torna talaşı, sac fire, profil kırpıntısı, hurda araç ve çatı sacı. Sahamıza kendiniz getirebileceğiniz miktarlar için sabit bir alt sınırımız yok; kantar tartımı sizin gözetiminizde yapılır, fiş elinize verilir.",
@@ -161,7 +161,7 @@ export const AREAS: Area[] = [
       {
         question: "Sahanıza yükümü kendim getirebilir miyim?",
         answer:
-          "Getirebilirsiniz. Hürriyet Mahallesi, Rüzgar Sokak No: 11, Soma. Sabit bir alt sınırımız yok. Tartı sizin gözetiminizde yapılır, kantar fişi elinize verilir ve ödeme tartı sonrası gerçekleşir.",
+          "Getirebilirsiniz. Hürriyet Mahallesi, İğde Sokak No: 10, Soma. Sabit bir alt sınırımız yok. Tartı sizin gözetiminizde yapılır, kantar fişi elinize verilir ve ödeme tartı sonrası gerçekleşir.",
       },
       {
         question: "Maden sahasından çıkan ekipmanı toplu alıyor musunuz?",

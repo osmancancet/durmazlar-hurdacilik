@@ -103,10 +103,10 @@ const META: Record<RouteKey, { title: Localized; description: Localized }> = {
       ar: "اتصل بنا وطلب عرض سعر",
     },
     description: {
-      tr: `Hürriyet Mahallesi, Rüzgar Sokak No: 11, Soma / Manisa. Telefon ${SITE.contacts[0].display}. Teklif formunu doldurun, bilgiler WhatsApp'ta açılsın.`,
-      en: `Hürriyet Mahallesi, Rüzgar Sokak No: 11, Soma / Manisa. Phone ${SITE.contacts[0].display}. Fill in the quote form and it opens as a WhatsApp message.`,
-      ru: `Hürriyet Mahallesi, Rüzgar Sokak No: 11, Сома / Маниса. Телефон ${SITE.contacts[0].display}. Заполните форму — данные откроются сообщением в WhatsApp.`,
-      ar: `Hürriyet Mahallesi, Rüzgar Sokak No: 11، صوما / مانيسا. الهاتف ${SITE.contacts[0].display}. املأوا نموذج الطلب لتُفتح البيانات كرسالة واتساب.`,
+      tr: `Hürriyet Mahallesi, İğde Sokak No: 10, Soma / Manisa. Telefon ${SITE.contacts[0].display}. Teklif formunu doldurun, bilgiler WhatsApp'ta açılsın.`,
+      en: `Hürriyet Mahallesi, İğde Sokak No: 10, Soma / Manisa. Phone ${SITE.contacts[0].display}. Fill in the quote form and it opens as a WhatsApp message.`,
+      ru: `Hürriyet Mahallesi, İğde Sokak No: 10, Сома / Маниса. Телефон ${SITE.contacts[0].display}. Заполните форму — данные откроются сообщением в WhatsApp.`,
+      ar: `Hürriyet Mahallesi, İğde Sokak No: 10، صوما / مانيسا. الهاتف ${SITE.contacts[0].display}. املأوا نموذج الطلب لتُفتح البيانات كرسالة واتساب.`,
     },
   },
 };
