@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ROUTES, hrefFor, routeByKey, type RouteKey } from "@/config/routes";
 import { SERVICES } from "@/content/services";
+import { MATERIAL_GROUPS } from "@/content/materials";
 import { MAPS_LINK_URL, SITE } from "@/config/site";
 import {
   AREA_LOCALE,
@@ -216,6 +217,28 @@ export function localBusinessJsonLd(locale: Locale) {
     /* Arama motorunu adresi metinden çözmeye bırakmak yerine harita
        kaydına doğrudan bağlar. */
     hasMap: MAPS_LINK_URL,
+    /*
+     * Varlık eşleştirme: site, Google İşletme Profili ve (varsa) sosyal
+     * hesaplar aynı işletmedir. Yapay zekâ asistanları ve Bilgi Grafiği
+     * işletmeyi bu bağlantılar üzerinden tek bir varlık olarak birleştirir.
+     */
+    sameAs: [
+      SITE.googleMapsUrl,
+      ...Object.values(SITE.social).filter(Boolean),
+    ],
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: SITE.geo.latitude,
+      longitude: SITE.geo.longitude,
+    },
+    foundingDate: SITE.foundingDate,
+    /*
+     * Alınan malzemeler. "Soma'da bakır kablo kim alır?" gibi sorulara
+     * yanıt üreten asistanlar işletmenin uzmanlık alanını buradan okur.
+     */
+    knowsAbout: MATERIAL_GROUPS.flatMap((group) =>
+      group.items.map((item) => item.name[locale]),
+    ),
     address: {
       "@type": "PostalAddress",
       streetAddress: SITE.address.street,
@@ -304,6 +327,24 @@ export function breadcrumbJsonLd(key: RouteKey, locale: Locale) {
 }
 
 /** Menüyü Google'a bildirir — arama sonucunda alt bağlantı olarak çıkabilir. */
+/**
+ * Sitenin kendisi. Google arama sonucunda "site adı" olarak bunu gösterir
+ * (alan adı yerine "Durmazlar Hurdacılık"); `publisher` ile işletme
+ * verisine bağlanır, böylece site ve işletme tek varlık olarak okunur.
+ */
+export function websiteJsonLd(locale: Locale) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${SITE.url}/#website`,
+    name: SITE.name,
+    alternateName: ["Durmazlar Hurda", "durmazlarhurdacilik.com"],
+    url: `${SITE.url}/`,
+    inLanguage: HTML_LANG[locale],
+    publisher: { "@id": `${SITE.url}/#business` },
+  };
+}
+
 export function siteNavigationJsonLd(locale: Locale) {
   return {
     "@context": "https://schema.org",

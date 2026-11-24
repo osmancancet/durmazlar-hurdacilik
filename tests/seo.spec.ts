@@ -95,6 +95,50 @@ test("işletme verisi (LocalBusiness) doğru ve eksiksiz", async ({ page }) => {
 
   // Hizmet kataloğu, hizmet sayfasındaki dört başlığı taşır.
   expect(business.hasOfferCatalog.itemListElement.length).toBe(SERVICES.length);
+
+  /*
+   * Varlık eşleştirme: koordinat ve Google Haritalar kaydı. Bunlar olmadan
+   * arama motoru ve yapay zekâ asistanları siteyi harita kaydıyla aynı
+   * işletme olarak birleştirmekte zorlanır.
+   */
+  expect(business.geo.latitude).toBe(SITE.geo.latitude);
+  expect(business.geo.longitude).toBe(SITE.geo.longitude);
+  expect(business.sameAs).toContain(SITE.googleMapsUrl);
+  expect(business.hasMap).toBe(SITE.googleMapsUrl);
+  expect(business.foundingDate).toBe(SITE.foundingDate);
+  expect(business.knowsAbout.length).toBeGreaterThan(10);
+
+  // Site, işletmeye `publisher` ile bağlı WebSite olarak da bildirilir.
+  const website = parsed.find((entry) => typesOf(entry).includes("WebSite"));
+  expect(website, "WebSite verisi yok").toBeTruthy();
+  expect(website.publisher["@id"]).toBe(business["@id"]);
+});
+
+test("llms.txt yapay zekâ asistanları için işletme özetini sunar", async ({
+  request,
+}) => {
+  const response = await request.get("/llms.txt");
+  expect(response.status()).toBe(200);
+  const body = await response.text();
+
+  expect(body.startsWith(`# ${SITE.name}`)).toBe(true);
+  for (const contact of SITE.contacts) {
+    expect(body).toContain(contact.display);
+  }
+  expect(body).toContain(SITE.address.street);
+  for (const service of SERVICES) {
+    expect(body).toContain(service.title.tr);
+  }
+  // Mutlak bağlantılar — asistan dosyayı siteden bağımsız okur.
+  expect(body).not.toMatch(/\]\(\//);
+});
+
+test("robots.txt yapay zekâ arama botlarına açık", async ({ request }) => {
+  const body = await (await request.get("/robots.txt")).text();
+  for (const bot of ["OAI-SearchBot", "PerplexityBot", "Google-Extended"]) {
+    expect(body).toContain(bot);
+  }
+  expect(body).not.toMatch(/Disallow:\s*\/\s*$/m);
 });
 
 test("alt sayfalar kırıntı yolu verisi taşır", async ({ page }) => {

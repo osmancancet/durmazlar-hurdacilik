@@ -60,6 +60,28 @@ export const SITE = {
     postalCode: "45500",
   },
 
+  /**
+   * Google İşletme Profili'ndeki iğnenin koordinatı.
+   *
+   * Yapılandırılmış veriye (`geo`) girer. Arama motorları ve yapay zekâ
+   * asistanları adresi metinden çözmek zorunda kalmaz; harita kaydıyla
+   * sitedeki işletme aynı nokta olarak eşleşir.
+   */
+  geo: { latitude: 39.183956, longitude: 27.6317105 },
+
+  /**
+   * Google Haritalar kaydının kalıcı adresi (CID).
+   *
+   * Adres aramasına giden bağlantının aksine doğrudan işletme kartını açar;
+   * yorumlar, fotoğraflar ve yol tarifi oradadır. JSON-LD'de `hasMap` ve
+   * `sameAs` olarak da kullanılır: "bu site ile bu harita kaydı aynı
+   * işletme" bilgisini arama motoruna açıkça verir.
+   */
+  googleMapsUrl: "https://maps.google.com/?cid=15756442235213012615",
+
+  /** İşletmenin faaliyete başladığı tarih (JSON-LD `foundingDate`). */
+  foundingDate: "2026-01-01",
+
   /** Çalışma saatleri. Metin alanları ekranda, `schema` alanı JSON-LD'de kullanılır. */
   hours: {
     weekdays: {
@@ -174,11 +196,17 @@ export const SITE = {
 /** Tek bir iletişim kişisi. */
 export type Contact = (typeof SITE.contacts)[number];
 
-/** Google Haritalar gömme adresi — iletişim sayfasındaki harita bunu kullanır. */
+/**
+ * Google Haritalar gömme adresi — iletişim sayfasındaki harita bunu kullanır.
+ *
+ * Sorguda işletme adı da bulunur: yalnızca adres yazıldığında harita boş
+ * bir iğne gösteriyordu; adla birlikte işletme kartının kendisi açılır.
+ */
 export const MAPS_QUERY = encodeURIComponent(
-  `${SITE.address.street}, ${SITE.address.district} / ${SITE.address.city}`,
+  `${SITE.name}, ${SITE.address.street}, ${SITE.address.district} / ${SITE.address.city}`,
 );
 
 export const MAPS_EMBED_URL = `https://maps.google.com/maps?q=${MAPS_QUERY}&hl=tr&z=15&output=embed`;
 
-export const MAPS_LINK_URL = `https://www.google.com/maps/search/?api=1&query=${MAPS_QUERY}`;
+/** "Haritada aç" bağlantıları doğrudan işletme kaydına gider. */
+export const MAPS_LINK_URL = SITE.googleMapsUrl;

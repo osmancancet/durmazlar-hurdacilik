@@ -9,7 +9,11 @@ import { MobileCallBar } from "@/components/whatsapp/MobileCallBar";
 import { SITE } from "@/config/site";
 import { UI } from "@/content/ui";
 import { DIR, HTML_LANG, LOCALES, isLocale } from "@/lib/i18n";
-import { localBusinessJsonLd, siteNavigationJsonLd } from "@/lib/seo";
+import {
+  localBusinessJsonLd,
+  siteNavigationJsonLd,
+  websiteJsonLd,
+} from "@/lib/seo";
 import "../globals.css";
 
 /*
@@ -148,6 +152,7 @@ export default async function LocaleLayout({
           dangerouslySetInnerHTML={{
             __html: JSON.stringify([
               localBusinessJsonLd(locale),
+              websiteJsonLd(locale),
               siteNavigationJsonLd(locale),
             ]),
           }}
