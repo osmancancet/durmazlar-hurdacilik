@@ -70,6 +70,14 @@ export const SITE = {
   geo: { latitude: 39.183956, longitude: 27.6317105 },
 
   /**
+   * Google'ın konum kodu (Plus Code) — Google İşletme Profili'ndeki değer.
+   * Sokak adı bulunmayan sanayi bölgelerinde nakliyecinin ve müşterinin
+   * yeri tek satırla bulmasını sağlar; Google Haritalar'a yazınca doğrudan
+   * sahayı açar.
+   */
+  plusCode: "5JMJ+HM Soma, Manisa",
+
+  /**
    * Google Haritalar kaydının kalıcı adresi (CID).
    *
    * Adres aramasına giden bağlantının aksine doğrudan işletme kartını açar;
@@ -199,14 +207,16 @@ export type Contact = (typeof SITE.contacts)[number];
 /**
  * Google Haritalar gömme adresi — iletişim sayfasındaki harita bunu kullanır.
  *
- * Sorguda işletme adı da bulunur: yalnızca adres yazıldığında harita boş
- * bir iğne gösteriyordu; adla birlikte işletme kartının kendisi açılır.
+ * Adres metni yerine işletme profilindeki koordinat kullanılır: sokak
+ * adresi sanayi bölgesinde birkaç yüz metre sapabiliyor, koordinat ise
+ * sahanın girişini tam gösteriyor.
  */
-export const MAPS_QUERY = encodeURIComponent(
-  `${SITE.name}, ${SITE.address.street}, ${SITE.address.district} / ${SITE.address.city}`,
-);
+export const MAPS_QUERY = `${SITE.geo.latitude},${SITE.geo.longitude}`;
 
-export const MAPS_EMBED_URL = `https://maps.google.com/maps?q=${MAPS_QUERY}&hl=tr&z=15&output=embed`;
+export const MAPS_EMBED_URL = `https://maps.google.com/maps?q=${MAPS_QUERY}&hl=tr&z=17&output=embed`;
+
+/** Ziyaretçinin bulunduğu yerden sahaya yol tarifi — tam koordinata. */
+export const MAPS_DIRECTIONS_URL = `https://www.google.com/maps/dir/?api=1&destination=${MAPS_QUERY}`;
 
 /** "Haritada aç" bağlantıları doğrudan işletme kaydına gider. */
 export const MAPS_LINK_URL = SITE.googleMapsUrl;

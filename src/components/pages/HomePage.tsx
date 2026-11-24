@@ -9,6 +9,13 @@ import { SpecStrip } from "@/components/ui/SpecStrip";
 import { VideoSlider } from "@/components/ui/VideoSlider";
 import { WhatsAppButton } from "@/components/whatsapp/WhatsAppButton";
 import { hrefFor } from "@/config/routes";
+import {
+  AREA_LOCALE,
+  PROVINCES,
+  areaHref,
+  areaIndexHref,
+  districtsOf,
+} from "@/content/areas";
 import { GALLERY_PREVIEW } from "@/content/gallery";
 import { SERVICES } from "@/content/services";
 import { HOME, UI } from "@/content/ui";
@@ -22,6 +29,7 @@ export function HomePage({ locale }: { locale: Locale }) {
       <Services locale={locale} />
       <Process locale={locale} />
       <GalleryPreview locale={locale} />
+      {locale === AREA_LOCALE && <ServiceRegions />}
       <CtaBand locale={locale} />
     </>
   );
@@ -212,6 +220,68 @@ function GalleryPreview({ locale }: { locale: Locale }) {
           showFilters={false}
           startIndex={1}
         />
+      </div>
+    </Section>
+  );
+}
+
+/**
+ * Hizmet bölgeleri — il ve ilçe sayfalarına ana sayfadan bağlantı.
+ *
+ * NEDEN ANA SAYFADA: bölge sayfaları menüde yok, yalnızca altbilgideki
+ * künyeden bağlanıyordu. Google bu sayfaları keşfetmiş ama çoğunu "şu
+ * anda dizine eklenmiş değil" diye bekletiyordu (Search Console, Kasım
+ * 2026) — site içinde neredeyse hiç bağlantı almayan sayfayı önemsiz
+ * sayıyor. Ana sayfa sitenin en güçlü sayfası; buradan verilen bağlantı
+ * hem ziyaretçiyi kendi ilçesine götürüyor hem de bu sayfaların önemli
+ * olduğunu arama motoruna söylüyor.
+ *
+ * Bölge sayfaları yalnızca Türkçe yayımlandığı için bölüm de yalnızca
+ * Türkçe ana sayfada görünür.
+ */
+function ServiceRegions() {
+  return (
+    <Section tone="raised">
+      <SectionHeading
+        label="Hizmet Bölgelerimiz"
+        title="Soma merkezli, dört ilde sahadayız"
+        lead="Fabrikanız, şantiyeniz ya da atölyeniz hangi ilçedeyse oradan hurda alıyor, söküm yapıyor ve konteyner bırakıyoruz. Bölgenize özel bilgiler için ilinizi veya ilçenizi seçin."
+        action={
+          <Link
+            href={areaIndexHref()}
+            className="inline-flex items-center gap-2 border-b border-ink pb-1 text-sm font-semibold text-ink transition-colors hover:border-brand hover:text-brand"
+          >
+            Tüm bölgeler
+            <ArrowRightIcon className="rtl-flip size-4" />
+          </Link>
+        }
+      />
+
+      <Rule className="mt-12" />
+
+      <div className="mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        {PROVINCES().map((province) => (
+          <nav key={province.slug} aria-label={`${province.name} hurdacı`}>
+            <Link
+              href={areaHref(province.slug)}
+              className="font-display text-lg font-semibold text-ink transition-colors hover:text-brand"
+            >
+              {province.name} hurdacı
+            </Link>
+            <ul className="mt-3 space-y-1.5 text-sm">
+              {districtsOf(province.slug).map((district) => (
+                <li key={district.slug}>
+                  <Link
+                    href={areaHref(district.slug)}
+                    className="text-steel underline-offset-4 transition-colors hover:text-brand hover:underline"
+                  >
+                    {district.name} hurdacı
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ))}
       </div>
     </Section>
   );

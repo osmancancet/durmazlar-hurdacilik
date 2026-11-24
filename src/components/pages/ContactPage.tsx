@@ -4,7 +4,12 @@ import { ServiceAreaValue } from "@/components/ui/ServiceAreaValue";
 import { Section } from "@/components/ui/Section";
 import { WhatsAppButton } from "@/components/whatsapp/WhatsAppButton";
 import { WhatsAppQuoteForm } from "@/components/whatsapp/WhatsAppQuoteForm";
-import { MAPS_EMBED_URL, MAPS_LINK_URL, SITE } from "@/config/site";
+import {
+  MAPS_DIRECTIONS_URL,
+  MAPS_EMBED_URL,
+  MAPS_LINK_URL,
+  SITE,
+} from "@/config/site";
 import { CONTACT, LABELS, PAGE_HEADERS, UI } from "@/content/ui";
 import type { Locale } from "@/lib/i18n";
 import { generalMessage, stockRequestMessage } from "@/lib/messages";
@@ -96,15 +101,40 @@ export function ContactPage({ locale }: { locale: Locale }) {
                   {SITE.address.street}
                   <br />
                   {SITE.address.district} / {SITE.address.city}
-                  <br />
-                  <a
-                    href={MAPS_LINK_URL}
-                    {...EXTERNAL_LINK_PROPS}
-                    className="mt-2 inline-flex min-h-6 items-center py-1 text-sm font-semibold text-brand underline-offset-4 hover:underline"
-                  >
-                    {UI.openInMaps[locale]}
-                    <ArrowRightIcon className="rtl-flip size-3.5" />
-                  </a>
+                  {/*
+                    Tam konum. Sanayi bölgesinde sokak adresi birkaç yüz metre
+                    sapabildiği için nakliyeci ve müşteri sahayı konum kodu
+                    ya da koordinatla bulur; ikisi de Google Haritalar'a
+                    yazıldığında doğrudan sahayı açar.
+                  */}
+                  <span className="mt-2 block font-mono text-xs text-steel">
+                    {UI.plusCode[locale]}:{" "}
+                    <span className="tabular text-ink" dir="ltr">
+                      {SITE.plusCode}
+                    </span>
+                    <br />
+                    <span className="tabular" dir="ltr">
+                      {SITE.geo.latitude}, {SITE.geo.longitude}
+                    </span>
+                  </span>
+                  <span className="mt-2 flex flex-wrap gap-x-5">
+                    <a
+                      href={MAPS_DIRECTIONS_URL}
+                      {...EXTERNAL_LINK_PROPS}
+                      className="inline-flex min-h-6 items-center gap-1 py-1 text-sm font-semibold text-brand underline-offset-4 hover:underline"
+                    >
+                      {UI.getDirections[locale]}
+                      <ArrowRightIcon className="rtl-flip size-3.5" />
+                    </a>
+                    <a
+                      href={MAPS_LINK_URL}
+                      {...EXTERNAL_LINK_PROPS}
+                      className="inline-flex min-h-6 items-center gap-1 py-1 text-sm font-semibold text-brand underline-offset-4 hover:underline"
+                    >
+                      {UI.openInMaps[locale]}
+                      <ArrowRightIcon className="rtl-flip size-3.5" />
+                    </a>
+                  </span>
                 </dd>
               </div>
 

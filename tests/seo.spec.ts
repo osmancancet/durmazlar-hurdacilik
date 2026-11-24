@@ -270,3 +270,21 @@ test("işletme verisi sitenin tüm dillerini bildirir", async ({ page }) => {
 
   expect(business.knowsLanguage).toEqual([...LOCALES]);
 });
+
+test("Türkçe ana sayfa her bölge sayfasına bağlantı verir", async ({ page }) => {
+  await page.goto(hrefFor("home", "tr"));
+  for (const { path } of AREA_PAGES) {
+    if (path === "/tr/hurdaci/") continue;
+    await expect(
+      page.locator(`main a[href="${path}"]`).first(),
+      `ana sayfada bağlantı yok: ${path}`,
+    ).toHaveCount(1);
+  }
+});
+
+test("iletişim sayfası tam konumu gösterir", async ({ page }) => {
+  await page.goto(hrefFor("contact", "tr"));
+  await expect(page.getByText(SITE.plusCode)).toBeVisible();
+  const iframe = await page.locator("iframe").first().getAttribute("src");
+  expect(iframe).toContain(`${SITE.geo.latitude},${SITE.geo.longitude}`);
+});

@@ -170,6 +170,18 @@ export const UI = {
     ru: "Открыть на карте",
     ar: "افتح على الخريطة",
   },
+  getDirections: {
+    tr: "Yol Tarifi Al",
+    en: "Get Directions",
+    ru: "Проложить маршрут",
+    ar: "احصل على الاتجاهات",
+  },
+  plusCode: {
+    tr: "Konum kodu",
+    en: "Plus Code",
+    ru: "Plus Code",
+    ar: "رمز الموقع",
+  },
   quickContact: {
     tr: "Hızlı İletişim",
     en: "Quick Contact",

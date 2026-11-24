@@ -16,7 +16,7 @@ export const dynamic = "force-static";
  * bırakır. Burası elle tutulan bir tarih — sayfa metinlerinde gerçek bir
  * değişiklik yaptığınızda güncelleyin.
  */
-const CONTENT_UPDATED = new Date("2026-09-01");
+const CONTENT_UPDATED = new Date("2026-11-25");
 
 /**
  * Site haritası iki bölümden oluşur:
