@@ -98,7 +98,7 @@ export const SITE = {
       ru: "Понедельник – суббота",
       ar: "الاثنين – السبت",
     },
-    weekdayHours: "08:00 – 17:30",
+    weekdayHours: "08:00 – 18:00",
     sunday: {
       tr: "Pazar",
       en: "Sunday",
@@ -123,7 +123,7 @@ export const SITE = {
           "Saturday",
         ],
         opens: "08:00",
-        closes: "17:30",
+        closes: "18:00",
       },
     ],
   },
